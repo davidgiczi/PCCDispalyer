@@ -2,14 +2,12 @@ package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer;
 
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.model.Point;
 import javafx.application.Application;
-import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
