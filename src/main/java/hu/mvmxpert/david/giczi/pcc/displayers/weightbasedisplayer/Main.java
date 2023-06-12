@@ -25,7 +25,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        WeightBaseDisplayer.setTITLE(System.getProperty("user.dir"));
+        WeightBaseDisplayer.setTitle(System.getProperty("user.dir"));
         WeightBaseDisplayer.setPillarBasePoints(getData());
         WeightBaseDisplayer.setDirectionPoint(new Point("173", 670496.91,243693.95));
         WeightBaseDisplayer.main(args);

@@ -3,12 +3,15 @@ package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer;
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.model.Point;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -26,7 +29,7 @@ public class WeightBaseDisplayer extends Application {
 
     private static List<Point> PILLAR_BASE_POINTS;
     private static Point DIRECTION_POINT;
-    private static final double SCALE = 2 * 22.5;
+    private static final double SCALE = 1 * 22.5;
     public static final double MILLIMETER = 1000 / 224.0;
     private AnchorPane pane;
     private double displayerCenterX;
@@ -34,7 +37,7 @@ public class WeightBaseDisplayer extends Application {
     private List<Point> transformedPillarBasePoints;
 
 
-    public static void setTITLE(String TITLE) {
+    public static void setTitle(String TITLE) {
         WeightBaseDisplayer.TITLE = TITLE;
     }
 
@@ -56,6 +59,7 @@ public class WeightBaseDisplayer extends Application {
         addHoleB();
         addHoleC();
         addHoleD();
+        addCirleForPoint();
     }
 
     private void addNorthSign(){
@@ -73,12 +77,14 @@ public class WeightBaseDisplayer extends Application {
             Text pointID = new Text(point.getPointID());
             if( point.getPointID().split("_").length == 1)
                 pointID.setFill(Color.MAGENTA);
-            pointID.setFont(Font.font("Book-Antiqua", FontWeight.BOLD, FontPosture.REGULAR, 16));
+            pointID.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+            pointID.setCursor(Cursor.HAND);
             pointID.setX(10 * MILLIMETER);
             pointID.setY(row);
             Text coords = new Text(point.toString());
-            coords.setFont(Font.font("Book-Antiqua", FontWeight.BOLD, FontPosture.REGULAR, 16));
+            coords.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
             coords.setFill(Color.RED);
+            coords.setCursor(Cursor.HAND);
             coords.setX(30 * MILLIMETER);
             coords.setY(row);
             row += 6 * MILLIMETER;
@@ -89,11 +95,11 @@ public class WeightBaseDisplayer extends Application {
     private void addDirectionPointCoords(double row){
         Text pointID = new Text(DIRECTION_POINT.getPointID());
         pointID.setFill(Color.MAGENTA);
-        pointID.setFont(Font.font("Book-Antiqua", FontWeight.BOLD, FontPosture.REGULAR, 16));
+        pointID.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
         pointID.setX(10 * MILLIMETER);
         pointID.setY(row);
         Text coords = new Text(DIRECTION_POINT.toString());
-        coords.setFont(Font.font("Book-Antiqua", FontWeight.BOLD, FontPosture.REGULAR, 16));
+        coords.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
         coords.setFill(Color.RED);
         coords.setX(30 * MILLIMETER);
         coords.setY(row);
@@ -249,6 +255,24 @@ public class WeightBaseDisplayer extends Application {
         pane.getChildren().addAll(line1, line2, line3, line4);
     }
 
+    private void addCirleForPoint(){
+
+        for (Point point: transformedPillarBasePoints) {
+            Circle circle = new Circle();
+            circle.setRadius(5);
+            circle.setCenterX(point.getX_coord());
+            circle.setCenterY(point.getY_coord());
+            circle.setStroke(Color.BLACK);
+            circle.setStrokeWidth(2);
+            circle.setFill(Color.TRANSPARENT);
+            circle.setCursor(Cursor.HAND);
+            Tooltip tooltip = new Tooltip(point.getPointID());
+            Tooltip.install(circle, tooltip);
+            pane.getChildren().add(circle);
+        }
+
+    }
+
     private ScrollPane getScrollPane(AnchorPane content){
         ScrollPane scroller = new ScrollPane(content);
         scroller.setFitToWidth(true);
@@ -261,8 +285,8 @@ public class WeightBaseDisplayer extends Application {
     private void getDisplayerCenterCoords() {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getBounds();
-        displayerCenterX = bounds.getWidth() / 2;
-        displayerCenterY = bounds.getHeight() / 2;
+        displayerCenterX = 3 * bounds.getWidth() / 4;
+        displayerCenterY = 3 * bounds.getHeight() / 5;
     }
 
     private void getTransformPillarCoordsForDisplayer() {
