@@ -63,7 +63,7 @@ public class Point {
 
 	@Override
 	public String toString() {
-		return df.format(x_coord).replace(",", ".") + "\t"
+		return  df.format(x_coord).replace(",", ".") + "\t"
 				+ df.format(y_coord).replace(",", ".");
 	}
 }
