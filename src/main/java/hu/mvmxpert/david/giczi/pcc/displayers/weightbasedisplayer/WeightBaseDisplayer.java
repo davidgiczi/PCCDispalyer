@@ -6,9 +6,11 @@ import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.PolarP
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -18,12 +20,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 import javafx.stage.Stage;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +33,15 @@ public class WeightBaseDisplayer extends Application {
 
     private static List<Point> PILLAR_BASE_POINTS;
     private static Point DIRECTION_POINT;
-    private static final double[] SCALE_PARAM_VALUES = {0.5, 1, 1.5, 2, 2.5, 4, 5};
-    private static double SCALE_PARAM = SCALE_PARAM_VALUES[3];
-    private final double SCALE = SCALE_PARAM * 22.5;
-    public final double MILLIMETER = 100 / (SCALE / SCALE_PARAM);
-    private AnchorPane pane;
+    private static final double MILLIMETER = 1000.0 / 225.0; // 1mm = 1000/225 JavaUnit
+    private static double SCALE = 200;
+    private final AnchorPane pane = new AnchorPane();
     private List<Point> transformedPillarBasePoints;
     private int circeID;
+    private  ComboBox<String> scaleComboBox;
+    private final DecimalFormat df = new DecimalFormat();
+    private List<Point> distancePointList;
+    private double nextRowValue;
 
     public static void setTitle(String TITLE) {
         WeightBaseDisplayer.TITLE = TITLE;
@@ -55,6 +57,7 @@ public class WeightBaseDisplayer extends Application {
 
     @Override
     public void start(Stage stage)  {
+        pane.setStyle("-fx-background-color: white");
         getContent();
         ScrollPane scrollPane = getScrollPane(pane);
         Scene scene = new Scene(scrollPane);
@@ -69,8 +72,8 @@ public class WeightBaseDisplayer extends Application {
     }
 
     private void getContent(){
-        pane = new AnchorPane();
-        pane.setStyle("-fx-background-color: white");
+        distancePointList = new ArrayList<>();
+        nextRowValue  = 5 * MILLIMETER;
         addNorthSign();
         addPointCoordsData();
         addPillarMainAxes();
@@ -78,6 +81,9 @@ public class WeightBaseDisplayer extends Application {
         addHoleB();
         addHoleC();
         addHoleD();
+        addNameTextsForHoles();
+        addTextsForBase();
+        addInformation();
         addCirleForPoint();
         addPreviousAndNextPillarDirections();
         addComboBoxForScaleValue();
@@ -186,6 +192,111 @@ public class WeightBaseDisplayer extends Application {
         perpendicularAxis.endYProperty().bind(pane.heightProperty().divide(2)
                 .subtract(transformedPillarBasePoints.get(4).getY_coord()));
         pane.getChildren().addAll(mainAxis, perpendicularAxis);
+    }
+
+    private void addTextsForBase(){
+        setText(PILLAR_BASE_POINTS.get(0).getPointID(),
+                transformedPillarBasePoints.get(0), Color.MAGENTA, 16 );
+        if(PILLAR_BASE_POINTS.size() == 25){
+            AzimuthAndDistance mainLineData = new AzimuthAndDistance(transformedPillarBasePoints.get(0),
+                    transformedPillarBasePoints.get(1));
+            PolarPoint slavePoint = new PolarPoint(transformedPillarBasePoints.get(1),
+                    30 * MILLIMETER, mainLineData.calcAzimuth(),
+                    "forwardDirection");
+            setText(DIRECTION_POINT.getPointID(), slavePoint.calcPolarPoint(), Color.MAGENTA, 16);
+        }
+        else {
+            setText(DIRECTION_POINT.getPointID(),
+                    transformedPillarBasePoints.get(25), Color.MAGENTA, 16);
+            int mainPillarID;
+            int directionPillarID;
+            try {
+                mainPillarID = Integer.parseInt(PILLAR_BASE_POINTS.get(0).getPointID());
+                directionPillarID = Integer.parseInt(DIRECTION_POINT.getPointID());
+            } catch (NumberFormatException n) {
+                mainPillarID = 0;
+                directionPillarID = 1;
+            }
+            if (directionPillarID > mainPillarID) {
+                setText(String.valueOf(mainPillarID - 1),
+                        transformedPillarBasePoints.get(26), Color.MAGENTA, 16);
+            } else if (directionPillarID < mainPillarID) {
+                setText(String.valueOf(mainPillarID + 1),
+                        transformedPillarBasePoints.get(26), Color.MAGENTA, 16);
+            } else {
+                setText(DIRECTION_POINT.getPointID(),
+                        transformedPillarBasePoints.get(26), Color.MAGENTA, 16);
+            }
+        }
+    }
+
+    private void addNameTextsForHoles(){
+        int mainPillarID;
+        int directionPillarID;
+        try {
+            mainPillarID = Integer.parseInt(PILLAR_BASE_POINTS.get(0).getPointID());
+            directionPillarID = Integer.parseInt(DIRECTION_POINT.getPointID());
+            if( mainPillarID == directionPillarID )
+                return;
+        } catch (NumberFormatException n) {
+            return;
+        }
+
+        int size = (int) (3000 * MILLIMETER / SCALE);
+        if( mainPillarID < directionPillarID ){
+
+            AzimuthAndDistance dataA =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(9), transformedPillarBasePoints.get(11));
+            PolarPoint posA = new PolarPoint(transformedPillarBasePoints.get(9),
+                    1500 * MILLIMETER / SCALE, dataA.calcAzimuth(), "A");
+            setText("A",
+                    posA.calcPolarPoint(), Color.RED, size);
+            AzimuthAndDistance dataB =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(23), transformedPillarBasePoints.get(21));
+            PolarPoint posB = new PolarPoint(transformedPillarBasePoints.get(23),
+                    1500 * MILLIMETER / SCALE, dataB.calcAzimuth(), "B");
+            setText("B",
+                    posB.calcPolarPoint(), Color.RED, size);
+            AzimuthAndDistance dataC =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(20), transformedPillarBasePoints.get(18));
+            PolarPoint posC = new PolarPoint(transformedPillarBasePoints.get(20),
+                    1500 * MILLIMETER / SCALE, dataC.calcAzimuth(), "C");
+            setText("C",
+                    posC.calcPolarPoint(), Color.RED, size);
+            AzimuthAndDistance dataD =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(13), transformedPillarBasePoints.get(15));
+            PolarPoint posD = new PolarPoint(transformedPillarBasePoints.get(13),
+                    1500 * MILLIMETER / SCALE, dataD.calcAzimuth(), "D");
+            setText("D",
+                    posD.calcPolarPoint(), Color.RED, size);
+        }
+        else {
+
+            AzimuthAndDistance dataA =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(20), transformedPillarBasePoints.get(18));
+            PolarPoint posA = new PolarPoint(transformedPillarBasePoints.get(20),
+                    1500 * MILLIMETER / SCALE, dataA.calcAzimuth(), "A");
+            setText("A",
+                    posA.calcPolarPoint(), Color.RED, size);
+            AzimuthAndDistance dataB =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(13), transformedPillarBasePoints.get(15));
+            PolarPoint posB = new PolarPoint(transformedPillarBasePoints.get(13),
+                    1500 * MILLIMETER / SCALE, dataB.calcAzimuth(), "B");
+            setText("B",
+                    posB.calcPolarPoint(), Color.RED, size);
+            AzimuthAndDistance dataC =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(9), transformedPillarBasePoints.get(11));
+            PolarPoint posC = new PolarPoint(transformedPillarBasePoints.get(9),
+                    1500 * MILLIMETER / SCALE, dataC.calcAzimuth(), "C");
+            setText("C",
+                    posC.calcPolarPoint(), Color.RED, size);
+            AzimuthAndDistance dataD =
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(23), transformedPillarBasePoints.get(21));
+            PolarPoint posD = new PolarPoint(transformedPillarBasePoints.get(23),
+                    1500 * MILLIMETER / SCALE, dataD.calcAzimuth(), "D");
+            setText("D",
+                    posD.calcPolarPoint(), Color.RED, size);
+        }
     }
 
     private void addHoleA(){
@@ -362,6 +473,7 @@ public class WeightBaseDisplayer extends Application {
             circle.setFill(Color.TRANSPARENT);
             circle.setCursor(Cursor.HAND);
             circle.setId(String.valueOf(circeID++));
+            circle.setOnMouseClicked(e -> setOnMouseClickEvent(circle));
             Tooltip tooltip = new Tooltip(point.getPointID());
             Tooltip.install(circle, tooltip);
             if( point.getPointID().split("_").length == 1){
@@ -374,8 +486,93 @@ public class WeightBaseDisplayer extends Application {
 
     }
 
+    private void setOnMouseClickEvent(Circle circle){
+        Point transformedPoint = transformedPillarBasePoints.get(Integer.parseInt(circle.getId()));
+        circle.setStroke(null);
+        circle.setRadius(10);
+        circle.setFill(Color.RED);
+        if( transformedPoint.getPointID().split("_").length == 2) {
+            setText(transformedPoint.getPointID(), transformedPoint, Color.BLACK, 16);
+        }
+        Point pillarBasePoint = PILLAR_BASE_POINTS.get(Integer.parseInt(circle.getId()));
+        distancePointList.add(pillarBasePoint);
+        addDistanceInformation();
+    }
+
+    private void addDistanceInformation(){
+        if( distancePointList.size() == 1 ){
+            return;
+        }
+        df.applyPattern("0.00");
+        double distance =
+                new AzimuthAndDistance(distancePointList.get(distancePointList.size() - 2),
+                        distancePointList.get(distancePointList.size() - 1)).calcDistance();
+        Text title = new Text("Pontok távolsága:");
+        title.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
+        Text distanceInfo =
+                new Text(distancePointList.get(distancePointList.size() - 2).getPointID()
+                        + " → " + distancePointList.get(distancePointList.size() - 1).getPointID() + ":\t"
+                        + df.format(distance).replace(",", ".") + "m");
+        distanceInfo.setFont(Font.font("Book-Antique", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
+       if( distancePointList.size() == 2 ){
+           title.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           title.yProperty().bind((pane.heightProperty().divide(10).multiply(2)));
+           distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
+           pane.getChildren().addAll(title, distanceInfo);
+        }
+       else {
+           nextRowValue += 5 * MILLIMETER;
+           distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
+           double summaDistance = 0;
+           for(int i = 0; i < distancePointList.size() - 1; i++) {
+               summaDistance +=
+                       new AzimuthAndDistance(distancePointList.get(i),
+                               distancePointList.get(i + 1) ).calcDistance();
+           }
+           nextRowValue += 5 * MILLIMETER;
+           Text sumDistance =
+                   new Text("Összesen távolság:\t"
+                           + df.format(summaDistance).replace(",",".") + "m");
+           sumDistance.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
+           sumDistance.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           sumDistance.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
+           pane.getChildren().addAll(distanceInfo, sumDistance);
+       }
+    }
+
+
     private void addPreviousAndNextPillarDirections(){
-        if( transformedPillarBasePoints.size() == 24 ){
+        if( transformedPillarBasePoints.size() == 25 ){
+            AzimuthAndDistance mainLineData = new AzimuthAndDistance(transformedPillarBasePoints.get(0),
+                    transformedPillarBasePoints.get(1));
+            PolarPoint slavePoint = new PolarPoint(transformedPillarBasePoints.get(1),
+                            30 * MILLIMETER, mainLineData.calcAzimuth(),
+                            "forwardDirection");
+            Line forwardDirection = new Line();
+            forwardDirection.setStrokeWidth(2);
+            forwardDirection.setStroke(Color.MAGENTA);
+            forwardDirection.startXProperty()
+                    .bind(pane.widthProperty()
+                            .divide(10)
+                            .multiply(6)
+                            .add(transformedPillarBasePoints.get(1).getX_coord()));
+            forwardDirection.startYProperty()
+                    .bind(pane.heightProperty()
+                            .divide(2)
+                            .subtract(transformedPillarBasePoints.get(1).getY_coord()));
+            forwardDirection.endXProperty()
+                    .bind(pane.widthProperty()
+                            .divide(10)
+                            .multiply(6)
+                            .add(slavePoint.calcPolarPoint().getX_coord()));
+            forwardDirection.endYProperty()
+                    .bind(pane.heightProperty()
+                            .divide(2)
+                            .subtract(slavePoint.calcPolarPoint().getY_coord()));
+                    addArrow(slavePoint.calcPolarPoint(), transformedPillarBasePoints.get(0));
+            pane.getChildren().add(forwardDirection);
             return;
         }
         Line previousPillarDirection = new Line();
@@ -445,18 +642,142 @@ public class WeightBaseDisplayer extends Application {
                         "200",
                         "250",
                         "400",
-                        "500"
-
+                        "500",
+                        "750",
+                        "1000"
                 );
-        ComboBox<String> scaleComboBox = new ComboBox<>(options);
+        HBox hbox = new HBox();
+        scaleComboBox = new ComboBox<>(options);
         scaleComboBox.setValue("200");
-        scaleComboBox.setStyle("-fx-background-color: white;-fx-font: 16px \"Book-Antique\";-fx-font-weight: bold;");
+        scaleComboBox
+                .setStyle("-fx-background-color: white;-fx-font: 16px \"Book-Antique\";-fx-font-weight: bold;");
         scaleComboBox.setCursor(Cursor.HAND);
-        Text textM = new Text("M= 1:");
+        scaleComboBox.setOnAction(e -> setOnActionEvent());
+        Label textM = new Label("M= 1: ");
         textM.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
-        pane.getChildren().addAll(textM, scaleComboBox);
+        textM.setPadding(new Insets(5.5, 0 , 0 , 0));
+        hbox.getChildren().addAll(textM, scaleComboBox);
+        hbox.setLayoutX(5 * MILLIMETER);
+        hbox.setLayoutY(2 * MILLIMETER);
+        pane.getChildren().add(hbox);
     }
 
+    private void addInformation(){
+        AzimuthAndDistance baseLineData =
+                new AzimuthAndDistance(PILLAR_BASE_POINTS.get(0), DIRECTION_POINT);
+        df.applyPattern("0.000");
+        Text distanceInfo =
+                new Text(PILLAR_BASE_POINTS.get(0).getPointID() + ". és "
+                        + DIRECTION_POINT.getPointID() + ". oszlopok távolsága: " +
+                        df.format(baseLineData.calcDistance()).replace(",", ".") + "m");
+        distanceInfo.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+        distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(7));
+        distanceInfo.yProperty().bind(pane.heightProperty().divide(10).multiply(9));
+        Text unit = new Text("1m");
+        unit.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+        unit.xProperty().bind(pane.widthProperty().divide(10).multiply(7).subtract(100 * MILLIMETER / SCALE));
+        unit.yProperty().bind(pane.heightProperty()
+                .divide(10).multiply(9).subtract(10 * MILLIMETER ));
+        Line distanceUnit = new Line();
+        distanceUnit.setStrokeWidth(2);
+        distanceUnit
+                .startXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(7));
+        distanceUnit
+                .startYProperty()
+                .bind(pane.heightProperty()
+                .divide(10)
+                        .multiply(9)
+                        .subtract(8 * MILLIMETER ));
+        distanceUnit
+                .endXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(7)
+                        .add(1000 * MILLIMETER / SCALE));
+        distanceUnit
+                .endYProperty()
+                .bind(pane.heightProperty()
+                .divide(10)
+                        .multiply(9)
+                        .subtract( 8 * MILLIMETER ));
+        Line leftEndLine = new Line();
+        leftEndLine.setStrokeWidth(2);
+        leftEndLine
+                .startXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(7));
+        leftEndLine
+                .startYProperty()
+                .bind(pane.heightProperty()
+                        .divide(10)
+                        .multiply(9)
+                        .subtract(8 * MILLIMETER ).add(0.5 * MILLIMETER));
+        leftEndLine
+                .endXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(7));
+        leftEndLine
+                .endYProperty()
+                .bind(pane.heightProperty()
+                        .divide(10)
+                        .multiply(9)
+                        .subtract( 8 * MILLIMETER ).subtract(0.5 * MILLIMETER));
+        Line rightEndLine = new Line();
+        rightEndLine.setStrokeWidth(2);
+        rightEndLine
+                .startXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(7).add(1000 * MILLIMETER / SCALE));
+        rightEndLine
+                .startYProperty()
+                .bind(pane.heightProperty()
+                        .divide(10)
+                        .multiply(9)
+                        .subtract(8 * MILLIMETER ).add(0.5 * MILLIMETER));
+        rightEndLine
+                .endXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(7).add(1000 * MILLIMETER / SCALE));
+        rightEndLine
+                .endYProperty()
+                .bind(pane.heightProperty()
+                        .divide(10)
+                        .multiply(9)
+                        .subtract( 8 * MILLIMETER ).subtract(0.5 * MILLIMETER));
+        pane.getChildren().addAll(distanceInfo, unit, distanceUnit, leftEndLine, rightEndLine);
+    }
+
+    private void setText(String textData, Point startPoint, Color color, int size){
+        Text text = new Text(textData);
+        text.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, size));
+        text.setFill(color);
+        text.xProperty()
+                .bind(pane.widthProperty()
+                        .divide(10).multiply(6)
+                        .add(startPoint.getX_coord())
+                        .add(2 * MILLIMETER));
+        text.yProperty()
+                .bind(pane.heightProperty()
+                        .divide(2)
+                        .subtract(startPoint.getY_coord())
+                        .subtract(2 * MILLIMETER));
+        pane.getChildren().add(text);
+    }
+
+    private void setOnActionEvent(){
+        String selectedScale = scaleComboBox.getSelectionModel().getSelectedItem();
+        SCALE = Integer.parseInt(selectedScale);
+        pane.getChildren().clear();
+        getContent();
+        scaleComboBox.setValue(selectedScale);
+    }
     private ScrollPane getScrollPane(AnchorPane content){
         ScrollPane scroller = new ScrollPane(content);
         scroller.setFitToWidth(true);
@@ -472,8 +793,8 @@ public class WeightBaseDisplayer extends Application {
         double Y = PILLAR_BASE_POINTS.get(0).getY_coord();
         for (Point pillarBasePoint : PILLAR_BASE_POINTS) {
             Point point = new Point(pillarBasePoint.getPointID(),
-                    Math.round((pillarBasePoint.getX_coord() - X) * 1000.0) / SCALE,
-                    Math.round((pillarBasePoint.getY_coord() - Y) * 1000.0) / SCALE);
+                    Math.round((pillarBasePoint.getX_coord() - X) * 1000.0) * MILLIMETER / SCALE,
+                    Math.round((pillarBasePoint.getY_coord() - Y) * 1000.0) * MILLIMETER / SCALE);
             transformedPillarBasePoints.add(point);
         }
     }
