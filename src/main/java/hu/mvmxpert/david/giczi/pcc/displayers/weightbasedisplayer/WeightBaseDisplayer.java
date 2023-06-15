@@ -6,6 +6,7 @@ import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.PolarP
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -15,6 +16,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -59,6 +62,15 @@ public class WeightBaseDisplayer extends Application {
     public void start(Stage stage)  {
         pane.setStyle("-fx-background-color: white");
         getContent();
+        pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if( mouseEvent.getButton() == MouseButton.SECONDARY ){
+                   distancePointList.clear();
+                   nextRowValue += 5 * MILLIMETER;
+                }
+            }
+        });
         ScrollPane scrollPane = getScrollPane(pane);
         Scene scene = new Scene(scrollPane);
         stage.setTitle(TITLE);
@@ -515,15 +527,15 @@ public class WeightBaseDisplayer extends Application {
                         + df.format(distance).replace(",", ".") + "m");
         distanceInfo.setFont(Font.font("Book-Antique", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
        if( distancePointList.size() == 2 ){
-           title.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           title.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
            title.yProperty().bind((pane.heightProperty().divide(10).multiply(2)));
-           distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           distanceInfo.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
            distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
            pane.getChildren().addAll(title, distanceInfo);
         }
        else {
            nextRowValue += 5 * MILLIMETER;
-           distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           distanceInfo.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
            distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
            double summaDistance = 0;
            for(int i = 0; i < distancePointList.size() - 1; i++) {
@@ -536,7 +548,7 @@ public class WeightBaseDisplayer extends Application {
                    new Text("Összesen távolság:\t"
                            + df.format(summaDistance).replace(",",".") + "m");
            sumDistance.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
-           sumDistance.xProperty().bind(pane.widthProperty().divide(10).multiply(8));
+           sumDistance.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
            sumDistance.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
            pane.getChildren().addAll(distanceInfo, sumDistance);
        }
@@ -544,7 +556,7 @@ public class WeightBaseDisplayer extends Application {
 
 
     private void addPreviousAndNextPillarDirections(){
-        if( transformedPillarBasePoints.size() == 25 ){
+        if( PILLAR_BASE_POINTS.size() == 25 ){
             AzimuthAndDistance mainLineData = new AzimuthAndDistance(transformedPillarBasePoints.get(0),
                     transformedPillarBasePoints.get(1));
             PolarPoint slavePoint = new PolarPoint(transformedPillarBasePoints.get(1),
@@ -671,11 +683,11 @@ public class WeightBaseDisplayer extends Application {
                         + DIRECTION_POINT.getPointID() + ". oszlopok távolsága: " +
                         df.format(baseLineData.calcDistance()).replace(",", ".") + "m");
         distanceInfo.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
-        distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(7));
+        distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(3));
         distanceInfo.yProperty().bind(pane.heightProperty().divide(10).multiply(9));
         Text unit = new Text("1m");
         unit.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
-        unit.xProperty().bind(pane.widthProperty().divide(10).multiply(7).subtract(100 * MILLIMETER / SCALE));
+        unit.xProperty().bind(pane.widthProperty().divide(10).multiply(3).subtract(100 * MILLIMETER / SCALE));
         unit.yProperty().bind(pane.heightProperty()
                 .divide(10).multiply(9).subtract(10 * MILLIMETER ));
         Line distanceUnit = new Line();
@@ -684,7 +696,7 @@ public class WeightBaseDisplayer extends Application {
                 .startXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
-                        .multiply(7));
+                        .multiply(3));
         distanceUnit
                 .startYProperty()
                 .bind(pane.heightProperty()
@@ -695,7 +707,7 @@ public class WeightBaseDisplayer extends Application {
                 .endXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
-                        .multiply(7)
+                        .multiply(3)
                         .add(1000 * MILLIMETER / SCALE));
         distanceUnit
                 .endYProperty()
@@ -709,7 +721,7 @@ public class WeightBaseDisplayer extends Application {
                 .startXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
-                        .multiply(7));
+                        .multiply(3));
         leftEndLine
                 .startYProperty()
                 .bind(pane.heightProperty()
@@ -720,7 +732,7 @@ public class WeightBaseDisplayer extends Application {
                 .endXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
-                        .multiply(7));
+                        .multiply(3));
         leftEndLine
                 .endYProperty()
                 .bind(pane.heightProperty()
@@ -733,7 +745,7 @@ public class WeightBaseDisplayer extends Application {
                 .startXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
-                        .multiply(7).add(1000 * MILLIMETER / SCALE));
+                        .multiply(3).add(1000 * MILLIMETER / SCALE));
         rightEndLine
                 .startYProperty()
                 .bind(pane.heightProperty()
@@ -744,7 +756,7 @@ public class WeightBaseDisplayer extends Application {
                 .endXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
-                        .multiply(7).add(1000 * MILLIMETER / SCALE));
+                        .multiply(3).add(1000 * MILLIMETER / SCALE));
         rightEndLine
                 .endYProperty()
                 .bind(pane.heightProperty()
