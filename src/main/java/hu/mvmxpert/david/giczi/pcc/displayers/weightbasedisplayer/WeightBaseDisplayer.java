@@ -3,17 +3,13 @@ package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer;
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.model.Point;
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.AzimuthAndDistance;
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.PolarPoint;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -26,23 +22,20 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeightBaseDisplayer extends Application {
+public class WeightBaseDisplayer {
 
     private static String TITLE;
-
     private static List<Point> PILLAR_BASE_POINTS;
     private static Point DIRECTION_POINT;
     private static final double MILLIMETER = 1000.0 / 225.0; // 1mm = 1000/225 JavaUnit
     private static double SCALE = 200;
-    private final AnchorPane pane = new AnchorPane();
+    public final AnchorPane pane = new AnchorPane();
     private List<Point> transformedPillarBasePoints;
     private int circeID;
     private  ComboBox<String> scaleComboBox;
-    private final DecimalFormat df = new DecimalFormat();
     private List<Point> distancePointList;
     private double nextRowValue;
 
@@ -58,8 +51,8 @@ public class WeightBaseDisplayer extends Application {
         DIRECTION_POINT = directionPoint;
     }
 
-    @Override
-    public void start(Stage stage)  {
+    public WeightBaseDisplayer()  {
+        Stage stage = new Stage();
         pane.setStyle("-fx-background-color: white");
         getContent();
         pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -67,7 +60,7 @@ public class WeightBaseDisplayer extends Application {
             public void handle(MouseEvent mouseEvent) {
                 if( mouseEvent.getButton() == MouseButton.SECONDARY ){
                    distancePointList.clear();
-                   nextRowValue += 5 * MILLIMETER;
+                   nextRowValue += 10 * MILLIMETER;
                 }
             }
         });
@@ -96,7 +89,7 @@ public class WeightBaseDisplayer extends Application {
         addNameTextsForHoles();
         addTextsForBase();
         addInformation();
-        addCirleForPoint();
+        addCircleForPoint();
         addPreviousAndNextPillarDirections();
         addComboBoxForScaleValue();
     }
@@ -148,7 +141,7 @@ public class WeightBaseDisplayer extends Application {
         String[] textIDValues = text.getId().split("_");
         if( textIDValues.length == 1 )
             return;
-        Circle circle = (Circle) pane.lookup("#" + textIDValues[1]);
+        Circle circle = (Circle) pane.lookup("#c_" + textIDValues[1]);
         circle.setStroke(null);
         circle.setRadius(10);
         circle.setFill(Color.RED);
@@ -156,11 +149,11 @@ public class WeightBaseDisplayer extends Application {
     private void onMouseExitedEvent(Text text){
         text.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
             for(int id = 1; id < circeID; id++) {
-                Circle circle = (Circle) pane.lookup("#" + id);
-                circle.setStroke(Color.FIREBRICK);
-                circle.setStrokeWidth(2);
-                circle.setFill(Color.TRANSPARENT);
-                circle.setRadius(5);
+                    Circle circle = (Circle) pane.lookup("#c_" + id);
+                    circle.setStroke(Color.FIREBRICK);
+                    circle.setStrokeWidth(2);
+                    circle.setFill(Color.TRANSPARENT);
+                    circle.setRadius(5);
             }
     }
 
@@ -471,7 +464,7 @@ public class WeightBaseDisplayer extends Application {
         pane.getChildren().addAll(line1, line2, line3, line4);
     }
 
-    private void addCirleForPoint(){
+    private void addCircleForPoint(){
         circeID = 0;
         for (Point point: transformedPillarBasePoints) {
             Circle circle = new Circle();
@@ -484,7 +477,8 @@ public class WeightBaseDisplayer extends Application {
             circle.setStrokeWidth(2);
             circle.setFill(Color.TRANSPARENT);
             circle.setCursor(Cursor.HAND);
-            circle.setId(String.valueOf(circeID++));
+            circle.setId("c_" + circeID);
+            circeID++;
             circle.setOnMouseClicked(e -> setOnMouseClickEvent(circle));
             Tooltip tooltip = new Tooltip(point.getPointID());
             Tooltip.install(circle, tooltip);
@@ -499,23 +493,23 @@ public class WeightBaseDisplayer extends Application {
     }
 
     private void setOnMouseClickEvent(Circle circle){
-        Point transformedPoint = transformedPillarBasePoints.get(Integer.parseInt(circle.getId()));
+        int pointIndex = Integer.parseInt(circle.getId().split("_")[1]);
+        Point transformedPoint = transformedPillarBasePoints.get(pointIndex);
         circle.setStroke(null);
         circle.setRadius(10);
         circle.setFill(Color.RED);
         if( transformedPoint.getPointID().split("_").length == 2) {
             setText(transformedPoint.getPointID(), transformedPoint, Color.BLACK, 16);
         }
-        Point pillarBasePoint = PILLAR_BASE_POINTS.get(Integer.parseInt(circle.getId()));
+        Point pillarBasePoint = PILLAR_BASE_POINTS.get(pointIndex);
         distancePointList.add(pillarBasePoint);
         addDistanceInformation();
     }
 
     private void addDistanceInformation(){
-        if( distancePointList.size() == 1 ){
+        if( distancePointList.size() == 1 ) {
             return;
         }
-        df.applyPattern("0.00");
         double distance =
                 new AzimuthAndDistance(distancePointList.get(distancePointList.size() - 2),
                         distancePointList.get(distancePointList.size() - 1)).calcDistance();
@@ -524,7 +518,7 @@ public class WeightBaseDisplayer extends Application {
         Text distanceInfo =
                 new Text(distancePointList.get(distancePointList.size() - 2).getPointID()
                         + " → " + distancePointList.get(distancePointList.size() - 1).getPointID() + ":\t"
-                        + df.format(distance).replace(",", ".") + "m");
+                        + String.format("%10.2f", distance).replace(",", ".") + "m");
         distanceInfo.setFont(Font.font("Book-Antique", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
        if( distancePointList.size() == 2 ){
            title.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
@@ -546,7 +540,7 @@ public class WeightBaseDisplayer extends Application {
            nextRowValue += 5 * MILLIMETER;
            Text sumDistance =
                    new Text("Összesen távolság:\t"
-                           + df.format(summaDistance).replace(",",".") + "m");
+                           + String.format("%10.2f", summaDistance).replace(",", ".") + "m");
            sumDistance.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
            sumDistance.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
            sumDistance.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
@@ -677,11 +671,10 @@ public class WeightBaseDisplayer extends Application {
     private void addInformation(){
         AzimuthAndDistance baseLineData =
                 new AzimuthAndDistance(PILLAR_BASE_POINTS.get(0), DIRECTION_POINT);
-        df.applyPattern("0.000");
         Text distanceInfo =
                 new Text(PILLAR_BASE_POINTS.get(0).getPointID() + ". és "
                         + DIRECTION_POINT.getPointID() + ". oszlopok távolsága: " +
-                        df.format(baseLineData.calcDistance()).replace(",", ".") + "m");
+                        String.format("%8.3f" , baseLineData.calcDistance()).replace(",", ".") + "m");
         distanceInfo.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
         distanceInfo.xProperty().bind(pane.widthProperty().divide(10).multiply(3));
         distanceInfo.yProperty().bind(pane.heightProperty().divide(10).multiply(9));
@@ -811,7 +804,4 @@ public class WeightBaseDisplayer extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }
