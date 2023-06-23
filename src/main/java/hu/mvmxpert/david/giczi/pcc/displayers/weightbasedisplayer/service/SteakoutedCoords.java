@@ -79,7 +79,23 @@ public class SteakoutedCoords implements Comparable<SteakoutedCoords> {
 	public void setStkPointID(String stkPointID) {
 		this.stkPointID = stkPointID;
 	}
-	
+
+	public double getXcoordForDesignPoint() {
+		return XcoordForDesignPoint;
+	}
+
+	public double getYcoordForDesignPoint() {
+		return YcoordForDesignPoint;
+	}
+
+	public double getXcoordForSteakoutPoint() {
+		return XcoordForSteakoutPoint;
+	}
+
+	public double getYcoordForSteakoutPoint() {
+		return YcoordForSteakoutPoint;
+	}
+
 	public String getSteakoutedPointData() {
 		return pointID + 
 				"\t" + comment +

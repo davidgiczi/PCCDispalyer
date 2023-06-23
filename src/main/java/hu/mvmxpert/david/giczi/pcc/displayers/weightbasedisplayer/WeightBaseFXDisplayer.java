@@ -3,13 +3,17 @@ package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer;
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.model.Point;
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.AzimuthAndDistance;
 import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.PolarPoint;
+import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.SteakoutedCoords;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -25,41 +29,55 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeightBaseDisplayer {
 
-    private static String TITLE;
+public class WeightBaseFXDisplayer {
+	
+	private static List<SteakoutedCoords> STK_PILLAR_BASE_POINTS;
     private static List<Point> PILLAR_BASE_POINTS;
+    private static String TITLE;
     private static Point DIRECTION_POINT;
     private static final double MILLIMETER = 1000.0 / 225.0; // 1mm = 1000/225 JavaUnit
-    private static double SCALE = 200;
-    public final AnchorPane pane = new AnchorPane();
+    private static double SCALE;
+    private final AnchorPane pane = new AnchorPane();
     private List<Point> transformedPillarBasePoints;
-    private int circeID;
+    private List<Point> stk_transformedPillarBasePoints;
     private  ComboBox<String> scaleComboBox;
     private List<Point> distancePointList;
+    private List<SteakoutedCoords> stk_distancePointList;
     private double nextRowValue;
+    private int pointID;
 
-    public static void setTitle(String TITLE) {
-        WeightBaseDisplayer.TITLE = TITLE;
+    public static void setStkPillarBasePoints(List<SteakoutedCoords> stkPillarBasePoints) {
+        STK_PILLAR_BASE_POINTS = stkPillarBasePoints;
     }
 
     public static void setPillarBasePoints(List<Point> pillarBasePoints) {
         PILLAR_BASE_POINTS = pillarBasePoints;
     }
 
+    public static void setTitle(String title) {
+        WeightBaseFXDisplayer.TITLE = title;
+    }
+
     public static void setDirectionPoint(Point directionPoint) {
         DIRECTION_POINT = directionPoint;
     }
 
-    public WeightBaseDisplayer()  {
-        Stage stage = new Stage();
+    public void setNextRowValue(double nextRowValue) {
+        this.nextRowValue = nextRowValue;
+    }
+
+	public WeightBaseFXDisplayer() {
+		Stage stage = new Stage();
+		SCALE = 200;
         pane.setStyle("-fx-background-color: white");
-        getContent();
+        getContent();   
         pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if( mouseEvent.getButton() == MouseButton.SECONDARY ){
                    distancePointList.clear();
+                   stk_distancePointList.clear();
                    nextRowValue += 10 * MILLIMETER;
                 }
             }
@@ -74,13 +92,19 @@ public class WeightBaseDisplayer {
         stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
-    }
-
+	}
+	
     private void getContent(){
         distancePointList = new ArrayList<>();
+        stk_distancePointList = new ArrayList<>();
         nextRowValue  = 5 * MILLIMETER;
         addNorthSign();
-        addPointCoordsData();
+        if( STK_PILLAR_BASE_POINTS == null ) {
+        	addPointCoordsData();
+        }
+        else {
+        	 addSTKPointCoordsData();
+        }
         addPillarMainAxes();
         addHoleA();
         addHoleB();
@@ -89,7 +113,12 @@ public class WeightBaseDisplayer {
         addNameTextsForHoles();
         addTextsForBase();
         addInformation();
-        addCircleForPoint();
+        if( STK_PILLAR_BASE_POINTS == null ) {
+        	addCircleForPoint();
+        }
+        else {
+        	addCircleForSTKPoint();
+        }
         addPreviousAndNextPillarDirections();
         addComboBoxForScaleValue();
     }
@@ -108,25 +137,26 @@ public class WeightBaseDisplayer {
         for (Point point : PILLAR_BASE_POINTS){
             String[] pointIdValues = point.getPointID().split("_");
             Text pointID = new Text(point.getPointID());
-            if( pointIdValues.length == 1)
-                pointID.setFill(Color.MAGENTA);
+            if( pointIdValues.length == 1) {
+            	pointID.setFill(Color.MAGENTA);
+            }
+            else {
+            	pointID.setCursor(Cursor.HAND);
+            	pointID.setOnMouseEntered(e -> onMouseEnteredEvent(pointID));
+                pointID.setOnMouseExited(e -> onMouseExitedEvent(pointID));
+            }
             pointID.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
-            pointID.setCursor(Cursor.HAND);
             pointID.xProperty().bind(pane.widthProperty().divide(10).subtract(30 * MILLIMETER));
             pointID.setY(row);
             pointID.setId(point.getPointID());
-            if( pointIdValues.length ==  2 ) {
-                pointID.setOnMouseEntered(e -> onMouseEnteredEvent(pointID));
-                pointID.setOnMouseExited(e -> onMouseExitedEvent(pointID));
-            }
             Text coords = new Text(point.toString());
             coords.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
             coords.setFill(Color.RED);
-            coords.setCursor(Cursor.HAND);
             coords.xProperty().bind(pane.widthProperty().divide(10).subtract(10 * MILLIMETER));
             coords.setY(row);
             coords.setId(point.getPointID());
             if( pointIdValues.length ==  2 ) {
+            	coords.setCursor(Cursor.HAND);
                 coords.setOnMouseEntered(e -> onMouseEnteredEvent(coords));
                 coords.setOnMouseExited(e -> onMouseExitedEvent(coords));
             }
@@ -135,26 +165,206 @@ public class WeightBaseDisplayer {
         }
         addDirectionPointCoords(row);
     }
+    
+    private void addSTKPointCoordsData() {
+    	double row = 15 * MILLIMETER;
+        for (SteakoutedCoords stk_coords : STK_PILLAR_BASE_POINTS){
+            String[] pointIdValues = stk_coords.getPointID().split("_");
+            Text pointID = new Text(stk_coords.getStkPointID());
+            if( pointIdValues.length == 1) {
+            	pointID.setFill(Color.MAGENTA);
+            }
+            pointID.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+            pointID.setCursor(Cursor.HAND);
+            pointID.xProperty().bind(pane.widthProperty().divide(10).subtract(30 * MILLIMETER));
+            pointID.setY(row);
+            pointID.setId(stk_coords.getPointID());
+            pointID.setOnMouseEntered(e -> onMouseEnteredEventForSTKPoint(pointID));
+            pointID.setOnMouseExited(e -> onMouseExitedEventForSTKPoint(pointID));
+            Text coords = new Text(stk_coords.toString());
+            coords.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+            coords.setFill(Color.RED);
+            coords.setCursor(Cursor.HAND);
+            coords.xProperty().bind(pane.widthProperty().divide(10).subtract(10 * MILLIMETER));
+            coords.setY(row);
+            coords.setId(stk_coords.getPointID());
+            coords.setOnMouseEntered(e -> onMouseEnteredEventForSTKPoint(coords));
+            coords.setOnMouseExited(e -> onMouseExitedEventForSTKPoint(coords));
+            row += 6 * MILLIMETER;
+            pane.getChildren().addAll(pointID, coords);
+        }
+    }
 
     private void onMouseEnteredEvent(Text text){
         text.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 17));
-        String[] textIDValues = text.getId().split("_");
-        if( textIDValues.length == 1 )
+        String[] idValues = text.getId().split("_");
+        if( idValues.length == 1)
             return;
-        Circle circle = (Circle) pane.lookup("#c_" + textIDValues[1]);
+        Circle circle = (Circle) pane.lookup("#c_"+ idValues[1]);
+        circle.setStroke(null);
+        circle.setRadius(10);
+        circle.setFill(Color.RED);
+        }
+    
+    private void onMouseExitedEvent(Text text){
+        text.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+         Circle circle = (Circle) pane.lookup("#c_" + text.getId().split("_")[1]);
+         circle.setStroke(Color.FIREBRICK);
+         circle.setStrokeWidth(2);
+         circle.setFill(Color.TRANSPARENT);
+         circle.setRadius(5);            	
+}
+    
+    private void onMouseEnteredEventForSTKPoint(Text text){
+        text.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 17));
+        String[] idValues = text.getId().split("_");
+        Circle circle;
+        if( idValues.length == 2 ) {
+        	 circle = (Circle) pane.lookup("#c_"+ idValues[1]);
+        }
+        else {
+        	circle = (Circle) pane.lookup("#c_0");
+        }
         circle.setStroke(null);
         circle.setRadius(10);
         circle.setFill(Color.RED);
     }
-    private void onMouseExitedEvent(Text text){
-        text.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
-            for(int id = 1; id < circeID; id++) {
-                    Circle circle = (Circle) pane.lookup("#c_" + id);
-                    circle.setStroke(Color.FIREBRICK);
-                    circle.setStrokeWidth(2);
-                    circle.setFill(Color.TRANSPARENT);
-                    circle.setRadius(5);
+    
+    private void onMouseExitedEventForSTKPoint(Text text) {
+    	text.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+    	for(int i = 0; i < stk_transformedPillarBasePoints.size(); i++ ) {
+    		String[] idValues = text.getId().split("_");
+    		if( idValues.length == 2 ) {
+    		Circle circle = (Circle) pane.lookup("#c_" + idValues[1]);
+    		circle.setStroke(Color.FIREBRICK);
+            circle.setStrokeWidth(2);
+            circle.setFill(Color.TRANSPARENT);
+            circle.setRadius(5);	
+    		}
+    		else {
+    		Circle circle = (Circle) pane.lookup("#c_0");
+    		circle.setStroke(Color.MAGENTA);
+            circle.setStrokeWidth(3);
+            circle.setRadius(10);
+            circle.setFill(Color.TRANSPARENT);
+    		}
+    	}
+    }
+
+    private void addCircleForPoint(){
+    	pointID = 0;
+        for (Point point: transformedPillarBasePoints) {
+            Circle circle = new Circle();
+            circle.setRadius(5);
+            circle.centerXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+                    .add(point.getX_coord()));
+            circle.centerYProperty().bind(pane.heightProperty().divide(2)
+                    .subtract(point.getY_coord()));
+            circle.setStroke(Color.FIREBRICK);
+            circle.setStrokeWidth(2);
+            circle.setFill(Color.TRANSPARENT);
+            circle.setCursor(Cursor.HAND);
+            circle.setId("c_" + pointID);
+            pointID++;
+            circle.setOnMouseClicked(e -> setOnMouseClickEvent(circle));
+            Tooltip tooltip = new Tooltip(point.getPointID());
+            Tooltip.install(circle, tooltip);
+            if( point.getPointID().split("_").length == 1){
+                circle.setStroke(null);
+                circle.setRadius(10);
+                circle.setFill(Color.MAGENTA);
             }
+            pane.getChildren().add(circle);
+        }
+
+    }
+
+    private void addCircleForSTKPoint() {
+    	getTransformedStkPillarBaseCoordsForDisplayer();
+        for (Point point: stk_transformedPillarBasePoints) {
+            Circle circle = new Circle();
+            circle.setRadius(5);
+            circle.centerXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+                    .add(point.getX_coord()));
+            circle.centerYProperty().bind(pane.heightProperty().divide(2)
+                    .subtract(point.getY_coord()));
+            circle.setStroke(Color.FIREBRICK);
+            circle.setStrokeWidth(2);
+            circle.setFill(Color.TRANSPARENT); 
+            circle.setCursor(Cursor.HAND);
+            String[] idValues = point.getPointID().split("_");
+            if( idValues.length == 2 ) {
+            	circle.setId("c_" + idValues[1]);	
+            }
+            else {
+            	circle.setId("c_0");
+            }
+            circle.setOnMouseClicked(e -> setOnMouseClickEventForSTKPoint(circle));
+            Tooltip tooltip = new Tooltip(point.getPointID());
+            Tooltip.install(circle, tooltip);
+            if( point.getPointID().split("_").length == 1){
+            	circle.setStroke(Color.MAGENTA);
+            	circle.setStrokeWidth(3);
+            	circle.setRadius(10);
+                circle.setFill(Color.TRANSPARENT);
+            }
+            pane.getChildren().add(circle);
+        }
+    }
+    
+    private void setOnMouseClickEventForSTKPoint(Circle circle) {
+        Point transformedPoint = getTransformedPointById(circle.getId());
+        circle.setStroke(null);
+        circle.setRadius(10);
+        circle.setFill(Color.RED);
+        if( transformedPoint.getPointID().split("_").length == 2) {
+            setText(transformedPoint.getPointID(), transformedPoint, Color.BLACK, 16);
+        }
+        SteakoutedCoords steakoutedPoint = getSTKPointById(circle.getId());
+        stk_distancePointList.add(steakoutedPoint);
+        addDistanceInformationBySTKBasePoints();
+    }
+    
+    private Point getTransformedPointById(String id) {
+    	if( "c_0".equals(id) ) {
+    		return stk_transformedPillarBasePoints.get(0);
+    	}
+    	String[] idValues = id.split("_");
+    	for (Point stk_point : stk_transformedPillarBasePoints) {
+    		String[] stk_idValues = stk_point.getPointID().split("_");
+    		if( stk_idValues.length == 2 && idValues[1].equals(stk_idValues[1]) ) {
+    			return stk_point;
+    		} 			
+    }
+    	return null;
+ }
+
+    private SteakoutedCoords getSTKPointById(String id){
+    	if( "c_0".equals(id) ) {
+    		return STK_PILLAR_BASE_POINTS.get(0);
+    	}
+    	String[] idValues = id.split("_");
+    	for (SteakoutedCoords stk_point : STK_PILLAR_BASE_POINTS) {
+    		String[] stk_idValues = stk_point.getPointID().split("_");
+    		if( stk_idValues.length == 2 && idValues[1].equals(stk_idValues[1]) ) {
+    			return stk_point;
+    		} 			
+    }
+    	return null; 	
+   }
+    
+    private void setOnMouseClickEvent(Circle circle){
+    	int index = Integer.parseInt(circle.getId().split("_")[1]);
+        Point transformedPoint = transformedPillarBasePoints.get(index);
+        circle.setStroke(null);
+        circle.setRadius(10);
+        circle.setFill(Color.RED);
+        if( transformedPoint.getPointID().split("_").length == 2) {
+            setText(transformedPoint.getPointID(), transformedPoint, Color.BLACK, 16);
+        }
+        Point pillarBasePoint = PILLAR_BASE_POINTS.get(index);
+        distancePointList.add(pillarBasePoint);
+        addDistanceInformationByBasePoints();
     }
 
     private void addDirectionPointCoords(double row){
@@ -171,7 +381,7 @@ public class WeightBaseDisplayer {
         pane.getChildren().addAll(pointID, coords);
     }
     private void addPillarMainAxes(){
-        getTransformPillarCoordsForDisplayer();
+        getTransformedPillarBaseCoordsForDisplayer();
         Line mainAxis = new Line();
         mainAxis.setStroke(Color.RED);
         mainAxis.setStrokeWidth(2);
@@ -464,50 +674,9 @@ public class WeightBaseDisplayer {
         pane.getChildren().addAll(line1, line2, line3, line4);
     }
 
-    private void addCircleForPoint(){
-        circeID = 0;
-        for (Point point: transformedPillarBasePoints) {
-            Circle circle = new Circle();
-            circle.setRadius(5);
-            circle.centerXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                    .add(point.getX_coord()));
-            circle.centerYProperty().bind(pane.heightProperty().divide(2)
-                    .subtract(point.getY_coord()));
-            circle.setStroke(Color.FIREBRICK);
-            circle.setStrokeWidth(2);
-            circle.setFill(Color.TRANSPARENT);
-            circle.setCursor(Cursor.HAND);
-            circle.setId("c_" + circeID);
-            circeID++;
-            circle.setOnMouseClicked(e -> setOnMouseClickEvent(circle));
-            Tooltip tooltip = new Tooltip(point.getPointID());
-            Tooltip.install(circle, tooltip);
-            if( point.getPointID().split("_").length == 1){
-                circle.setStroke(null);
-                circle.setRadius(10);
-                circle.setFill(Color.MAGENTA);
-            }
-            pane.getChildren().add(circle);
-        }
-
-    }
-
-    private void setOnMouseClickEvent(Circle circle){
-        int pointIndex = Integer.parseInt(circle.getId().split("_")[1]);
-        Point transformedPoint = transformedPillarBasePoints.get(pointIndex);
-        circle.setStroke(null);
-        circle.setRadius(10);
-        circle.setFill(Color.RED);
-        if( transformedPoint.getPointID().split("_").length == 2) {
-            setText(transformedPoint.getPointID(), transformedPoint, Color.BLACK, 16);
-        }
-        Point pillarBasePoint = PILLAR_BASE_POINTS.get(pointIndex);
-        distancePointList.add(pillarBasePoint);
-        addDistanceInformation();
-    }
-
-    private void addDistanceInformation(){
-        if( distancePointList.size() == 1 ) {
+   
+    private void addDistanceInformationByBasePoints(){
+        if( distancePointList.size() == 1 ){
             return;
         }
         double distance =
@@ -517,20 +686,20 @@ public class WeightBaseDisplayer {
         title.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
         Text distanceInfo =
                 new Text(distancePointList.get(distancePointList.size() - 2).getPointID()
-                        + " → " + distancePointList.get(distancePointList.size() - 1).getPointID() + ":\t"
-                        + String.format("%10.2f", distance).replace(",", ".") + "m");
+                        + " → " + distancePointList.get(distancePointList.size() - 1).getPointID() + ":"
+                        + String.format("%19.2f", distance).replace(",", ".") + "m");
         distanceInfo.setFont(Font.font("Book-Antique", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
        if( distancePointList.size() == 2 ){
            title.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
-           title.yProperty().bind((pane.heightProperty().divide(10).multiply(2)));
+           title.yProperty().bind((pane.heightProperty().divide(10).multiply(1)));
            distanceInfo.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
-           distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
+           distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(1)).add(nextRowValue));
            pane.getChildren().addAll(title, distanceInfo);
         }
        else {
            nextRowValue += 5 * MILLIMETER;
            distanceInfo.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
-           distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
+           distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(1)).add(nextRowValue));
            double summaDistance = 0;
            for(int i = 0; i < distancePointList.size() - 1; i++) {
                summaDistance +=
@@ -539,15 +708,79 @@ public class WeightBaseDisplayer {
            }
            nextRowValue += 5 * MILLIMETER;
            Text sumDistance =
-                   new Text("Összesen távolság:\t"
-                           + String.format("%10.2f", summaDistance).replace(",", ".") + "m");
+                   new Text(String.format("Összesen távolság: %13.2f", summaDistance).replace(",", ".") + "m");
            sumDistance.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
            sumDistance.xProperty().bind(pane.widthProperty().divide(11).multiply(9));
-           sumDistance.yProperty().bind((pane.heightProperty().divide(10).multiply(2)).add(nextRowValue));
+           sumDistance.yProperty().bind((pane.heightProperty().divide(10).multiply(1)).add(nextRowValue));
            pane.getChildren().addAll(distanceInfo, sumDistance);
        }
     }
 
+    private void addDistanceInformationBySTKBasePoints() {
+    	 if( stk_distancePointList.size() == 1 ){
+             return;
+         }
+    	 double calcedDistance =
+                 new AzimuthAndDistance(new Point("calc",  
+                		 stk_distancePointList.get(stk_distancePointList.size() - 2).getXcoordForDesignPoint(), 
+                		 stk_distancePointList.get(stk_distancePointList.size() - 2).getYcoordForDesignPoint()),
+                		 new Point("calc",  
+                		 stk_distancePointList.get(stk_distancePointList.size() - 1).getXcoordForDesignPoint(), 
+                         stk_distancePointList.get(stk_distancePointList.size() - 1).getYcoordForDesignPoint())).calcDistance();
+    	 double measuredDistance =
+                 new AzimuthAndDistance(new Point("meas",  
+                		 stk_distancePointList.get(stk_distancePointList.size() - 2).getXcoordForSteakoutPoint(), 
+                		 stk_distancePointList.get(stk_distancePointList.size() - 2).getYcoordForSteakoutPoint()),
+                		 new Point("meas",  
+                		 stk_distancePointList.get(stk_distancePointList.size() - 1).getXcoordForSteakoutPoint(), 
+                         stk_distancePointList.get(stk_distancePointList.size() - 1).getYcoordForSteakoutPoint())).calcDistance();
+    	 Text title = new Text( String.format("%10s %15s %8s %12s", "Távolság:", "Számított", "Mért", "Δ"));
+         title.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
+         Text distanceInfo =
+                 new Text(stk_distancePointList.get(stk_distancePointList.size() - 2).getPointID()
+                         + " → " + stk_distancePointList.get(stk_distancePointList.size() - 1).getPointID() + ":"
+                         + String.format("%10.3fm %10.3fm %10.3fm", calcedDistance, measuredDistance, 
+                        		 (calcedDistance - measuredDistance)).replace(",", "."));
+         distanceInfo.setFont(Font.font("Book-Antique", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 14));
+         if( stk_distancePointList.size() == 2 ){
+             title.xProperty().bind(pane.widthProperty().divide(11).multiply(8));
+             title.yProperty().bind((pane.heightProperty().divide(10).multiply(1)));
+             
+             distanceInfo.xProperty().bind(pane.widthProperty().divide(11).multiply(8));
+             distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(1)).add(nextRowValue));
+             pane.getChildren().addAll(title, distanceInfo);
+          }
+         else {
+        	 nextRowValue += 5 * MILLIMETER;
+             distanceInfo.xProperty().bind(pane.widthProperty().divide(11).multiply(8));
+             distanceInfo.yProperty().bind((pane.heightProperty().divide(10).multiply(1)).add(nextRowValue));
+             double summaCalcDistance = 0;
+             double summaMeasDistance = 0;
+             for(int i = 0; i < stk_distancePointList.size() - 1; i++) {
+                 summaCalcDistance +=  new AzimuthAndDistance(new Point("sumCalc",  
+                		 stk_distancePointList.get(i).getXcoordForDesignPoint(), 
+                		 stk_distancePointList.get(i).getYcoordForDesignPoint()),
+                		 new Point("calc",  
+                		 stk_distancePointList.get(i + 1).getXcoordForDesignPoint(), 
+                         stk_distancePointList.get(i + 1).getYcoordForDesignPoint())).calcDistance();
+                 summaMeasDistance += new AzimuthAndDistance(new Point("meas",  
+                		 stk_distancePointList.get(i).getXcoordForSteakoutPoint(), 
+                		 stk_distancePointList.get(i).getYcoordForSteakoutPoint()),
+                		 new Point("meas",  
+                		 stk_distancePointList.get(i + 1).getXcoordForSteakoutPoint(), 
+                         stk_distancePointList.get(i + 1).getYcoordForSteakoutPoint())).calcDistance();
+             }
+             nextRowValue += 5 * MILLIMETER;
+             Text sumDistance =
+                     new Text(String.format("%10s %10.3fm %10.3fm", "Összesen:",
+                            		 summaCalcDistance, summaMeasDistance).replace(",", "."));
+             sumDistance.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 14));
+             sumDistance.xProperty().bind(pane.widthProperty().divide(11).multiply(8));
+             sumDistance.yProperty().bind((pane.heightProperty().divide(10).multiply(1)).add(nextRowValue));
+             pane.getChildren().addAll(distanceInfo, sumDistance);
+         }
+    }
+    
 
     private void addPreviousAndNextPillarDirections(){
         if( PILLAR_BASE_POINTS.size() == 25 ){
@@ -792,7 +1025,7 @@ public class WeightBaseDisplayer {
         return scroller;
     }
 
-    private void getTransformPillarCoordsForDisplayer() {
+    private void getTransformedPillarBaseCoordsForDisplayer() {
         transformedPillarBasePoints = new ArrayList<>();
         double X = PILLAR_BASE_POINTS.get(0).getX_coord();
         double Y = PILLAR_BASE_POINTS.get(0).getY_coord();
@@ -803,5 +1036,17 @@ public class WeightBaseDisplayer {
             transformedPillarBasePoints.add(point);
         }
     }
-
+    
+    private void getTransformedStkPillarBaseCoordsForDisplayer() {
+        stk_transformedPillarBasePoints = new ArrayList<>();
+        double X = PILLAR_BASE_POINTS.get(0).getX_coord();
+        double Y = PILLAR_BASE_POINTS.get(0).getY_coord();
+        for (SteakoutedCoords stk_pillarBasePoint : STK_PILLAR_BASE_POINTS) {
+            Point point = new Point(stk_pillarBasePoint.getPointID(),
+                    Math.round((stk_pillarBasePoint.getXcoordForSteakoutPoint() - X) * 1000.0) * MILLIMETER / SCALE,
+                    Math.round((stk_pillarBasePoint.getYcoordForSteakoutPoint() - Y) * 1000.0) * MILLIMETER / SCALE);
+            stk_transformedPillarBasePoints.add(point);
+        }
+    }
+ 
 }

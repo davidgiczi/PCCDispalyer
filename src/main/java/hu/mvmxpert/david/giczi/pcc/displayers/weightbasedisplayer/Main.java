@@ -18,10 +18,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        WeightBaseDisplayer.setTitle(System.getProperty("user.dir"));
-        WeightBaseDisplayer.setPillarBasePoints(getData());
-        WeightBaseDisplayer.setDirectionPoint(weightBaseCalculator.getAxisDirectionPoint());
-        new WeightBaseDisplayer();
+        WeightBaseFXDisplayer.setTitle(System.getProperty("user.dir"));
+        WeightBaseFXDisplayer.setPillarBasePoints(getData());
+        WeightBaseFXDisplayer.setDirectionPoint(weightBaseCalculator.getAxisDirectionPoint());
+        new WeightBaseFXDisplayer();
     }
 
     public List<Point> getData(){
