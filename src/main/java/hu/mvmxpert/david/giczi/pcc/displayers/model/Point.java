@@ -1,4 +1,4 @@
-package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.model;
+package hu.mvmxpert.david.giczi.pcc.displayers.model;
 
 import java.text.DecimalFormat;
 import java.util.Objects;

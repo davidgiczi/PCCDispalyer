@@ -1,15 +1,15 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer;
 
-import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.model.Point;
-import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service.PillarCoordsForWeightBase;
+import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
+import hu.mvmxpert.david.giczi.pcc.displayers.service.PillarCoordsForWeightBase;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.List;
 
-public class Main extends Application {
+public class MainForWeightBaseDisplayer extends Application {
    private final PillarCoordsForWeightBase weightBaseCalculator;
-    public Main() {
+    public MainForWeightBaseDisplayer() {
         Point center = new Point("7", 639453.94, 218115.40);
         Point direction = new Point("8", 639369.24,217820.07);
         weightBaseCalculator =

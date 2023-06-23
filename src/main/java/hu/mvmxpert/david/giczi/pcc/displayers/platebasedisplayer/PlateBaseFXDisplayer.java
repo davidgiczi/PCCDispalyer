@@ -1,4 +1,5 @@
-package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer;
+package hu.mvmxpert.david.giczi.pcc.displayers.platebasedisplayer;
+
 
 import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
 import hu.mvmxpert.david.giczi.pcc.displayers.service.AzimuthAndDistance;
@@ -6,7 +7,6 @@ import hu.mvmxpert.david.giczi.pcc.displayers.service.PolarPoint;
 import hu.mvmxpert.david.giczi.pcc.displayers.service.SteakoutedCoords;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -17,21 +17,23 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.text.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class WeightBaseFXDisplayer {
-	
+public class PlateBaseFXDisplayer {
+
 	private static List<SteakoutedCoords> STK_PILLAR_BASE_POINTS;
     private static List<Point> PILLAR_BASE_POINTS;
     private static String TITLE;
@@ -56,7 +58,7 @@ public class WeightBaseFXDisplayer {
     }
 
     public static void setTitle(String title) {
-        WeightBaseFXDisplayer.TITLE = title;
+        PlateBaseFXDisplayer.TITLE = title;
     }
 
     public static void setDirectionPoint(Point directionPoint) {
@@ -67,19 +69,16 @@ public class WeightBaseFXDisplayer {
         this.nextRowValue = nextRowValue;
     }
 
-	public WeightBaseFXDisplayer() {
+	public PlateBaseFXDisplayer() {
 		Stage stage = new Stage();
 		SCALE = 200;
         pane.setStyle("-fx-background-color: white");
         getContent();   
-        pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if( mouseEvent.getButton() == MouseButton.SECONDARY ){
-                   distancePointList.clear();
-                   stk_distancePointList.clear();
-                   nextRowValue += 10 * MILLIMETER;
-                }
+        pane.setOnMouseClicked(mouseEvent -> {
+            if( mouseEvent.getButton() == MouseButton.SECONDARY ){
+               distancePointList.clear();
+               stk_distancePointList.clear();
+               nextRowValue += 10 * MILLIMETER;
             }
         });
         ScrollPane scrollPane = getScrollPane(pane);
@@ -106,11 +105,8 @@ public class WeightBaseFXDisplayer {
         	 addSTKPointCoordsData();
         }
         addPillarMainAxes();
-        addHoleA();
-        addHoleB();
-        addHoleC();
-        addHoleD();
-        addNameTextsForHoles();
+        addHole();
+        addNameTextsForHole();
         addTextsForBase();
         addInformation();
         if( STK_PILLAR_BASE_POINTS == null ) {
@@ -387,42 +383,42 @@ public class WeightBaseFXDisplayer {
         mainAxis.setStrokeWidth(2);
         mainAxis.getStrokeDashArray().addAll(10d);
         mainAxis.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(1).getX_coord()));
+                .add(transformedPillarBasePoints.get(6).getX_coord()));
         mainAxis.startYProperty().bind(pane.heightProperty().divide(2)
-                .subtract(transformedPillarBasePoints.get(1).getY_coord()));
+                .subtract(transformedPillarBasePoints.get(6).getY_coord()));
         mainAxis.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(3).getX_coord()));
+                .add(transformedPillarBasePoints.get(8).getX_coord()));
         mainAxis.endYProperty().bind(pane.heightProperty().divide(2)
-                .subtract(transformedPillarBasePoints.get(3).getY_coord()));
+                .subtract(transformedPillarBasePoints.get(8).getY_coord()));
         Line perpendicularAxis = new Line();
         perpendicularAxis.setStroke(Color.RED);
         perpendicularAxis.setStrokeWidth(2);
         perpendicularAxis.getStrokeDashArray().addAll(10d);
         perpendicularAxis.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(2).getX_coord()));
+                .add(transformedPillarBasePoints.get(5).getX_coord()));
         perpendicularAxis.startYProperty().bind(pane.heightProperty().divide(2)
-                .subtract(transformedPillarBasePoints.get(2).getY_coord()));
+                .subtract(transformedPillarBasePoints.get(5).getY_coord()));
         perpendicularAxis.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(4).getX_coord()));
+                .add(transformedPillarBasePoints.get(7).getX_coord()));
         perpendicularAxis.endYProperty().bind(pane.heightProperty().divide(2)
-                .subtract(transformedPillarBasePoints.get(4).getY_coord()));
+                .subtract(transformedPillarBasePoints.get(7).getY_coord()));
         pane.getChildren().addAll(mainAxis, perpendicularAxis);
     }
 
     private void addTextsForBase(){
         setText(PILLAR_BASE_POINTS.get(0).getPointID(),
                 transformedPillarBasePoints.get(0), Color.MAGENTA, 16 );
-        if(PILLAR_BASE_POINTS.size() == 25){
+        if(PILLAR_BASE_POINTS.size() == 9){
             AzimuthAndDistance mainLineData = new AzimuthAndDistance(transformedPillarBasePoints.get(0),
-                    transformedPillarBasePoints.get(1));
-            PolarPoint slavePoint = new PolarPoint(transformedPillarBasePoints.get(1),
+                    transformedPillarBasePoints.get(6));
+            PolarPoint slavePoint = new PolarPoint(transformedPillarBasePoints.get(6),
                     30 * MILLIMETER, mainLineData.calcAzimuth(),
                     "forwardDirection");
             setText(DIRECTION_POINT.getPointID(), slavePoint.calcPolarPoint(), Color.MAGENTA, 16);
         }
         else {
             setText(DIRECTION_POINT.getPointID(),
-                    transformedPillarBasePoints.get(25), Color.MAGENTA, 16);
+                    transformedPillarBasePoints.get(9), Color.MAGENTA, 16);
             int mainPillarID;
             int directionPillarID;
             try {
@@ -434,18 +430,18 @@ public class WeightBaseFXDisplayer {
             }
             if (directionPillarID > mainPillarID) {
                 setText(String.valueOf(mainPillarID - 1),
-                        transformedPillarBasePoints.get(26), Color.MAGENTA, 16);
+                        transformedPillarBasePoints.get(10), Color.MAGENTA, 16);
             } else if (directionPillarID < mainPillarID) {
                 setText(String.valueOf(mainPillarID + 1),
-                        transformedPillarBasePoints.get(26), Color.MAGENTA, 16);
+                        transformedPillarBasePoints.get(10), Color.MAGENTA, 16);
             } else {
                 setText(DIRECTION_POINT.getPointID(),
-                        transformedPillarBasePoints.get(26), Color.MAGENTA, 16);
+                        transformedPillarBasePoints.get(10), Color.MAGENTA, 16);
             }
         }
     }
 
-    private void addNameTextsForHoles(){
+    private void addNameTextsForHole(){
         int mainPillarID;
         int directionPillarID;
         try {
@@ -461,220 +457,99 @@ public class WeightBaseFXDisplayer {
         if( mainPillarID < directionPillarID ){
 
             AzimuthAndDistance dataA =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(9), transformedPillarBasePoints.get(11));
-            PolarPoint posA = new PolarPoint(transformedPillarBasePoints.get(9),
-                    1500 * MILLIMETER / SCALE, dataA.calcAzimuth(), "A");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(1));
+            PolarPoint posA = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataA.calcDistance() / 2, dataA.calcAzimuth(), "A");
             setText("A",
                     posA.calcPolarPoint(), Color.RED, size);
             AzimuthAndDistance dataB =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(23), transformedPillarBasePoints.get(21));
-            PolarPoint posB = new PolarPoint(transformedPillarBasePoints.get(23),
-                    1500 * MILLIMETER / SCALE, dataB.calcAzimuth(), "B");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(2));
+            PolarPoint posB = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataB.calcDistance() / 2, dataB.calcAzimuth(), "B");
             setText("B",
                     posB.calcPolarPoint(), Color.RED, size);
             AzimuthAndDistance dataC =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(20), transformedPillarBasePoints.get(18));
-            PolarPoint posC = new PolarPoint(transformedPillarBasePoints.get(20),
-                    1500 * MILLIMETER / SCALE, dataC.calcAzimuth(), "C");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(3));
+            PolarPoint posC = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataC.calcDistance() / 2, dataC.calcAzimuth(), "C");
             setText("C",
                     posC.calcPolarPoint(), Color.RED, size);
             AzimuthAndDistance dataD =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(13), transformedPillarBasePoints.get(15));
-            PolarPoint posD = new PolarPoint(transformedPillarBasePoints.get(13),
-                    1500 * MILLIMETER / SCALE, dataD.calcAzimuth(), "D");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(4));
+            PolarPoint posD = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataD.calcDistance() / 2, dataD.calcAzimuth(), "D");
             setText("D",
                     posD.calcPolarPoint(), Color.RED, size);
         }
         else {
 
             AzimuthAndDistance dataA =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(20), transformedPillarBasePoints.get(18));
-            PolarPoint posA = new PolarPoint(transformedPillarBasePoints.get(20),
-                    1500 * MILLIMETER / SCALE, dataA.calcAzimuth(), "A");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(3));
+            PolarPoint posA = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataA.calcDistance() / 2, dataA.calcAzimuth(), "A");
             setText("A",
                     posA.calcPolarPoint(), Color.RED, size);
             AzimuthAndDistance dataB =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(13), transformedPillarBasePoints.get(15));
-            PolarPoint posB = new PolarPoint(transformedPillarBasePoints.get(13),
-                    1500 * MILLIMETER / SCALE, dataB.calcAzimuth(), "B");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(4));
+            PolarPoint posB = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataB.calcDistance() / 2, dataB.calcAzimuth(), "B");
             setText("B",
                     posB.calcPolarPoint(), Color.RED, size);
             AzimuthAndDistance dataC =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(9), transformedPillarBasePoints.get(11));
-            PolarPoint posC = new PolarPoint(transformedPillarBasePoints.get(9),
-                    1500 * MILLIMETER / SCALE, dataC.calcAzimuth(), "C");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(1));
+            PolarPoint posC = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataC.calcDistance() / 2, dataC.calcAzimuth(), "C");
             setText("C",
                     posC.calcPolarPoint(), Color.RED, size);
             AzimuthAndDistance dataD =
-                    new AzimuthAndDistance(transformedPillarBasePoints.get(23), transformedPillarBasePoints.get(21));
-            PolarPoint posD = new PolarPoint(transformedPillarBasePoints.get(23),
-                    1500 * MILLIMETER / SCALE, dataD.calcAzimuth(), "D");
+                    new AzimuthAndDistance(transformedPillarBasePoints.get(0), transformedPillarBasePoints.get(2));
+            PolarPoint posD = new PolarPoint(transformedPillarBasePoints.get(0),
+                    dataD.calcDistance() / 2, dataD.calcAzimuth(), "D");
             setText("D",
                     posD.calcPolarPoint(), Color.RED, size);
         }
     }
 
-    private void addHoleA(){
+    private void addHole(){
         Line line1 = new Line();
         line1.setStroke(Color.BLUE);
         line1.setStrokeWidth(2);
         line1.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(9).getX_coord()));
-        line1.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(9).getY_coord()));
+                .add(transformedPillarBasePoints.get(1).getX_coord()));
+        line1.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(1).getY_coord()));
         line1.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(10).getX_coord()));
-        line1.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(10).getY_coord()));
+                .add(transformedPillarBasePoints.get(2).getX_coord()));
+        line1.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(2).getY_coord()));
         Line line2 = new Line();
         line2.setStroke(Color.BLUE);
         line2.setStrokeWidth(2);
         line2.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(10).getX_coord()));
-        line2.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(10).getY_coord()));
+                .add(transformedPillarBasePoints.get(2).getX_coord()));
+        line2.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(2).getY_coord()));
         line2.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(11).getX_coord()));
-        line2.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(11).getY_coord()));
+                .add(transformedPillarBasePoints.get(3).getX_coord()));
+        line2.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(3).getY_coord()));
         Line line3 = new Line();
         line3.setStroke(Color.BLUE);
         line3.setStrokeWidth(2);
         line3.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(11).getX_coord()));
-        line3.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(11).getY_coord()));
+                .add(transformedPillarBasePoints.get(3).getX_coord()));
+        line3.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(3).getY_coord()));
         line3.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(12).getX_coord()));
-        line3.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(12).getY_coord()));
+                .add(transformedPillarBasePoints.get(4).getX_coord()));
+        line3.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(4).getY_coord()));
         Line line4 = new Line();
         line4.setStroke(Color.BLUE);
         line4.setStrokeWidth(2);
         line4.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(12).getX_coord()));
-        line4.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(12).getY_coord()));
+                .add(transformedPillarBasePoints.get(4).getX_coord()));
+        line4.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(4).getY_coord()));
         line4.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(9).getX_coord()));
-        line4.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(9).getY_coord()));
+                .add(transformedPillarBasePoints.get(1).getX_coord()));
+        line4.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(1).getY_coord()));
         pane.getChildren().addAll(line1, line2, line3, line4);
     }
 
-    private void addHoleB(){
-        Line line1 = new Line();
-        line1.setStroke(Color.BLUE);
-        line1.setStrokeWidth(2);
-        line1.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(21).getX_coord()));
-        line1.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(21).getY_coord()));
-        line1.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(22).getX_coord()));
-        line1.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(22).getY_coord()));
-        Line line2 = new Line();
-        line2.setStroke(Color.BLUE);
-        line2.setStrokeWidth(2);
-        line2.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(22).getX_coord()));
-        line2.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(22).getY_coord()));
-        line2.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(23).getX_coord()));
-        line2.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(23).getY_coord()));
-        Line line3 = new Line();
-        line3.setStroke(Color.BLUE);
-        line3.setStrokeWidth(2);
-        line3.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(23).getX_coord()));
-        line3.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(23).getY_coord()));
-        line3.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(24).getX_coord()));
-        line3.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(24).getY_coord()));
-        Line line4 = new Line();
-        line4.setStroke(Color.BLUE);
-        line4.setStrokeWidth(2);
-        line4.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(24).getX_coord()));
-        line4.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(24).getY_coord()));
-        line4.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(21).getX_coord()));
-        line4.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(21).getY_coord()));
-        pane.getChildren().addAll(line1, line2, line3, line4);
-    }
-
-    private void addHoleC(){
-        Line line1 = new Line();
-        line1.setStroke(Color.BLUE);
-        line1.setStrokeWidth(2);
-        line1.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(17).getX_coord()));
-        line1.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(17).getY_coord()));
-        line1.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(18).getX_coord()));
-        line1.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(18).getY_coord()));
-        Line line2 = new Line();
-        line2.setStroke(Color.BLUE);
-        line2.setStrokeWidth(2);
-        line2.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(18).getX_coord()));
-        line2.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(18).getY_coord()));
-        line2.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(19).getX_coord()));
-        line2.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(19).getY_coord()));
-        Line line3 = new Line();
-        line3.setStroke(Color.BLUE);
-        line3.setStrokeWidth(2);
-        line3.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(19).getX_coord()));
-        line3.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(19).getY_coord()));
-        line3.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(20).getX_coord()));
-        line3.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(20).getY_coord()));
-        Line line4 = new Line();
-        line4.setStroke(Color.BLUE);
-        line4.setStrokeWidth(2);
-        line4.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(20).getX_coord()));
-        line4.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(20).getY_coord()));
-        line4.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(17).getX_coord()));
-        line4.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(17).getY_coord()));
-        pane.getChildren().addAll(line1, line2, line3, line4);
-    }
-
-    private void addHoleD(){
-        Line line1 = new Line();
-        line1.setStroke(Color.BLUE);
-        line1.setStrokeWidth(2);
-        line1.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(13).getX_coord()));
-        line1.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(13).getY_coord()));
-        line1.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(14).getX_coord()));
-        line1.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(14).getY_coord()));
-        Line line2 = new Line();
-        line2.setStroke(Color.BLUE);
-        line2.setStrokeWidth(2);
-        line2.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(14).getX_coord()));
-        line2.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(14).getY_coord()));
-        line2.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(15).getX_coord()));
-        line2.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(15).getY_coord()));
-        Line line3 = new Line();
-        line3.setStroke(Color.BLUE);
-        line3.setStrokeWidth(2);
-        line3.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(15).getX_coord()));
-        line3.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(15).getY_coord()));
-        line3.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(16).getX_coord()));
-        line3.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(16).getY_coord()));
-        Line line4 = new Line();
-        line4.setStroke(Color.BLUE);
-        line4.setStrokeWidth(2);
-        line4.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(16).getX_coord()));
-        line4.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(16).getY_coord()));
-        line4.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(13).getX_coord()));
-        line4.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(13).getY_coord()));
-        pane.getChildren().addAll(line1, line2, line3, line4);
-    }
-
-   
     private void addDistanceInformationByBasePoints(){
         if( distancePointList.size() == 1 ){
             return;
@@ -783,10 +658,10 @@ public class WeightBaseFXDisplayer {
     
 
     private void addPreviousAndNextPillarDirections(){
-        if( PILLAR_BASE_POINTS.size() == 25 ){
+        if( PILLAR_BASE_POINTS.size() == 9 ){
             AzimuthAndDistance mainLineData = new AzimuthAndDistance(transformedPillarBasePoints.get(0),
-                    transformedPillarBasePoints.get(1));
-            PolarPoint slavePoint = new PolarPoint(transformedPillarBasePoints.get(1),
+                    transformedPillarBasePoints.get(6));
+            PolarPoint slavePoint = new PolarPoint(transformedPillarBasePoints.get(6),
                             30 * MILLIMETER, mainLineData.calcAzimuth(),
                             "forwardDirection");
             Line forwardDirection = new Line();
@@ -796,11 +671,11 @@ public class WeightBaseFXDisplayer {
                     .bind(pane.widthProperty()
                             .divide(10)
                             .multiply(6)
-                            .add(transformedPillarBasePoints.get(1).getX_coord()));
+                            .add(transformedPillarBasePoints.get(6).getX_coord()));
             forwardDirection.startYProperty()
                     .bind(pane.heightProperty()
                             .divide(2)
-                            .subtract(transformedPillarBasePoints.get(1).getY_coord()));
+                            .subtract(transformedPillarBasePoints.get(6).getY_coord()));
             forwardDirection.endXProperty()
                     .bind(pane.widthProperty()
                             .divide(10)
@@ -822,10 +697,10 @@ public class WeightBaseFXDisplayer {
         previousPillarDirection.startYProperty().bind(pane.heightProperty().divide(2)
                 .subtract(transformedPillarBasePoints.get(0).getY_coord()));
         previousPillarDirection.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(26).getX_coord()));
+                .add(transformedPillarBasePoints.get(10).getX_coord()));
         previousPillarDirection.endYProperty().bind(pane.heightProperty().divide(2)
-                .subtract(transformedPillarBasePoints.get(26).getY_coord()));
-        addArrow(transformedPillarBasePoints.get(26), transformedPillarBasePoints.get(0));
+                .subtract(transformedPillarBasePoints.get(10).getY_coord()));
+        addArrow(transformedPillarBasePoints.get(10), transformedPillarBasePoints.get(0));
         Line nextPillarDirection = new Line();
         nextPillarDirection.setStroke(Color.MAGENTA);
         nextPillarDirection.setStrokeWidth(2);
@@ -834,10 +709,10 @@ public class WeightBaseFXDisplayer {
         nextPillarDirection.startYProperty().bind(pane.heightProperty().divide(2)
                 .subtract(transformedPillarBasePoints.get(0).getY_coord()));
         nextPillarDirection.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
-                .add(transformedPillarBasePoints.get(25).getX_coord()));
+                .add(transformedPillarBasePoints.get(9).getX_coord()));
         nextPillarDirection.endYProperty().bind(pane.heightProperty().divide(2)
-                .subtract(transformedPillarBasePoints.get(25).getY_coord()));
-        addArrow(transformedPillarBasePoints.get(25), transformedPillarBasePoints.get(0));
+                .subtract(transformedPillarBasePoints.get(9).getY_coord()));
+        addArrow(transformedPillarBasePoints.get(9), transformedPillarBasePoints.get(0));
         pane.getChildren().addAll(previousPillarDirection, nextPillarDirection);
     }
 

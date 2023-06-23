@@ -1,9 +1,9 @@
-package hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.service;
+package hu.mvmxpert.david.giczi.pcc.displayers.service;
 
 import java.text.DecimalFormat;
 
-import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.model.Point;
-import hu.mvmxpert.david.giczi.pcc.displayers.weightbasedisplayer.utils.BaseType;
+import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
+import hu.mvmxpert.david.giczi.pcc.displayers.utils.BaseType;
 
 public class SteakoutedCoords implements Comparable<SteakoutedCoords> {
 
