@@ -48,6 +48,12 @@ public class PlateBaseFXDisplayer {
     private List<SteakoutedCoords> stk_distancePointList;
     private double nextRowValue;
     private int pointID;
+    public static boolean isDisplayPillarBaseCoords = true;
+    public static Stage stage;
+
+    public static void setDisplayPillarBaseCoords(boolean isDisplayPillarBaseCoords) {
+        PlateBaseFXDisplayer.isDisplayPillarBaseCoords = isDisplayPillarBaseCoords;
+    }
 
     public static void setStkPillarBasePoints(List<SteakoutedCoords> stkPillarBasePoints) {
         STK_PILLAR_BASE_POINTS = stkPillarBasePoints;
@@ -70,7 +76,7 @@ public class PlateBaseFXDisplayer {
     }
 
 	public PlateBaseFXDisplayer() {
-		Stage stage = new Stage();
+		stage = new Stage();
 		SCALE = 200;
         pane.setStyle("-fx-background-color: white");
         getContent();   
@@ -98,7 +104,7 @@ public class PlateBaseFXDisplayer {
         stk_distancePointList = new ArrayList<>();
         nextRowValue  = 5 * MILLIMETER;
         addNorthSign();
-        if( STK_PILLAR_BASE_POINTS == null ) {
+        if( isDisplayPillarBaseCoords ) {
         	addPointCoordsData();
         }
         else {
@@ -109,7 +115,7 @@ public class PlateBaseFXDisplayer {
         addNameTextsForHole();
         addTextsForBase();
         addInformation();
-        if( STK_PILLAR_BASE_POINTS == null ) {
+        if( isDisplayPillarBaseCoords ) {
         	addCircleForPoint();
         }
         else {
