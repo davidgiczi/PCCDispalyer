@@ -86,7 +86,7 @@ public class FileProcess {
 			setData(selectedFile);
 		}
 		MeasuredPillarData pillarData = new MeasuredPillarData(measData);
-		pillarData.getPillarTopPoints().forEach(System.out::println);
+		pillarData.getMeasPillarPoints().forEach(System.out::println);
 	}
 
 	private void setData(File selectedFile){

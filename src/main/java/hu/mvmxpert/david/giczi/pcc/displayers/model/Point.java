@@ -8,7 +8,6 @@ public class Point {
 	private final String pointID;
 	private double x_coord;
 	private double y_coord;
-	private double z_coord;
 	private DecimalFormat df = new DecimalFormat("0.000");
 	
 	public Point(String pointID, double x_coord, double y_coord) {
@@ -18,12 +17,6 @@ public class Point {
 		this.y_coord = y_coord;
 	}
 
-	public Point(String pointID, double x_coord, double y_coord, double z_coord) {
-		this.pointID = pointID;
-		this.x_coord = x_coord;
-		this.y_coord = y_coord;
-		this.z_coord = z_coord;
-	}
 
 	public String getPointID() {
 		return pointID;
@@ -73,7 +66,6 @@ public class Point {
 	@Override
 	public String toString() {
 		return  df.format(x_coord).replace(",", ".") + "\t"
-				+ df.format(y_coord).replace(",", ".") + "\t"
-				+ df.format(z_coord).replace(",", ".");
+				+ df.format(y_coord).replace(",", ".");
 	}
 }

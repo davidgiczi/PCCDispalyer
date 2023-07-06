@@ -69,6 +69,7 @@ public class FXHomeWindow extends Application {
 		controlSteakoutedPoint.getItems().add(controll);
 		Menu pillarProject = new Menu("Oszlop projekt");
 		MenuItem openPillarProject = new MenuItem("Projekt megnyitása");
+		openPillarProject.setOnAction(e -> new MeasPointListDisplayer());
 		MenuItem createPillarProject = new MenuItem("Új projekt létrehozása");
 		createPillarProject.setOnAction(e -> fileProcess.getMeasureFileData());
 		pillarProject.getItems().addAll(openPillarProject,createPillarProject);

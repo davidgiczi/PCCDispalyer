@@ -1,6 +1,6 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
-import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
+import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -10,20 +10,14 @@ import java.util.List;
 
 public class MeasuredPillarData {
 
-    private final List<Point> pillarBasePoints;
-    private final List<Point> pillarTopPoints;
+    private final List<MeasPoint> measPillarPoints;
 
-    public List<Point> getPillarBasePoints() {
-        return pillarBasePoints;
-    }
-
-    public List<Point> getPillarTopPoints() {
-        return pillarTopPoints;
+    public List<MeasPoint> getMeasPillarPoints() {
+        return measPillarPoints;
     }
 
     public MeasuredPillarData(List<String> measData) {
-        pillarBasePoints = new ArrayList<>();
-        pillarTopPoints = new ArrayList<>();
+        measPillarPoints = new ArrayList<>();
         getMeasuredData(measData);
     }
 
@@ -37,21 +31,23 @@ public class MeasuredPillarData {
                 return;
             }
             if( baseData.length > 1) {
-                Point basePoint = new Point(baseData[0],
+                MeasPoint basePoint = new MeasPoint(baseData[0],
                         Double.parseDouble(baseData[1]),
                         Double.parseDouble(baseData[2]),
-                        Double.parseDouble(baseData[3]));
-                if ( !pillarBasePoints.contains(basePoint) ) {
-                        pillarBasePoints.add(basePoint);
+                        Double.parseDouble(baseData[3]),
+                        PointType.ALAP);
+                if ( !measPillarPoints.contains(basePoint) ) {
+                        measPillarPoints.add(basePoint);
                 }
             }
             if( topData.length > 1 ) {
-                Point topPoint = new Point(topData[0],
+                MeasPoint topPoint = new MeasPoint(topData[0],
                         Double.parseDouble(topData[1]),
                         Double.parseDouble(topData[2]),
-                        Double.parseDouble(topData[3]));
-                if ( !pillarTopPoints.contains(topPoint) ) {
-                    pillarTopPoints.add(topPoint);
+                        Double.parseDouble(topData[3]),
+                        PointType.CSUCS);
+                if ( !measPillarPoints.contains(topPoint) ) {
+                    measPillarPoints.add(topPoint);
                 }
             }
         });
