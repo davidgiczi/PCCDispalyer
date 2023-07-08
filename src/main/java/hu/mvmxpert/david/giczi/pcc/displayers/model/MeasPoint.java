@@ -12,8 +12,9 @@ public class MeasPoint {
     private final double x_coord;
     private final double y_coord;
     private final double z_coord;
-    private Color color = Color.BLACK;
+    private Color color;
     private final Enum pointType;
+    private boolean isUsed;
     private final DecimalFormat df = new DecimalFormat("0.000");
 
     public MeasPoint(String pointID, double x_coord, double y_coord, double z_coord, Enum pointType) {
@@ -51,6 +52,13 @@ public class MeasPoint {
     }
     public Enum getPointType() {
         return pointType;
+    }
+
+    public boolean isUsed() {
+        return isUsed;
+    }
+    public void setUsed(boolean used) {
+        isUsed = used;
     }
 
     @Override

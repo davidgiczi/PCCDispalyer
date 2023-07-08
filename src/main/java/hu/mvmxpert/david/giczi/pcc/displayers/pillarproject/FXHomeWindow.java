@@ -1,5 +1,6 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
+import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -12,6 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 
 public class FXHomeWindow extends Application {
@@ -69,9 +72,18 @@ public class FXHomeWindow extends Application {
 		controlSteakoutedPoint.getItems().add(controll);
 		Menu pillarProject = new Menu("Oszlop projekt");
 		MenuItem openPillarProject = new MenuItem("Projekt megnyitása");
-		openPillarProject.setOnAction(e -> new MeasPointListDisplayer());
+
+		openPillarProject.setOnAction(e -> {
+
+
+		});
 		MenuItem createPillarProject = new MenuItem("Új projekt létrehozása");
-		createPillarProject.setOnAction(e -> fileProcess.getMeasureFileData());
+		createPillarProject.setOnAction(e -> {
+			fileProcess.getMeasureFileData();
+			MeasuredPillarData measData = new MeasuredPillarData(fileProcess.getMeasData());
+			MeasPointListDisplayer measDisp = new MeasPointListDisplayer(measData.getMeasPillarPoints());
+
+		});
 		pillarProject.getItems().addAll(openPillarProject,createPillarProject);
 		menuBar.getMenus().addAll(projectProcess, setBaseData,
 				controlSteakoutedPoint, pillarProject);
