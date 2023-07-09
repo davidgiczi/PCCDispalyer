@@ -24,6 +24,7 @@ public class FXHomeWindow extends Application {
 	public static Menu setBaseData;
 	public static Menu controlSteakoutedPoint;
 	private final FileProcess fileProcess = new FileProcess();
+	private MeasuredPillarData measData;
 
 	
 	@Override
@@ -74,15 +75,13 @@ public class FXHomeWindow extends Application {
 		MenuItem openPillarProject = new MenuItem("Projekt megnyitása");
 
 		openPillarProject.setOnAction(e -> {
-
-
+			new InputPillarDataWindow();
 		});
 		MenuItem createPillarProject = new MenuItem("Új projekt létrehozása");
 		createPillarProject.setOnAction(e -> {
 			fileProcess.getMeasureFileData();
-			MeasuredPillarData measData = new MeasuredPillarData(fileProcess.getMeasData());
+			measData = new MeasuredPillarData(fileProcess.getMeasData());
 			MeasPointListDisplayer measDisp = new MeasPointListDisplayer(measData.getMeasPillarPoints());
-
 		});
 		pillarProject.getItems().addAll(openPillarProject,createPillarProject);
 		menuBar.getMenus().addAll(projectProcess, setBaseData,

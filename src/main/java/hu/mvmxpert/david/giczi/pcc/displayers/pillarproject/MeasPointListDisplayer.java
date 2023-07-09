@@ -1,29 +1,33 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
-import javafx.event.EventHandler;
+
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+
 
 import java.util.List;
 
 public class MeasPointListDisplayer {
 
     private final AnchorPane pane;
-    private  VBox vBox;
+    private final  VBox vBox;
     private final int[] clickValue;
     private final List<MeasPoint> measPointList;
+    private final Font font = Font.font("Arial", FontWeight.BOLD, 12);
+
 
     public MeasPointListDisplayer(List<MeasPoint> measPointList){
         this.measPointList = measPointList;
@@ -36,12 +40,7 @@ public class MeasPointListDisplayer {
         pane.getChildren().add(vBox);
         ScrollPane scrollPane = getScrollPane();
         Scene scene = new Scene(scrollPane);
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                parseDisplayerData();
-            }
-        });
+        stage.setOnCloseRequest(windowEvent -> parseDisplayerData());
         stage.setWidth(430);
         stage.setMaxHeight(800);
         stage.setTitle(FileProcess.PROJECT_FILE_NAME + " projekt");
@@ -53,9 +52,7 @@ public class MeasPointListDisplayer {
 
     private void parseDisplayerData(){
             for ( int i = 0; i < vBox.getChildren().size(); i++ ) {
-
                 measPointList.get(i).setColor(getColorValue(i));
-
                 HBox hbox = (HBox) vBox.getChildren().get(i);
                 for( int j = 0; j < hbox.getChildren().size(); j++) {
                     if ( hbox.getChildren().get(j) instanceof CheckBox ) {
@@ -63,7 +60,6 @@ public class MeasPointListDisplayer {
                     }
                 }
             }
-
         }
 
     private void addMeasData(List<MeasPoint> measPointList){
@@ -82,17 +78,22 @@ public class MeasPointListDisplayer {
                 }
             });
             Text measID = new Text(measPont.getPointID());
+            measID.setFont(font);
             Text x = new Text(String.format("%.3f", measPont.getX_coord()).replace(",", "."));
+            x.setFont(font);
             Text y = new Text(String.format("%.3f", measPont.getY_coord()).replace(",", "."));
+            y.setFont(font);
             Text z = new Text(String.format("%.3f", measPont.getZ_coord()).replace(",", "."));
+            z.setFont(font);
             Text type = new Text(measPont.getPointType().name());
+            type.setFont(font);
             CheckBox check = new CheckBox("Használ");
+            check.setFont(font);
             check.setSelected(true);
             hbox.getChildren().addAll(measID, x, y, z, type, check);
             vBox.getChildren().add(hbox);
         }
     }
-
 
     private Color getColorValue(int rowIndex) {
 
