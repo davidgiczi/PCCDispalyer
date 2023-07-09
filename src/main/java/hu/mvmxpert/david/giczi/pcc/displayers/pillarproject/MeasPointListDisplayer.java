@@ -1,12 +1,12 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.List;
 
@@ -22,26 +23,48 @@ public class MeasPointListDisplayer {
     private final AnchorPane pane;
     private  VBox vBox;
     private final int[] clickValue;
+    private final List<MeasPoint> measPointList;
 
     public MeasPointListDisplayer(List<MeasPoint> measPointList){
+        this.measPointList = measPointList;
         clickValue = new int[measPointList.size()];
         vBox = new VBox();
         Stage stage = new Stage();
-        stage.setWidth(430);
-        stage.setMaxHeight(600);
         pane = new AnchorPane();
         pane.setStyle("-fx-background-color: white");
         addMeasData(measPointList);
-        addButton();
         pane.getChildren().add(vBox);
-        ScrollPane scrollPane = getScrollPane(pane);
+        ScrollPane scrollPane = getScrollPane();
         Scene scene = new Scene(scrollPane);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                parseDisplayerData();
+            }
+        });
+        stage.setWidth(430);
+        stage.setMaxHeight(800);
         stage.setTitle(FileProcess.PROJECT_FILE_NAME + " projekt");
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
+
+    private void parseDisplayerData(){
+            for ( int i = 0; i < vBox.getChildren().size(); i++ ) {
+
+                measPointList.get(i).setColor(getColorValue(i));
+
+                HBox hbox = (HBox) vBox.getChildren().get(i);
+                for( int j = 0; j < hbox.getChildren().size(); j++) {
+                    if ( hbox.getChildren().get(j) instanceof CheckBox ) {
+                        measPointList.get(i).setUsed(((CheckBox) hbox.getChildren().get(j)).isSelected());
+                    }
+                }
+            }
+
+        }
 
     private void addMeasData(List<MeasPoint> measPointList){
         for (MeasPoint measPont: measPointList) {
@@ -51,14 +74,12 @@ public class MeasPointListDisplayer {
             hbox.setStyle("-fx-border-color: lightgray");
             hbox.setOnMouseClicked(mouseEvent -> {
                 int rowIndex = vBox.getChildren().indexOf((Node) mouseEvent.getSource());
-               if(clickValue[rowIndex] == 5){
-                   clickValue[rowIndex] = 1;
-               }
-               else{
-                   clickValue[rowIndex]++;
-               }
+                clickValue[rowIndex]++;
                 hbox.setBackground(new Background(
                         new BackgroundFill(getColorValue(rowIndex), null, null)));
+                if( clickValue[rowIndex] == 5 ){
+                    clickValue[rowIndex] = 0;
+                }
             });
             Text measID = new Text(measPont.getPointID());
             Text x = new Text(String.format("%.3f", measPont.getX_coord()).replace(",", "."));
@@ -72,15 +93,6 @@ public class MeasPointListDisplayer {
         }
     }
 
-    private void addButton(){
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(10, 10, 10, 10));
-        Button calcBtn = new Button("Számol");
-        calcBtn.setCursor(Cursor.HAND);
-        hBox.getChildren().add(calcBtn);
-        vBox.getChildren().add(hBox);
-    }
 
     private Color getColorValue(int rowIndex) {
 
@@ -96,8 +108,9 @@ public class MeasPointListDisplayer {
         }
         return Color.TRANSPARENT;
     }
-    private ScrollPane getScrollPane(AnchorPane content){
-        ScrollPane scroller = new ScrollPane(content);
+
+    private ScrollPane getScrollPane(){
+        ScrollPane scroller = new ScrollPane(pane);
         scroller.setFitToWidth(true);
         scroller.setFitToHeight(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);

@@ -79,11 +79,14 @@ public class MeasPoint {
 
     @Override
     public String toString() {
-        return  pointID + ", "
-                + df.format(x_coord).replace(",", ".") + ","
-                + df.format(y_coord).replace(",", ".") + ", "
-                + df.format(z_coord).replace(",", ".") + ", "
-                + pointType;
+        return "MeasPoint{" +
+                "pointID='" + pointID + '\'' +
+                ", x_coord=" + x_coord +
+                ", y_coord=" + y_coord +
+                ", z_coord=" + z_coord +
+                ", color=" + color +
+                ", pointType=" + pointType +
+                ", isUsed=" + isUsed +
+                '}';
     }
-
 }
