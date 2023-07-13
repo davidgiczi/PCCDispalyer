@@ -1,7 +1,5 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;

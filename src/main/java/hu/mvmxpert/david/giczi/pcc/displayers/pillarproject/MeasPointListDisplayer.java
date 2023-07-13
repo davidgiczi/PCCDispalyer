@@ -52,7 +52,7 @@ public class MeasPointListDisplayer {
 
     private void parseDisplayerData(){
             for ( int i = 0; i < vBox.getChildren().size(); i++ ) {
-                measPointList.get(i).setColor(getColorValue(i));
+                measPointList.get(i).setGroupID(clickValue[i]);
                 HBox hbox = (HBox) vBox.getChildren().get(i);
                 for( int j = 0; j < hbox.getChildren().size(); j++) {
                     if ( hbox.getChildren().get(j) instanceof CheckBox ) {

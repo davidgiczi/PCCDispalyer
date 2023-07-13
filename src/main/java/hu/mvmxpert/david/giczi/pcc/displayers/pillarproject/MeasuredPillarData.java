@@ -11,6 +11,8 @@ import java.util.List;
 public class MeasuredPillarData {
 
     private final List<MeasPoint> measPillarPoints;
+    private List<MeasPoint> pillarBasePoints;
+    private List<MeasPoint> pillarTopPoints;
 
     public List<MeasPoint> getMeasPillarPoints() {
         return measPillarPoints;
@@ -19,6 +21,44 @@ public class MeasuredPillarData {
     public MeasuredPillarData(List<String> measData) {
         measPillarPoints = new ArrayList<>();
         getMeasuredData(measData);
+    }
+
+    public List<MeasPoint> getPillarBasePoints() {
+        return pillarBasePoints;
+    }
+
+    public List<MeasPoint> getPillarTopPoints() {
+        return pillarTopPoints;
+    }
+
+    public void calcPillarLegsPoint(){
+        pillarBasePoints = new ArrayList<>();
+        for(int i = 0; i < 5; i++){
+            List<MeasPoint> pillarLegPoints = new ArrayList<>();
+        for (MeasPoint measPillarPoint : measPillarPoints) {
+                if( PointType.ALAP == measPillarPoint.getPointType() &&
+                        i == measPillarPoint.getGroupID() ){
+                    pillarLegPoints.add(measPillarPoint);
+                }
+            }
+            double x = 0.0;
+            double y = 0.0;
+            double z = 0.0;
+            MeasPoint pillarLegPoint = new MeasPoint(null, x, y, z, PointType.ALAP);
+            pillarBasePoints.add(pillarLegPoint);
+        }
+    }
+
+    public void calcPillarTopPoints(){
+
+    }
+
+    public MeasPoint getPillarBaseCenterPoint(){
+        return null;
+    }
+
+    public MeasPoint getPillarTopCenterPoint(){
+        return null;
     }
 
     private void getMeasuredData(List<String> measData){

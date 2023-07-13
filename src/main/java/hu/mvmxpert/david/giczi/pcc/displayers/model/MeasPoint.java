@@ -12,7 +12,7 @@ public class MeasPoint {
     private final double x_coord;
     private final double y_coord;
     private final double z_coord;
-    private Color color;
+    private int groupID;
     private final Enum pointType;
     private boolean isUsed;
     private final DecimalFormat df = new DecimalFormat("0.000");
@@ -44,12 +44,14 @@ public class MeasPoint {
         return z_coord;
     }
 
-    public Color getColor() {
-        return color;
+    public int getGroupID() {
+        return groupID;
     }
-    public void setColor(Color color) {
-        this.color = color;
+
+    public void setGroupID(int groupID) {
+        this.groupID = groupID;
     }
+
     public Enum getPointType() {
         return pointType;
     }
@@ -84,7 +86,7 @@ public class MeasPoint {
                 ", x_coord=" + x_coord +
                 ", y_coord=" + y_coord +
                 ", z_coord=" + z_coord +
-                ", color=" + color +
+                ", groupID=" + groupID +
                 ", pointType=" + pointType +
                 ", isUsed=" + isUsed +
                 '}';
