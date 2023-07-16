@@ -17,7 +17,7 @@ public class InputPillarDataWindow {
         Scene scene = new Scene(pane);
         stage.setWidth(400);
         stage.setHeight(500);
-        stage.setTitle(FileProcess.PROJECT_FILE_NAME + " projekt");
+        stage.setTitle(FileProcess.PROJECT_FILE_NAME);
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
         stage.setScene(scene);

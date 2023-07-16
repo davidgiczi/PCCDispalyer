@@ -1,14 +1,12 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.model;
 
-import javafx.scene.paint.Color;
-
 import java.text.DecimalFormat;
 import java.util.Objects;
 
 
-public class MeasPoint {
+public class MeasPoint  {
 
-    private final String pointID;
+    private String pointID;
     private final double x_coord;
     private final double y_coord;
     private final double z_coord;
@@ -30,6 +28,9 @@ public class MeasPoint {
         return pointID;
     }
 
+    public void setPointID(String pointID) {
+        this.pointID = pointID;
+    }
 
     public double getX_coord() {
         return x_coord;
@@ -79,6 +80,8 @@ public class MeasPoint {
         return Objects.hash(pointID, x_coord, y_coord, z_coord);
     }
 
+
+
     @Override
     public String toString() {
         return "MeasPoint{" +
@@ -91,4 +94,5 @@ public class MeasPoint {
                 ", isUsed=" + isUsed +
                 '}';
     }
+
 }

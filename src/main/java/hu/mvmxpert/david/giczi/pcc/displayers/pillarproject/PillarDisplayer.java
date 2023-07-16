@@ -25,7 +25,7 @@ public class PillarDisplayer {
         });
         ScrollPane scrollPane = getScrollPane(pane);
         Scene scene = new Scene(scrollPane);
-        stage.setTitle(FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".plr");
+        stage.setTitle(FileProcess.FOLDER_PATH);
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setMinWidth(1050);
         stage.setMinHeight(750);

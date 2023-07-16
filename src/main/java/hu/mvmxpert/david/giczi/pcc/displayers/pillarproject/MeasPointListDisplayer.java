@@ -40,10 +40,13 @@ public class MeasPointListDisplayer {
         pane.getChildren().add(vBox);
         ScrollPane scrollPane = getScrollPane();
         Scene scene = new Scene(scrollPane);
-        stage.setOnCloseRequest(windowEvent -> parseDisplayerData());
+        stage.setOnCloseRequest(windowEvent -> {
+            parseDisplayerData();
+            new InputPillarDataWindow();
+        });
         stage.setWidth(430);
         stage.setMaxHeight(800);
-        stage.setTitle(FileProcess.PROJECT_FILE_NAME + " projekt");
+        stage.setTitle(FileProcess.PROJECT_FILE_NAME);
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
         stage.setScene(scene);

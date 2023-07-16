@@ -84,7 +84,7 @@ public class FileProcess {
 		File selectedFile = projectFileChooser.showOpenDialog(FXHomeWindow.HOME_STAGE);
 		if ( selectedFile != null ) {
 			setData(selectedFile);
-			PROJECT_FILE_NAME = selectedFile.getName().substring(0, selectedFile.getName().indexOf("."));
+			FOLDER_PATH = selectedFile.getAbsolutePath();
 		}
 	}
 

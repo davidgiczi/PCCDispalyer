@@ -75,8 +75,7 @@ public class FXHomeWindow extends Application {
 		MenuItem openPillarProject = new MenuItem("Projekt megnyitása");
 
 		openPillarProject.setOnAction(e -> {
-			//new InputPillarDataWindow();
-			measData.getMeasPillarPoints().forEach(System.out::println);
+
 		});
 		MenuItem createPillarProject = new MenuItem("Új projekt létrehozása");
 		createPillarProject.setOnAction(e -> {
