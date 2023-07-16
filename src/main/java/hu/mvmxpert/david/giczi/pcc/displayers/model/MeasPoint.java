@@ -1,5 +1,7 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.model;
 
+import hu.mvmxpert.david.giczi.pcc.displayers.service.AzimuthAndDistance;
+
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -10,6 +12,7 @@ public class MeasPoint  {
     private final double x_coord;
     private final double y_coord;
     private final double z_coord;
+    private double azimuth;
     private int groupID;
     private final Enum pointType;
     private boolean isUsed;
@@ -36,13 +39,20 @@ public class MeasPoint  {
         return x_coord;
     }
 
-
     public double getY_coord() {
         return y_coord;
     }
 
     public double getZ_coord() {
         return z_coord;
+    }
+
+    public double getAzimuth() {
+        return azimuth;
+    }
+    public void setAzimuth(Point azimuthFrom) {
+        this.azimuth =
+                new AzimuthAndDistance(azimuthFrom, new Point(null, x_coord, y_coord)).calcAzimuth();
     }
 
     public int getGroupID() {
@@ -89,6 +99,7 @@ public class MeasPoint  {
                 ", x_coord=" + x_coord +
                 ", y_coord=" + y_coord +
                 ", z_coord=" + z_coord +
+                ", azimuth=" + azimuth +
                 ", groupID=" + groupID +
                 ", pointType=" + pointType +
                 ", isUsed=" + isUsed +

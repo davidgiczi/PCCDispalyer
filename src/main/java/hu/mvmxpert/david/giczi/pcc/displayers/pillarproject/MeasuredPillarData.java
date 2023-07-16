@@ -6,9 +6,7 @@ import hu.mvmxpert.david.giczi.pcc.displayers.service.AzimuthAndDistance;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MeasuredPillarData {
 
@@ -105,44 +103,43 @@ public class MeasuredPillarData {
         Point direction = new Point("direction", baseLineDirectionPoint.getX_coord(),
                 baseLineDirectionPoint.getY_coord());
         AzimuthAndDistance baseLineDirection = new AzimuthAndDistance(center, direction);
-        Point pillarLeg1 = new Point("leg1", pillarBasePoints.get(0).getX_coord(),
-                pillarBasePoints.get(0).getY_coord());
-        Point pillarLeg2 = new Point("leg2", pillarBasePoints.get(1).getX_coord(),
-                pillarBasePoints.get(1).getY_coord());
-        Point pillarLeg3 = new Point("leg3", pillarBasePoints.get(2).getX_coord(),
-                pillarBasePoints.get(2).getY_coord());
-        Point pillarLeg4 = new Point("leg4", pillarBasePoints.get(3).getX_coord(),
-                pillarBasePoints.get(3).getY_coord());
+        for (MeasPoint pillarBasePoint : pillarBasePoints) {
+            pillarBasePoint.setAzimuth(center);
+        }
 
         if( rotation == 0 ){
-            AzimuthAndDistance pillarLeg1Direction = new AzimuthAndDistance(center, pillarLeg1);
-            AzimuthAndDistance pillarLeg2Direction = new AzimuthAndDistance(center, pillarLeg2);
-            AzimuthAndDistance pillarLeg3Direction = new AzimuthAndDistance(center, pillarLeg3);
-            AzimuthAndDistance pillarLeg4Direction = new AzimuthAndDistance(center, pillarLeg4);
 
-            if( pillarLeg1Direction.calcAzimuth() < baseLineDirection.calcAzimuth() &&
-            baseLineDirection.calcAzimuth() < pillarLeg2Direction.calcAzimuth() ){
+              for(int i = 0; i < pillarBasePoints.size(); i++){
+                  for(int j = i + 1; j < pillarBasePoints.size(); j++) {
+                      if (pillarBasePoints.get(i).getAzimuth() > pillarBasePoints.get(j).getAzimuth()) {
+                          Collections.swap(pillarBasePoints, i, j);
+                      }
+                  }
+            }
+
+            if( pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                    baseLineDirection.calcAzimuth() < pillarBasePoints.get(1).getAzimuth() ){
                 pillarBasePoints.get(0).setPointID("A");
                 pillarBasePoints.get(1).setPointID("B");
                 pillarBasePoints.get(2).setPointID("C");
                 pillarBasePoints.get(3).setPointID("D");
             }
-            else if( pillarLeg2Direction.calcAzimuth() < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() < pillarLeg3Direction.calcAzimuth() ){
+            else if( pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                    baseLineDirection.calcAzimuth() < pillarBasePoints.get(2).getAzimuth() ){
                 pillarBasePoints.get(0).setPointID("D");
                 pillarBasePoints.get(1).setPointID("A");
                 pillarBasePoints.get(2).setPointID("B");
                 pillarBasePoints.get(3).setPointID("C");
             }
-            else if( pillarLeg3Direction.calcAzimuth() < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() < pillarLeg4Direction.calcAzimuth() ){
+            else if( pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                    baseLineDirection.calcAzimuth() < pillarBasePoints.get(3).getAzimuth() ){
                 pillarBasePoints.get(0).setPointID("C");
                 pillarBasePoints.get(1).setPointID("D");
                 pillarBasePoints.get(2).setPointID("A");
                 pillarBasePoints.get(3).setPointID("B");
             }
-            else if( pillarLeg4Direction.calcAzimuth() < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() < pillarLeg1Direction.calcAzimuth() ){
+            else if( pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                    baseLineDirection.calcAzimuth() < pillarBasePoints.get(0).getAzimuth() ){
                 pillarBasePoints.get(0).setPointID("B");
                 pillarBasePoints.get(1).setPointID("C");
                 pillarBasePoints.get(2).setPointID("D");

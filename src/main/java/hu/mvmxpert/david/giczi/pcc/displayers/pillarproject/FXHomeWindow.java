@@ -77,12 +77,12 @@ public class FXHomeWindow extends Application {
 		openPillarProject.setOnAction(e -> {
 
 		});
+
 		MenuItem createPillarProject = new MenuItem("Új projekt létrehozása");
 		createPillarProject.setOnAction(e -> {
 			fileProcess.getMeasureFileData();
 			measData = new MeasuredPillarData(fileProcess.getMeasData());
-			MeasPointListDisplayer measDisp = new MeasPointListDisplayer(measData.getMeasPillarPoints());
-
+			new MeasPointListDisplayer(measData.getMeasPillarPoints());
 		});
 		pillarProject.getItems().addAll(openPillarProject,createPillarProject);
 		menuBar.getMenus().addAll(projectProcess, setBaseData,
