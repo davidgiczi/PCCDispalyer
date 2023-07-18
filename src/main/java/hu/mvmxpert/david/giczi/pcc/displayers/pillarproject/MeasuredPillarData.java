@@ -149,6 +149,74 @@ public class MeasuredPillarData {
         }
         int centerID = Integer.parseInt(pillarCenterPoint.getPointID());
         int directionID = Integer.parseInt(baseLineDirectionPoint.getPointID());
+
+        if( centerID == directionID ){
+            return;
+        }
+
+        if( centerID < directionID ){
+            rotation += (Math.PI - rotation) / 2;
+            if( pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(1).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("A");
+                pillarBasePoints.get(1).setPointID("B");
+                pillarBasePoints.get(2).setPointID("C");
+                pillarBasePoints.get(3).setPointID("D");
+            }
+            else if( pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(2).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("D");
+                pillarBasePoints.get(1).setPointID("A");
+                pillarBasePoints.get(2).setPointID("B");
+                pillarBasePoints.get(3).setPointID("C");
+            }
+            else if( pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(3).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("C");
+                pillarBasePoints.get(1).setPointID("D");
+                pillarBasePoints.get(2).setPointID("A");
+                pillarBasePoints.get(3).setPointID("B");
+            }
+            else if( pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(0).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("B");
+                pillarBasePoints.get(1).setPointID("C");
+                pillarBasePoints.get(2).setPointID("D");
+                pillarBasePoints.get(3).setPointID("A");
+            }
+        }
+        else {
+
+            rotation += (Math.PI + rotation) / 2;
+            if( pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(1).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("A");
+                pillarBasePoints.get(1).setPointID("B");
+                pillarBasePoints.get(2).setPointID("C");
+                pillarBasePoints.get(3).setPointID("D");
+            }
+            else if( pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(2).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("D");
+                pillarBasePoints.get(1).setPointID("A");
+                pillarBasePoints.get(2).setPointID("B");
+                pillarBasePoints.get(3).setPointID("C");
+            }
+            else if( pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(3).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("C");
+                pillarBasePoints.get(1).setPointID("D");
+                pillarBasePoints.get(2).setPointID("A");
+                pillarBasePoints.get(3).setPointID("B");
+            }
+            else if( pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() + rotation &&
+                    baseLineDirection.calcAzimuth() + rotation < pillarBasePoints.get(0).getAzimuth() ){
+                pillarBasePoints.get(0).setPointID("B");
+                pillarBasePoints.get(1).setPointID("C");
+                pillarBasePoints.get(2).setPointID("D");
+                pillarBasePoints.get(3).setPointID("A");
+            }
+        }
     }
 
     public MeasPoint getPillarBaseCenterPoint(){
