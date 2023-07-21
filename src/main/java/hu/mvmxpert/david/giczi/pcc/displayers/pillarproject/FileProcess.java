@@ -16,20 +16,21 @@ public class FileProcess {
 	
 	public static String FOLDER_PATH;
 	public static String PROJECT_FILE_NAME;
-	private final List<String> measData = new ArrayList<>();
+	public static String MEAS_FILE_NAME;
+	private List<String> measData;
 	private String delimiter = ";";
 
 	public List<String> getMeasData() {
 		return measData;
 	}
-
 	public void setDelimiter(String delimiter) {
 		this.delimiter = delimiter;
 	}
 
 	public void setFolder() {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
-		directoryChooser.setInitialDirectory(FOLDER_PATH == null ? new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
+		directoryChooser.setInitialDirectory(FOLDER_PATH == null ?
+				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
 		directoryChooser.setTitle("Válassz mentési mappát");
 		File selectedFile =	directoryChooser.showDialog(FXHomeWindow.HOME_STAGE);
 		if ( selectedFile != null ) {
@@ -38,7 +39,8 @@ public class FileProcess {
 	}
 	public List<String> openProject() {
 		FileChooser projectFileChooser = new FileChooser();
-		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ? new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
+		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ?
+				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
 		projectFileChooser.setTitle("Válassz projekt fájlt");
 		FileChooser.ExtensionFilter projectFileFilter = new FileChooser.ExtensionFilter("Projekt fájlok (*.plr)", "*.plr");
 		projectFileChooser.getExtensionFilters().add(projectFileFilter);
@@ -77,19 +79,20 @@ public class FileProcess {
 
 	public void getMeasureFileData() {
 		FileChooser projectFileChooser = new FileChooser();
-		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ? new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
+		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ?
+				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
 		projectFileChooser.setTitle("Válassz mérési fájlt");
 		FileChooser.ExtensionFilter projectFileFilter = new FileChooser.ExtensionFilter("Mérési fájlok (*.txt)", "*.txt");
 		projectFileChooser.getExtensionFilters().add(projectFileFilter);
 		File selectedFile = projectFileChooser.showOpenDialog(FXHomeWindow.HOME_STAGE);
 		if ( selectedFile != null ) {
 			setData(selectedFile);
-			FOLDER_PATH = selectedFile.getAbsolutePath();
+			MEAS_FILE_NAME = selectedFile.getName();
 		}
 	}
 
 	private void setData(File selectedFile){
-
+		measData = new ArrayList<>();
 		try(BufferedReader reader = new BufferedReader(
 				new FileReader(selectedFile, StandardCharsets.UTF_8))) {
 

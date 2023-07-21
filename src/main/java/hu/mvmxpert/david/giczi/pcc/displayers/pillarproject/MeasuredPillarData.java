@@ -10,7 +10,7 @@ import java.util.*;
 
 public class MeasuredPillarData {
 
-    private final List<MeasPoint> measPillarPoints;
+    private List<MeasPoint> measPillarPoints;
     private List<MeasPoint> pillarBasePoints;
     private List<MeasPoint> pillarTopPoints;
     private MeasPoint pillarCenterPoint =
@@ -18,6 +18,10 @@ public class MeasuredPillarData {
     private MeasPoint baseLineDirectionPoint =
             new MeasPoint("T2", 727921.3643, 218638.8988, 0 , PointType.ALAP);
     private double rotation;
+
+    public MeasuredPillarData(){
+        measPillarPoints = new ArrayList<>();
+    }
 
     public List<MeasPoint> getMeasPillarPoints() {
         return measPillarPoints;
@@ -33,11 +37,6 @@ public class MeasuredPillarData {
 
     public void setRotation(double rotation) {
         this.rotation = rotation;
-    }
-
-    public MeasuredPillarData(List<String> measData) {
-        measPillarPoints = new ArrayList<>();
-        getMeasuredData(measData);
     }
 
     public List<MeasPoint> getPillarBasePoints() {
@@ -255,7 +254,7 @@ public class MeasuredPillarData {
         return new MeasPoint("topCenter", x , y, z, PointType.CSUCS);
     }
 
-    private void getMeasuredData(List<String> measData){
+    public void convertMeasuredDataToMeasPoints(List<String> measData){
         measData.forEach(data -> {
             String[] baseData = data.split(",");
             String[] topData = data.split(";");

@@ -1,6 +1,5 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
-import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -14,8 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.File;
-
 
 public class FXHomeWindow extends Application {
 
@@ -24,7 +21,7 @@ public class FXHomeWindow extends Application {
 	public static Menu setBaseData;
 	public static Menu controlSteakoutedPoint;
 	private final FileProcess fileProcess = new FileProcess();
-	private MeasuredPillarData measData;
+	private final MeasuredPillarData measuredPillarData = new MeasuredPillarData();
 
 	
 	@Override
@@ -61,28 +58,30 @@ public class FXHomeWindow extends Application {
 		MenuItem closeProject = new MenuItem("Program bezárása");
 		projectProcess.getItems().addAll(openProject, createProject, new SeparatorMenuItem(), closeProject); 
 		setBaseData = new Menu("Alap adatainak megadása");
-		//setBaseData.setDisable(true);
+		setBaseData.setDisable(true);
 		MenuItem calcDistanceBetweenLegs = new MenuItem("Oszloplábak távolságának számítása");
 		MenuItem calcWeightBasePoints = new MenuItem("Súlyalap pontjainak számítása");
 		MenuItem calcPlateBasePoints = new MenuItem("Lemezalap pontjainak számítása");
 		setBaseData.getItems().addAll(calcDistanceBetweenLegs, 
 				new SeparatorMenuItem(), calcWeightBasePoints, calcPlateBasePoints);
 		controlSteakoutedPoint = new Menu("Kitűzés vizsgálata");
-		//controlSteakoutedPoint.setDisable(true);
+		controlSteakoutedPoint.setDisable(true);
 		MenuItem controll = new MenuItem("Kitűzött pontok ellenőrzése");
 		controlSteakoutedPoint.getItems().add(controll);
 		Menu pillarProject = new Menu("Oszlop projekt");
 		MenuItem openPillarProject = new MenuItem("Projekt megnyitása");
 
 		openPillarProject.setOnAction(e -> {
-			new InputPillarDataWindow();
 		});
 
 		MenuItem createPillarProject = new MenuItem("Új projekt létrehozása");
 		createPillarProject.setOnAction(e -> {
 			fileProcess.getMeasureFileData();
-			measData = new MeasuredPillarData(fileProcess.getMeasData());
-			new MeasPointListDisplayer(measData.getMeasPillarPoints());
+			if( fileProcess.getMeasData().isEmpty() ){
+				return;
+			}
+			measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
+			new MeasPointListDisplayer(measuredPillarData);
 		});
 		pillarProject.getItems().addAll(openPillarProject,createPillarProject);
 		menuBar.getMenus().addAll(projectProcess, setBaseData,
