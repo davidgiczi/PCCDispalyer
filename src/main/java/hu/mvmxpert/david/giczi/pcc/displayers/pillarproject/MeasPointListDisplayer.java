@@ -15,38 +15,31 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
 import java.util.List;
-import java.util.Optional;
+
 
 public class MeasPointListDisplayer {
 
     private final AnchorPane pane;
-    private final  VBox vBox;
+    private final  VBox vBoxForMeasuredData;
     private final int[] clickValue;
     private final MeasuredPillarData measuredPillarData;
-    private final Font font = Font.font("Arial", FontWeight.BOLD, 12);
+    private final Font font = Font.font("Arial", FontWeight.BOLD, 13);
 
     public MeasPointListDisplayer(MeasuredPillarData measuredPillarData){
         this.measuredPillarData = measuredPillarData;
         clickValue = new int[measuredPillarData.getMeasPillarPoints().size()];
-        vBox = new VBox();
+        vBoxForMeasuredData = new VBox();
         Stage stage = new Stage();
         pane = new AnchorPane();
         pane.setStyle("-fx-background-color: white");
+        addInstructionButtons();
         addMeasData(measuredPillarData.getMeasPillarPoints());
-        pane.getChildren().add(vBox);
-        ScrollPane scrollPane = getScrollPane();
-        Scene scene = new Scene(scrollPane);
-        stage.setOnCloseRequest(windowEvent -> {
-            parseDisplayerData();
-            if( !getConfirmationAlert("További mérési adatok hozzáadása, vagy új adatok beolvasása",
-                    "Kívánsz további mérési eredményeket beolvasni, vagy új listát létrehozni?")){
-                measuredPillarData.getMeasPillarPoints().clear();
-            }
-        });
-        stage.setWidth(450);
-        stage.setMaxHeight(800);
+        pane.getChildren().add(vBoxForMeasuredData);
+        Scene scene = new Scene(getScrollPane());
+        stage.setOnCloseRequest(windowEvent -> measuredPillarData.getMeasPillarPoints().clear());
+        stage.setWidth(510);
+        stage.setHeight(130 + measuredPillarData.getMeasPillarPoints().size() * 40);
         stage.setTitle(FileProcess.MEAS_FILE_NAME);
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
@@ -55,18 +48,47 @@ public class MeasPointListDisplayer {
     }
 
     private void parseDisplayerData(){
-            for ( int i = 0; i < vBox.getChildren().size(); i++ ) {
-                measuredPillarData.getMeasPillarPoints().get(i).setGroupID(clickValue[i]);
-                HBox hbox = (HBox) vBox.getChildren().get(i);
+            for (int i = 3; i < vBoxForMeasuredData.getChildren().size(); i++ ) {
+                measuredPillarData.getMeasPillarPoints().get(i - 3).setGroupID(clickValue[i - 3]);
+                HBox hbox = (HBox) vBoxForMeasuredData.getChildren().get(i);
                 for( int j = 0; j < hbox.getChildren().size(); j++) {
                     if ( hbox.getChildren().get(j) instanceof CheckBox ) {
                         measuredPillarData.getMeasPillarPoints()
-                                .get(i).setUsed(((CheckBox) hbox.getChildren().get(j)).isSelected());
+                                .get(i - 3).setUsed(((CheckBox) hbox.getChildren().get(j)).isSelected());
                     }
                 }
             }
         }
+        private void addInstructionButtons(){
+        Button createProjectButton = new Button("Új projekt létrehozása");
+        createProjectButton.setFont(font);
+        createProjectButton.setCursor(Cursor.HAND);
+        createProjectButton.setPrefWidth(480);
+        createProjectButton.setPrefHeight(30);
+        createProjectButton.setOnMouseClicked(e -> {
+            parseDisplayerData();
+            new InputPillarDataWindow();
+              });
+        Button addMoreMeasuredDataButton = new Button("További mérési adatok hozzáadása");
+        addMoreMeasuredDataButton.setFont(font);
+        addMoreMeasuredDataButton.setCursor(Cursor.HAND);
+        addMoreMeasuredDataButton.setPrefWidth(480);
+        addMoreMeasuredDataButton.setPrefHeight(30);
+        addMoreMeasuredDataButton.setOnMouseClicked(e -> {
 
+        });
+        Button addNewMeasuredDataButton = new Button("Új mérési adatok hozzáadása");
+        addNewMeasuredDataButton.setFont(font);
+        addNewMeasuredDataButton.setCursor(Cursor.HAND);
+        addNewMeasuredDataButton.setPrefWidth(480);
+        addNewMeasuredDataButton.setPrefHeight(30);
+        addNewMeasuredDataButton.setOnMouseClicked(e -> {
+        measuredPillarData.getMeasPillarPoints().clear();
+        });
+        vBoxForMeasuredData.getChildren().addAll(createProjectButton,
+                addMoreMeasuredDataButton, addNewMeasuredDataButton);
+
+         }
     private void addMeasData(List<MeasPoint> measPointList){
         for (MeasPoint measPont: measPointList) {
             HBox hbox = new HBox(20);
@@ -74,7 +96,7 @@ public class MeasPointListDisplayer {
             hbox.setCursor(Cursor.HAND);
             hbox.setStyle("-fx-border-color: lightgray");
             hbox.setOnMouseClicked(mouseEvent -> {
-                int rowIndex = vBox.getChildren().indexOf((Node) mouseEvent.getSource());
+                int rowIndex = vBoxForMeasuredData.getChildren().indexOf((Node) mouseEvent.getSource());
                 clickValue[rowIndex]++;
                 hbox.setBackground(new Background(
                         new BackgroundFill(getColorValue(rowIndex), null, null)));
@@ -96,7 +118,7 @@ public class MeasPointListDisplayer {
             check.setFont(font);
             check.setSelected(true);
             hbox.getChildren().addAll(measID, x, y, z, type, check);
-            vBox.getChildren().add(hbox);
+            vBoxForMeasuredData.getChildren().add(hbox);
         }
     }
 
@@ -120,20 +142,7 @@ public class MeasPointListDisplayer {
         scroller.setFitToWidth(true);
         scroller.setFitToHeight(true);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         return scroller;
-    }
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public boolean getConfirmationAlert(String title, String text) {
-        ButtonType addData = new ButtonType("További adatok hozzáadása", ButtonBar.ButtonData.OK_DONE);
-        ButtonType newList = new ButtonType("Új lista létrehozása", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, null, addData, newList);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("file:images/MVM.jpg"));
-        alert.initOwner(FXHomeWindow.HOME_STAGE);
-        alert.setTitle(title);
-        alert.setHeaderText(text);
-        Optional<ButtonType> option = alert.showAndWait();
-        return option.get() == ButtonType.OK;
     }
 }
