@@ -20,26 +20,28 @@ import java.util.List;
 
 public class MeasPointListDisplayer {
 
+    public Stage stage;
     private final AnchorPane pane;
     private final  VBox vBoxForMeasuredData;
     private final int[] clickValue;
-    private final MeasuredPillarData measuredPillarData;
+    private final MeasuredPillarDataController measuredPillarDataController;
     private final Font font = Font.font("Arial", FontWeight.BOLD, 13);
 
-    public MeasPointListDisplayer(MeasuredPillarData measuredPillarData){
-        this.measuredPillarData = measuredPillarData;
-        clickValue = new int[measuredPillarData.getMeasPillarPoints().size()];
+    public MeasPointListDisplayer(MeasuredPillarDataController measuredPillarDataController){
+        this.measuredPillarDataController = measuredPillarDataController;
+        clickValue = new int[measuredPillarDataController
+                .measuredPillarData.getMeasPillarPoints().size()];
         vBoxForMeasuredData = new VBox();
-        Stage stage = new Stage();
+        stage = new Stage();
         pane = new AnchorPane();
         pane.setStyle("-fx-background-color: white");
         addInstructionButtons();
-        addMeasData(measuredPillarData.getMeasPillarPoints());
+        addMeasData(measuredPillarDataController.measuredPillarData.getMeasPillarPoints());
         pane.getChildren().add(vBoxForMeasuredData);
         Scene scene = new Scene(getScrollPane());
-        stage.setOnCloseRequest(windowEvent -> measuredPillarData.getMeasPillarPoints().clear());
+        stage.setOnCloseRequest(windowEvent -> measuredPillarDataController.init());
         stage.setWidth(510);
-        stage.setHeight(130 + measuredPillarData.getMeasPillarPoints().size() * 40);
+        stage.setHeight(600);
         stage.setTitle(FileProcess.MEAS_FILE_NAME);
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
@@ -49,11 +51,11 @@ public class MeasPointListDisplayer {
 
     private void parseDisplayerData(){
             for (int i = 3; i < vBoxForMeasuredData.getChildren().size(); i++ ) {
-                measuredPillarData.getMeasPillarPoints().get(i - 3).setGroupID(clickValue[i - 3]);
+          measuredPillarDataController.measuredPillarData.getMeasPillarPoints().get(i - 3).setGroupID(clickValue[i - 3]);
                 HBox hbox = (HBox) vBoxForMeasuredData.getChildren().get(i);
                 for( int j = 0; j < hbox.getChildren().size(); j++) {
                     if ( hbox.getChildren().get(j) instanceof CheckBox ) {
-                        measuredPillarData.getMeasPillarPoints()
+                     measuredPillarDataController.measuredPillarData.getMeasPillarPoints()
                                 .get(i - 3).setUsed(((CheckBox) hbox.getChildren().get(j)).isSelected());
                     }
                 }
@@ -67,7 +69,7 @@ public class MeasPointListDisplayer {
         createProjectButton.setPrefHeight(30);
         createProjectButton.setOnMouseClicked(e -> {
             parseDisplayerData();
-            new InputPillarDataWindow();
+            measuredPillarDataController.createNewProject();
               });
         Button addMoreMeasuredDataButton = new Button("További mérési adatok hozzáadása");
         addMoreMeasuredDataButton.setFont(font);
@@ -75,7 +77,7 @@ public class MeasPointListDisplayer {
         addMoreMeasuredDataButton.setPrefWidth(480);
         addMoreMeasuredDataButton.setPrefHeight(30);
         addMoreMeasuredDataButton.setOnMouseClicked(e -> {
-
+            measuredPillarDataController.addMoreMeasuredPillarData();
         });
         Button addNewMeasuredDataButton = new Button("Új mérési adatok hozzáadása");
         addNewMeasuredDataButton.setFont(font);
@@ -83,7 +85,8 @@ public class MeasPointListDisplayer {
         addNewMeasuredDataButton.setPrefWidth(480);
         addNewMeasuredDataButton.setPrefHeight(30);
         addNewMeasuredDataButton.setOnMouseClicked(e -> {
-        measuredPillarData.getMeasPillarPoints().clear();
+        measuredPillarDataController.init();
+        measuredPillarDataController.openNewMeasuredPillarData();
         });
         vBoxForMeasuredData.getChildren().addAll(createProjectButton,
                 addMoreMeasuredDataButton, addNewMeasuredDataButton);
@@ -96,7 +99,7 @@ public class MeasPointListDisplayer {
             hbox.setCursor(Cursor.HAND);
             hbox.setStyle("-fx-border-color: lightgray");
             hbox.setOnMouseClicked(mouseEvent -> {
-                int rowIndex = vBoxForMeasuredData.getChildren().indexOf((Node) mouseEvent.getSource());
+                int rowIndex = vBoxForMeasuredData.getChildren().indexOf((Node) mouseEvent.getSource()) - 3;
                 clickValue[rowIndex]++;
                 hbox.setBackground(new Background(
                         new BackgroundFill(getColorValue(rowIndex), null, null)));
