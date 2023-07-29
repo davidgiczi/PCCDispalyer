@@ -11,8 +11,10 @@ import javafx.stage.Stage;
 
 public class PillarDisplayer {
     private final AnchorPane pane = new AnchorPane();
+    public MeasuredPillarDataController measuredPillarDataController;
 
-    public PillarDisplayer(){
+    public PillarDisplayer(MeasuredPillarDataController measuredPillarDataController){
+        this.measuredPillarDataController = measuredPillarDataController;
        Stage stage = new Stage();
         pane.setStyle("-fx-background-color: white");
         pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -25,7 +27,7 @@ public class PillarDisplayer {
         });
         ScrollPane scrollPane = getScrollPane(pane);
         Scene scene = new Scene(scrollPane);
-        stage.setTitle(FileProcess.FOLDER_PATH);
+        stage.setTitle(FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".plr");
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setMinWidth(1050);
         stage.setMinHeight(750);

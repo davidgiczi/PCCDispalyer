@@ -3,13 +3,11 @@ package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
 import hu.mvmxpert.david.giczi.pcc.displayers.service.AzimuthAndDistance;
-import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
 import java.util.*;
 
 public class MeasuredPillarData {
 
+    public MeasuredPillarDataController measuredPillarDataController;
     private List<MeasPoint> measPillarPoints;
     private List<MeasPoint> pillarBasePoints;
     private List<MeasPoint> pillarTopPoints;
@@ -19,7 +17,8 @@ public class MeasuredPillarData {
             new MeasPoint("T2", 727921.3643, 218638.8988, 0 , PointType.ALAP);
     private double rotation;
 
-    public MeasuredPillarData(){
+    public MeasuredPillarData(MeasuredPillarDataController measuredPillarDataController){
+        this.measuredPillarDataController = measuredPillarDataController;
         measPillarPoints = new ArrayList<>();
     }
 
@@ -259,7 +258,7 @@ public class MeasuredPillarData {
             String[] baseData = data.split(",");
             String[] topData = data.split(";");
             if( baseData.length == 1 && topData.length == 1){
-                getInfoAlert("Nem megfelelő mérési fájl formátum",
+              measuredPillarDataController. getInfoAlert("Nem megfelelő mérési fájl formátum",
                         "Az elválasztó karakter a mérési fájlban \",\" vagy \";\" lehet.");
                 return;
             }
@@ -286,13 +285,4 @@ public class MeasuredPillarData {
         });
     }
 
-    public void getInfoAlert(String title, String text) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(new Image("file:images/MVM.jpg"));
-        alert.initOwner(FXHomeWindow.HOME_STAGE);
-        alert.setTitle(title);
-        alert.setHeaderText(text);
-        alert.showAndWait();
-    }
 }

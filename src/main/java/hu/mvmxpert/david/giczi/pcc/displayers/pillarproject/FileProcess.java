@@ -13,12 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileProcess {
-	
-	public static String FOLDER_PATH;
+
 	public static String PROJECT_FILE_NAME;
+	public MeasuredPillarDataController measuredPillarDataController;
+	public static String FOLDER_PATH;
 	public static String MEAS_FILE_NAME;
 	private List<String> measData;
 	private String delimiter = ";";
+
+	public FileProcess(MeasuredPillarDataController measuredPillarDataController){
+		this.measuredPillarDataController = measuredPillarDataController;
+	}
 
 	public List<String> getMeasData() {
 		return measData;
@@ -32,7 +37,7 @@ public class FileProcess {
 		directoryChooser.setInitialDirectory(FOLDER_PATH == null ?
 				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
 		directoryChooser.setTitle("Válassz mentési mappát");
-		File selectedFile =	directoryChooser.showDialog(FXHomeWindow.HOME_STAGE);
+		File selectedFile =	directoryChooser.showDialog(measuredPillarDataController.fxHomeWindow.homeStage);
 		if ( selectedFile != null ) {
 			FOLDER_PATH = selectedFile.getAbsolutePath();
 		}
@@ -44,7 +49,7 @@ public class FileProcess {
 		projectFileChooser.setTitle("Válassz projekt fájlt");
 		FileChooser.ExtensionFilter projectFileFilter = new FileChooser.ExtensionFilter("Projekt fájlok (*.plr)", "*.plr");
 		projectFileChooser.getExtensionFilters().add(projectFileFilter);
-		File selectedFile = projectFileChooser.showOpenDialog(FXHomeWindow.HOME_STAGE);
+		File selectedFile = projectFileChooser.showOpenDialog(measuredPillarDataController.fxHomeWindow.homeStage);
 		if ( selectedFile != null ) {
 			FOLDER_PATH = selectedFile.getParent();
 			PROJECT_FILE_NAME = selectedFile.getName().substring(0, selectedFile.getName().indexOf('.'));
@@ -84,7 +89,7 @@ public class FileProcess {
 		projectFileChooser.setTitle("Válassz mérési fájlt");
 		FileChooser.ExtensionFilter projectFileFilter = new FileChooser.ExtensionFilter("Mérési fájlok (*.txt)", "*.txt");
 		projectFileChooser.getExtensionFilters().add(projectFileFilter);
-		File selectedFile = projectFileChooser.showOpenDialog(FXHomeWindow.HOME_STAGE);
+		File selectedFile = projectFileChooser.showOpenDialog(measuredPillarDataController.fxHomeWindow.homeStage);
 		if ( selectedFile != null ) {
 			setData(selectedFile);
 			MEAS_FILE_NAME = selectedFile.getName();

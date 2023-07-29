@@ -1,6 +1,5 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
-import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -17,31 +16,34 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.List;
-import java.util.Optional;
 
 public class InputPillarDataWindow {
 
+    public Stage stage;
+    private MeasuredPillarDataController measuredPillarDataController;
     private final AnchorPane pane;
     private final VBox vBox;
     private final Color color = Color.rgb(112,128,144);
     private final Font normalFont = Font.font("Arial", FontWeight.NORMAL, 14);
     private final Font boldFont = Font.font("Arial", FontWeight.BOLD, 13);
-    private TextField projectNameField;
-    private TextField projectPathField;
-    private TextField centerPillarIDField;
-    private TextField centerPillarField_X;
-    private TextField centerPillarField_Y;
-    private TextField rotationAngleField;
-    private TextField rotationMinField;;
-    private TextField rotationSecField;
-    private TextField directionPillarIDField;
-    private TextField directionPillarField_X;
-    private TextField directionPillarField_Y;
+    public TextField projectNameField;
+    public TextField projectPathField;
+    public TextField centerPillarIDField;
+    public TextField centerPillarField_X;
+    public TextField centerPillarField_Y;
+    public TextField rotationAngleField;
+    public TextField rotationMinField;;
+    public TextField rotationSecField;
+    public TextField directionPillarIDField;
+    public TextField directionPillarField_X;
+    public TextField directionPillarField_Y;
 
-
-    public InputPillarDataWindow(){
-        Stage stage = new Stage();
+    public InputPillarDataWindow(MeasuredPillarDataController measuredPillarDataController){
+        this.measuredPillarDataController = measuredPillarDataController;
+        stage = new Stage();
+        stage.setOnCloseRequest(windowEvent ->
+        {measuredPillarDataController.init();
+        measuredPillarDataController.fxHomeWindow.homeStage.show();});
         pane = new AnchorPane();
         vBox = new VBox();
         pane.setStyle("-fx-background-color: white");
@@ -128,6 +130,11 @@ public class InputPillarDataWindow {
         projectPathHbox.setAlignment(Pos.CENTER);
         projectPathHbox.getChildren().add(projectPathField);
         Button browseButton = new Button("Tallóz");
+        browseButton.setOnMouseClicked( e -> {
+          measuredPillarDataController.fxHomeWindow.homeStage.hide();
+          measuredPillarDataController.fileProcess.setFolder();
+          projectPathField.setTooltip(new Tooltip(FileProcess.FOLDER_PATH));
+          projectPathField.setText(FileProcess.FOLDER_PATH);});
         browseButton.setCursor(Cursor.HAND);
         browseButton.setFont(boldFont);
         HBox browseButtonHbox = new HBox();
@@ -355,6 +362,7 @@ public class InputPillarDataWindow {
 
     private void addCalcButton(){
     Button calcButton = new Button("Számol");
+    calcButton.setOnMouseClicked(e -> measuredPillarDataController.onlClickCountButtonProcess());
     calcButton.setCursor(Cursor.HAND);
     calcButton.setFont(boldFont);
     HBox calcButtonHbox = new HBox();

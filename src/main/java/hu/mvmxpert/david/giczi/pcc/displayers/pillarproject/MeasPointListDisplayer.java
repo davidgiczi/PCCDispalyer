@@ -41,7 +41,7 @@ public class MeasPointListDisplayer {
         Scene scene = new Scene(getScrollPane());
         stage.setOnCloseRequest(windowEvent -> measuredPillarDataController.init());
         stage.setWidth(510);
-        stage.setHeight(600);
+        stage.setHeight(130 + measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size() * 36);
         stage.setTitle(FileProcess.MEAS_FILE_NAME);
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);

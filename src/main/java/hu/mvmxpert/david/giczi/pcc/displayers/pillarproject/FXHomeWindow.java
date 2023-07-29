@@ -16,14 +16,14 @@ import javafx.stage.Stage;
 
 public class FXHomeWindow extends Application {
 
-	public static Stage HOME_STAGE;
+	public Stage homeStage;
 	private AnchorPane pane;
 	public static Menu setBaseData;
 	public static Menu controlSteakoutedPoint;
 	public MeasuredPillarDataController measuredPillarDataController;
 
 	public FXHomeWindow(){
-		this.measuredPillarDataController = new MeasuredPillarDataController();
+		this.measuredPillarDataController = new MeasuredPillarDataController(this);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class FXHomeWindow extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		HOME_STAGE = stage;
+		homeStage = stage;
 		pane = new AnchorPane();
 		addBackgroundImage();
 		addMenu();
