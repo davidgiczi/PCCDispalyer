@@ -1,21 +1,35 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class PillarDisplayer {
     private final AnchorPane pane = new AnchorPane();
     public MeasuredPillarDataController measuredPillarDataController;
+    private static final double MILLIMETER = 1000.0 / 225.0;
+    private final Font normalFont = Font.font("Arial", FontWeight.NORMAL, 14);
+    private final Font boldFont = Font.font("Arial", FontWeight.BOLD, 16);
 
     public PillarDisplayer(MeasuredPillarDataController measuredPillarDataController){
         this.measuredPillarDataController = measuredPillarDataController;
-       Stage stage = new Stage();
+        Stage stage = new Stage();
+        stage.setOnCloseRequest(windowEvent -> {
+            measuredPillarDataController.fxHomeWindow.homeStage.show();
+            measuredPillarDataController.init();
+        });
         pane.setStyle("-fx-background-color: white");
         pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -25,6 +39,7 @@ public class PillarDisplayer {
                 }
             }
         });
+        addContent();
         ScrollPane scrollPane = getScrollPane(pane);
         Scene scene = new Scene(scrollPane);
         stage.setTitle(FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".plr");
@@ -44,5 +59,48 @@ public class PillarDisplayer {
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         return scroller;
     }
+
+    private void addContent(){
+        addNorthSign();
+        addCenterPillarData();
+    }
+
+    private void addNorthSign(){
+        ImageView northSign = new ImageView(new Image("file:images/north.jpg"));
+        northSign.setFitWidth(40 * MILLIMETER);
+        northSign.setFitHeight(40 * MILLIMETER);
+        northSign.xProperty().bind(pane.widthProperty().divide(10).add(10 * MILLIMETER));
+        northSign.setY(10 * MILLIMETER);
+        pane.getChildren().add(northSign);
+    }
+
+    private void addCenterPillarData(){
+        HBox centerPillarDataHBox = new HBox();
+        centerPillarDataHBox.setAlignment(Pos.CENTER);
+        centerPillarDataHBox.setPadding(new Insets(10, 10, 10, 10));
+        centerPillarDataHBox.setSpacing(20);
+        Text idText = new Text(measuredPillarDataController
+                .measuredPillarData
+                .getPillarCenterPoint()
+                .getPointID());
+        idText.setFont(boldFont);
+        Text designedYText = new Text(String.format("%.3f", measuredPillarDataController
+                .measuredPillarData.getPillarCenterPoint().getX_coord()).replace(",", "."));
+        designedYText.setFont(normalFont);
+        Text designedXText = new Text(String.format("%.3f", measuredPillarDataController
+                .measuredPillarData.getPillarCenterPoint().getY_coord()).replace(",", "."));
+        designedXText.setFont(normalFont);
+        Text measuerdYtext = new Text(String.format("%.3f", measuredPillarDataController
+                .measuredPillarData.getPillarBaseCenterPoint().getX_coord()).replace(",", "."));
+        measuerdYtext.setFont(normalFont);
+        Text measuerdXText = new Text(String.format("%.3f", measuredPillarDataController
+                .measuredPillarData.getPillarBaseCenterPoint().getY_coord()).replace(",", "."));
+        measuerdXText.setFont(normalFont);
+        centerPillarDataHBox
+                .getChildren()
+                .addAll(idText, designedYText, designedXText, measuerdYtext, measuerdXText);
+        pane.getChildren().add(centerPillarDataHBox);
+    }
+
 
 }

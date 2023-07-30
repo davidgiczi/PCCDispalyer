@@ -93,6 +93,7 @@ public class FileProcess {
 		if ( selectedFile != null ) {
 			setData(selectedFile);
 			MEAS_FILE_NAME = selectedFile.getName();
+			FOLDER_PATH = selectedFile.getParent();
 		}
 	}
 

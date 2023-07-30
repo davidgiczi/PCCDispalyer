@@ -1,5 +1,7 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
+import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
+import hu.mvmxpert.david.giczi.pcc.displayers.utils.BaseType;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -34,7 +36,7 @@ public class MeasuredPillarDataController {
 
     public void openMeasuredData(){
         fileProcess.getMeasureFileData();
-        if( fileProcess.getMeasData().isEmpty() ){
+        if( fileProcess.getMeasData() == null || fileProcess.getMeasData().isEmpty() ){
             return;
         }
         measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
@@ -69,8 +71,9 @@ public class MeasuredPillarDataController {
            getInfoAlert("Hiányzó mentési mappa","Mentési mappa választása szükséges");
            return;
        }
+        int centerPillarID;
        try {
-           int centerPillarID =
+            centerPillarID =
                    InputDataValidator
                            .isValidInputPositiveIntegerValue(inputPillarDataWindow.centerPillarIDField.getText());
        }
@@ -79,8 +82,9 @@ public class MeasuredPillarDataController {
                    "Az oszlop száma csak pozitív egész érték lehet.");
            return;
        }
+        double centerPillarX;
         try {
-            double centerPillarX =
+            centerPillarX =
                     InputDataValidator
                             .isValidInputPositiveDoubleValue(inputPillarDataWindow.centerPillarField_X.getText());
         }
@@ -89,8 +93,9 @@ public class MeasuredPillarDataController {
                     "Az oszlop X koordinátája csak nem negatív szám lehet.");
             return;
         }
+        double centerPillarY;
         try {
-            double centerPillarY =
+            centerPillarY =
                     InputDataValidator
                             .isValidInputPositiveDoubleValue(inputPillarDataWindow.centerPillarField_Y.getText());
         }
@@ -100,39 +105,53 @@ public class MeasuredPillarDataController {
             return;
         }
 
+        measuredPillarData.setPillarCenterPoint(new MeasPoint(inputPillarDataWindow.centerPillarIDField.getText(),
+                centerPillarX, centerPillarY, 0.0, PointType.CENTER));
+
+        int angle;
         try{
-            int angle = InputDataValidator.isValidAngleValue(inputPillarDataWindow.rotationAngleField.getText());
+            angle = InputDataValidator.isValidAngleValue(inputPillarDataWindow.rotationAngleField.getText());
         }catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő e forgatás szög értéke",
                     "A forgatás szög értéke csak 360-nál kisebb egész szám lehet.");
             return;
         }
+        int min;
         try{
-            int min = InputDataValidator.isValidMinSecValue(inputPillarDataWindow.rotationMinField.getText());
+            min = InputDataValidator.isValidMinSecValue(inputPillarDataWindow.rotationMinField.getText());
         }catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő a forgatás szögperc értéke",
                     "A forgatás szögperc értéke csak 59-nél kisebb egész szám lehet.");
             return;
         }
+        int sec;
         try{
-            int sec = InputDataValidator.isValidMinSecValue(inputPillarDataWindow.rotationSecField.getText());
+            sec = InputDataValidator.isValidMinSecValue(inputPillarDataWindow.rotationSecField.getText());
         }catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő a forgatás szögmásodperc értéke",
                     "A forgatás szögmásodperc értéke csak 59-nél kisebb egész szám lehet.");
             return;
         }
+        int directionPillarID;
         try {
-            int directionPillarID =
+            directionPillarID =
                     InputDataValidator
                             .isValidInputPositiveIntegerValue(inputPillarDataWindow.directionPillarIDField.getText());
+            if( directionPillarID == centerPillarID ){
+                getInfoAlert("Nem megfelelő az előző/következő oszlop száma",
+                        "Az előző/következő oszlop száma nem lehet egyenlő az oszlop számával.");
+                return;
+            }
         }
         catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő az előző/következő oszlop száma",
                     "Az oszlop száma csak pozitív egész érték lehet.");
             return;
         }
+
+        double directionPillarX;
         try {
-            double directionPillarX =
+            directionPillarX =
                     InputDataValidator
                             .isValidInputPositiveDoubleValue(inputPillarDataWindow.directionPillarField_X.getText());
         }
@@ -141,8 +160,10 @@ public class MeasuredPillarDataController {
                     "Az oszlop X koordinátája csak nem negatív szám lehet.");
             return;
         }
+
+        double directionPillarY;
         try {
-            double directionPillarY =
+            directionPillarY =
                     InputDataValidator
                             .isValidInputPositiveDoubleValue(inputPillarDataWindow.directionPillarField_Y.getText());
         }
@@ -151,6 +172,9 @@ public class MeasuredPillarDataController {
                     "Az oszlop Y koordinátája csak nem negatív szám lehet.");
             return;
         }
+        measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
+                directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
+        measuredPillarData.calcPillarLegsPoint();
         inputPillarDataWindow.stage.hide();
         this.pillarDisplayer = new PillarDisplayer(this);
     }

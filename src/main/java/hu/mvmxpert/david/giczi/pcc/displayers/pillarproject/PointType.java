@@ -5,7 +5,9 @@ public enum PointType {
     CSUCS,
     csucs,
     ALAP,
-    alap
+    alap,
+    CENTER,
+    DIRECTION;
 
 
 }

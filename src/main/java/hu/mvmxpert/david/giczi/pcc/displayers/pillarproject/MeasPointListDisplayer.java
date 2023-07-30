@@ -41,7 +41,7 @@ public class MeasPointListDisplayer {
         Scene scene = new Scene(getScrollPane());
         stage.setOnCloseRequest(windowEvent -> measuredPillarDataController.init());
         stage.setWidth(510);
-        stage.setHeight(130 + measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size() * 36);
+        stage.setHeight(600);
         stage.setTitle(FileProcess.MEAS_FILE_NAME);
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
@@ -79,7 +79,7 @@ public class MeasPointListDisplayer {
         addMoreMeasuredDataButton.setOnMouseClicked(e -> {
             measuredPillarDataController.addMoreMeasuredPillarData();
         });
-        Button addNewMeasuredDataButton = new Button("Új mérési adatok hozzáadása");
+        Button addNewMeasuredDataButton = new Button("Új mérési adatok lista létrehozása");
         addNewMeasuredDataButton.setFont(font);
         addNewMeasuredDataButton.setCursor(Cursor.HAND);
         addNewMeasuredDataButton.setPrefWidth(480);

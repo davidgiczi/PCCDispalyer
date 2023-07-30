@@ -41,10 +41,10 @@ public class InputDataValidator {
 		
 		int angle = Integer.parseInt(angleValue);
 
-		if( 0 > angle ){
+		if( 0 > angle && -360 < angle ){
 			angle += 360;
 		}
-		else if( 360 < angle ){
+		else if(-360 > angle || 360 < angle ){
 			throw new NumberFormatException();
 		}
 

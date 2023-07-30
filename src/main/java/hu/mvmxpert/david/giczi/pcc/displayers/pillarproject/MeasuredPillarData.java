@@ -8,13 +8,11 @@ import java.util.*;
 public class MeasuredPillarData {
 
     public MeasuredPillarDataController measuredPillarDataController;
-    private List<MeasPoint> measPillarPoints;
+    private final List<MeasPoint> measPillarPoints;
     private List<MeasPoint> pillarBasePoints;
     private List<MeasPoint> pillarTopPoints;
-    private MeasPoint pillarCenterPoint =
-            new MeasPoint("T1", 727707.6421, 218428.3689, 0, PointType.ALAP);
-    private MeasPoint baseLineDirectionPoint =
-            new MeasPoint("T2", 727921.3643, 218638.8988, 0 , PointType.ALAP);
+    private MeasPoint pillarCenterPoint;
+    private MeasPoint baseLineDirectionPoint;
     private double rotation;
 
     public MeasuredPillarData(MeasuredPillarDataController measuredPillarDataController){
@@ -26,6 +24,9 @@ public class MeasuredPillarData {
         return measPillarPoints;
     }
 
+    public MeasPoint getPillarCenterPoint() {
+        return pillarCenterPoint;
+    }
     public void setPillarCenterPoint(MeasPoint pillarCenterPoint) {
         this.pillarCenterPoint = pillarCenterPoint;
     }
@@ -232,6 +233,7 @@ public class MeasuredPillarData {
         return new MeasPoint("baseCenter", x , y, z, PointType.ALAP);
     }
     public void calcPillarTopPoints(){
+        pillarTopPoints = new ArrayList<>();
         for (MeasPoint topPoint: measPillarPoints) {
             if( topPoint.isUsed() && topPoint.getPointType() == PointType.CSUCS ){
                 pillarTopPoints.add(topPoint);
