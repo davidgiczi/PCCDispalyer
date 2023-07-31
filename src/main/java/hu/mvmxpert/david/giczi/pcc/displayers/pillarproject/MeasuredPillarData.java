@@ -106,7 +106,7 @@ public class MeasuredPillarData {
             pillarBasePoint.setAzimuth(center);
         }
 
-        if( rotation == 0 ){
+        if( rotation == Math.PI ){
 
               for(int i = 0; i < pillarBasePoints.size(); i++){
                   for(int j = i + 1; j < pillarBasePoints.size(); j++) {

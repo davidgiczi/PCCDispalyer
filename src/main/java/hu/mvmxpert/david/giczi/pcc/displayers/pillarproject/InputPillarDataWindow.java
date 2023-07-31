@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class InputPillarDataWindow {
 
     public Stage stage;
-    private MeasuredPillarDataController measuredPillarDataController;
+    private final MeasuredPillarDataController measuredPillarDataController;
     private final AnchorPane pane;
     private final VBox vBox;
     private final Color color = Color.rgb(112,128,144);
@@ -244,6 +244,7 @@ public class InputPillarDataWindow {
         rotationAngleField.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
+        rotationAngleField.setText("180");
         rotationAngleField.setFont(normalFont);
         rotationAngleField.setCursor(Cursor.HAND);
         rotationAngleField.setPrefColumnCount(3);
@@ -251,6 +252,7 @@ public class InputPillarDataWindow {
         rotationMinField.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
+        rotationMinField.setText("0");
         rotationMinField.setFont(normalFont);
         rotationMinField.setCursor(Cursor.HAND);
         rotationMinField.setPrefColumnCount(3);
@@ -258,6 +260,7 @@ public class InputPillarDataWindow {
         rotationSecField.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
+        rotationSecField.setText("0");
         rotationSecField.setFont(normalFont);
         rotationSecField.setCursor(Cursor.HAND);
         rotationSecField.setPrefColumnCount(3);
