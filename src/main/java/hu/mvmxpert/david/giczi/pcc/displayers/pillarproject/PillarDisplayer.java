@@ -1,16 +1,15 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -22,6 +21,7 @@ public class PillarDisplayer {
     private static final double MILLIMETER = 1000.0 / 225.0;
     private final Font normalFont = Font.font("Arial", FontWeight.NORMAL, 14);
     private final Font boldFont = Font.font("Arial", FontWeight.BOLD, 16);
+
 
     public PillarDisplayer(MeasuredPillarDataController measuredPillarDataController){
         this.measuredPillarDataController = measuredPillarDataController;
@@ -69,38 +69,84 @@ public class PillarDisplayer {
         ImageView northSign = new ImageView(new Image("file:images/north.jpg"));
         northSign.setFitWidth(40 * MILLIMETER);
         northSign.setFitHeight(40 * MILLIMETER);
-        northSign.xProperty().bind(pane.widthProperty().divide(10).add(10 * MILLIMETER));
-        northSign.setY(10 * MILLIMETER);
+        northSign.xProperty().bind(pane.widthProperty().divide(20));
+        northSign.setY(5 * MILLIMETER);
         pane.getChildren().add(northSign);
     }
 
     private void addCenterPillarData(){
-        HBox centerPillarDataHBox = new HBox();
-        centerPillarDataHBox.setAlignment(Pos.CENTER);
-        centerPillarDataHBox.setPadding(new Insets(10, 10, 10, 10));
-        centerPillarDataHBox.setSpacing(20);
-        Text idText = new Text(measuredPillarDataController
+
+      Text idText = new Text(measuredPillarDataController
                 .measuredPillarData
                 .getPillarCenterPoint()
                 .getPointID());
+        idText.xProperty().bind(pane.widthProperty().divide(21).multiply(5));
+        idText.setY(10 * MILLIMETER);
         idText.setFont(boldFont);
-        Text designedYText = new Text(String.format("%.3f", measuredPillarDataController
+        Text designedXText = new Text(String.format("%20.3f", measuredPillarDataController
                 .measuredPillarData.getPillarCenterPoint().getX_coord()).replace(",", "."));
-        designedYText.setFont(normalFont);
-        Text designedXText = new Text(String.format("%.3f", measuredPillarDataController
-                .measuredPillarData.getPillarCenterPoint().getY_coord()).replace(",", "."));
+        designedXText.xProperty().bind(pane.widthProperty().divide(21).multiply(6));
+        designedXText.setY(10 * MILLIMETER);
         designedXText.setFont(normalFont);
-        Text measuerdYtext = new Text(String.format("%.3f", measuredPillarDataController
+        Text designedYText = new Text(String.format("%20.3f", measuredPillarDataController
+                .measuredPillarData.getPillarCenterPoint().getY_coord()).replace(",", "."));
+        designedYText.setFont(normalFont);
+        designedYText.xProperty().bind(pane.widthProperty().divide(21).multiply(8));
+        designedYText.setY(10 * MILLIMETER);
+        Text measXtext = new Text(String.format("%20.3f", measuredPillarDataController
                 .measuredPillarData.getPillarBaseCenterPoint().getX_coord()).replace(",", "."));
-        measuerdYtext.setFont(normalFont);
-        Text measuerdXText = new Text(String.format("%.3f", measuredPillarDataController
+       measXtext.xProperty().bind(pane.widthProperty().divide(21).multiply(10));
+       measXtext.setY(10 * MILLIMETER);
+       measXtext.setFont(normalFont);
+       Text measYText = new Text(String.format("%20.3f", measuredPillarDataController
                 .measuredPillarData.getPillarBaseCenterPoint().getY_coord()).replace(",", "."));
-        measuerdXText.setFont(normalFont);
-        centerPillarDataHBox
-                .getChildren()
-                .addAll(idText, designedYText, designedXText, measuerdYtext, measuerdXText);
-        pane.getChildren().add(centerPillarDataHBox);
+        measYText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
+        measYText.setY(10 * MILLIMETER);
+        measYText.setFont(normalFont);
+        Text deltaXText = new Text(String.format("%+20.3f", 100 * (measuredPillarDataController
+                .measuredPillarData.getPillarCenterPoint().getX_coord()
+                - measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getX_coord())
+        ).replace(",", "."));
+        deltaXText.xProperty().bind(pane.widthProperty().divide(21).multiply(14));
+        deltaXText.setY(10 * MILLIMETER);
+        deltaXText.setFont(normalFont);
+        Text deltaYText = new Text(String.format("%+20.3f", 100 * (measuredPillarDataController
+                .measuredPillarData.getPillarCenterPoint().getY_coord()
+                - measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getY_coord())
+        ).replace(",", "."));
+        deltaYText.xProperty().bind(pane.widthProperty().divide(21).multiply(16));
+        deltaYText.setY(10 * MILLIMETER);
+        deltaYText.setFont(normalFont);
+        pane.getChildren().addAll(idText, designedXText, designedYText,
+                measXtext, measYText, deltaXText, deltaYText);
+        copyText( idText.getText() + "\t" +
+                String.format("%10.3f", measuredPillarDataController
+                        .measuredPillarData.getPillarCenterPoint()
+                        .getX_coord()).replace(",", ".") + "\t" +
+                String.format("%10.3f", measuredPillarDataController
+                        .measuredPillarData.getPillarCenterPoint()
+                        .getY_coord()).replace(",", ".") + "\t" +
+                String.format("%10.3f", measuredPillarDataController
+                        .measuredPillarData.getPillarBaseCenterPoint()
+                        .getX_coord()).replace(",", ".") + "\t" +
+                String.format("%10.3f", measuredPillarDataController
+                        .measuredPillarData.getPillarBaseCenterPoint()
+                        .getY_coord()).replace(",", ".") + "\t" +
+                String.format("%+3.1f", 100 * (measuredPillarDataController
+                        .measuredPillarData.getPillarCenterPoint().getX_coord()
+                        - measuredPillarDataController.measuredPillarData
+                        .getPillarBaseCenterPoint().getX_coord())).replace(",", ".") + "\t" +
+                String.format("%+3.1f", 100 * (measuredPillarDataController
+                        .measuredPillarData.getPillarCenterPoint().getY_coord()
+                        - measuredPillarDataController.measuredPillarData
+                        .getPillarBaseCenterPoint().getY_coord())).replace(",", "."));
     }
 
+    private void copyText(String text){
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(text);
+        clipboard.setContent(content);
+    }
 
 }

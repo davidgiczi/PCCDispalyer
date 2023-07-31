@@ -86,7 +86,8 @@ public class MeasuredPillarDataController {
         try {
             centerPillarX =
                     InputDataValidator
-                            .isValidInputPositiveDoubleValue(inputPillarDataWindow.centerPillarField_X.getText());
+                            .isValidInputPositiveDoubleValue
+                                    (inputPillarDataWindow.centerPillarField_X.getText().replace(",", "."));
         }
         catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő az oszlop X koordinátája",
@@ -97,7 +98,8 @@ public class MeasuredPillarDataController {
         try {
             centerPillarY =
                     InputDataValidator
-                            .isValidInputPositiveDoubleValue(inputPillarDataWindow.centerPillarField_Y.getText());
+                            .isValidInputPositiveDoubleValue
+                                    (inputPillarDataWindow.centerPillarField_Y.getText().replace(",", "."));
         }
         catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő az oszlop Y koordinátája",
@@ -153,7 +155,8 @@ public class MeasuredPillarDataController {
         try {
             directionPillarX =
                     InputDataValidator
-                            .isValidInputPositiveDoubleValue(inputPillarDataWindow.directionPillarField_X.getText());
+                            .isValidInputPositiveDoubleValue
+                                    (inputPillarDataWindow.directionPillarField_X.getText().replace(",", "."));
         }
         catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő az előző/következő oszlop X koordinátája",
@@ -165,7 +168,8 @@ public class MeasuredPillarDataController {
         try {
             directionPillarY =
                     InputDataValidator
-                            .isValidInputPositiveDoubleValue(inputPillarDataWindow.directionPillarField_Y.getText());
+                            .isValidInputPositiveDoubleValue
+                                    (inputPillarDataWindow.directionPillarField_Y.getText().replace(",", "."));
         }
         catch (NumberFormatException e){
             getInfoAlert("Nem megfelelő az előző/következő oszlop Y koordinátája",
