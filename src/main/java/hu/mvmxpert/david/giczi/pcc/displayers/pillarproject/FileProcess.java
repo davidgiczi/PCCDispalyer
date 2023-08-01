@@ -1,13 +1,11 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 
+import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,5 +114,47 @@ public class FileProcess {
 		catch (IOException e) {
 		}
 	}
-
+	public void savePillarProjectData(){
+		File file = new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + ".plr");
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
+			writer.write(measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID());
+			writer.newLine();
+			writer.write(String.valueOf(
+					measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getX_coord()));
+			writer.newLine();
+			writer.write(String.valueOf(
+					measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getY_coord()));
+			writer.newLine();
+			writer.write(measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getPointID());
+			writer.newLine();
+			writer.write(String.valueOf(
+					measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord()));
+			writer.newLine();
+			writer.write(String.valueOf(
+					measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getY_coord()));
+			writer.newLine();
+			writer.write(String.valueOf(
+					measuredPillarDataController.measuredPillarData.getAngleRotation()));
+			writer.newLine();
+			writer.write(String.valueOf(
+					measuredPillarDataController.measuredPillarData.getMinRotation()));
+			writer.newLine();
+			writer.write(String.valueOf(
+					measuredPillarDataController.measuredPillarData.getSecRotation()));
+			writer.newLine();
+			if(  measuredPillarDataController.measuredPillarData.getPillarBasePoints() != null ){
+				for (MeasPoint basePoint : measuredPillarDataController.measuredPillarData.getPillarBasePoints()) {
+					writer.write(basePoint.toString());
+					writer.newLine();
+				}
+			}
+			if(  measuredPillarDataController.measuredPillarData.getPillarTopPoints() != null ) {
+				for (MeasPoint topPoint : measuredPillarDataController.measuredPillarData.getPillarTopPoints()) {
+					writer.write(topPoint.toString());
+					writer.newLine();
+				}
+			}
+		}catch (IOException e){
+		}
+	}
 }

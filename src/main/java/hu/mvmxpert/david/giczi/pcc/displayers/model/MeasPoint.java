@@ -91,19 +91,10 @@ public class MeasPoint  {
     }
 
 
-
     @Override
     public String toString() {
-        return "MeasPoint{" +
-                "pointID='" + pointID + '\'' +
-                ", x_coord=" + x_coord +
-                ", y_coord=" + y_coord +
-                ", z_coord=" + z_coord +
-                ", azimuth=" + azimuth +
-                ", groupID=" + groupID +
-                ", pointType=" + pointType +
-                ", isUsed=" + isUsed +
-                '}';
+        return pointID + "#" +  x_coord + "#" + y_coord + "#" +
+                z_coord + "#" + groupID + "#" + pointType;
     }
 
 }

@@ -3,22 +3,22 @@ package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -49,16 +49,13 @@ public class PillarDisplayer {
             measuredPillarDataController.init();
         });
         pane.setStyle("-fx-background-color: white");
-        pane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if( mouseEvent.getButton() == MouseButton.SECONDARY ){
-               if( measuredPillarDataController.getConfirmationAlert(
-                       "Az oszlop magassági adatainak láthatósága",
-                       "Láthatók legyenek az oszlop magasságára, dőlésére vonatkozó adatok?") ){
+        pane.setOnMouseClicked(mouseEvent -> {
+            if( mouseEvent.getButton() == MouseButton.SECONDARY ){
+           if( measuredPillarDataController.getConfirmationAlert(
+                   "Az oszlop magassági adatainak láthatósága",
+                   "Láthatók legyenek az oszlop magasságára, dőlésére vonatkozó adatok?") ){
 
-               }
-                }
+           }
             }
         });
         addContent();
@@ -87,6 +84,7 @@ public class PillarDisplayer {
         addCenterPillarData();
         getTransformedPillarBaseCoordsForDisplayer();
         addBase();
+        addCircleForBasePoints();
         addComboBoxForScaleValue();
     }
 
@@ -261,13 +259,9 @@ public class PillarDisplayer {
                 FXCollections.observableArrayList(
                         "50",
                         "100",
-                        "150",
                         "200",
-                        "250",
                         "400",
-                        "500",
-                        "750",
-                        "1000"
+                        "500"
                 );
         HBox hbox = new HBox();
         scaleComboBox = new ComboBox<>(options);
@@ -290,6 +284,24 @@ public class PillarDisplayer {
         pane.getChildren().clear();
         addContent();
         scaleComboBox.setValue(selectedScale);
+    }
+
+    private void addCircleForBasePoints(){
+        for (MeasPoint transformedPillarBasePoint : transformedPillarBasePoints) {
+            Circle circle = new Circle();
+            circle.setRadius(5);
+            circle.setStroke(Color.MAGENTA);
+            circle.setStrokeWidth(2);
+            circle.setFill(Color.TRANSPARENT);
+            circle.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                    .add(transformedPillarBasePoint.getX_coord()));
+            circle.centerYProperty().bind(pane.heightProperty().divide(2)
+                    .subtract(transformedPillarBasePoint.getY_coord()));
+            Tooltip tooltip = new Tooltip(transformedPillarBasePoint.getPointID());
+            Tooltip.install(circle, tooltip);
+            circle.setCursor(Cursor.HAND);
+            pane.getChildren().add(circle);
+        }
     }
 
 }

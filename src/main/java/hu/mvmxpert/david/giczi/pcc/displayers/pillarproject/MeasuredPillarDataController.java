@@ -135,6 +135,7 @@ public class MeasuredPillarDataController {
                     "A forgatás szög értéke csak 360-nál kisebb egész szám lehet.");
             return;
         }
+        measuredPillarData.setAngleRotation(angle);
         int min;
         try{
             min = InputDataValidator.isValidMinSecValue(inputPillarDataWindow.rotationMinField.getText());
@@ -143,6 +144,7 @@ public class MeasuredPillarDataController {
                     "A forgatás szögperc értéke csak 59-nél kisebb egész szám lehet.");
             return;
         }
+        measuredPillarData.setMinRotation(min);
         int sec;
         try{
             sec = InputDataValidator.isValidMinSecValue(inputPillarDataWindow.rotationSecField.getText());
@@ -151,6 +153,7 @@ public class MeasuredPillarDataController {
                     "A forgatás szögmásodperc értéke csak 59-nél kisebb egész szám lehet.");
             return;
         }
+        measuredPillarData.setSecRotation(sec);
         int directionPillarID;
         try {
             directionPillarID =
@@ -196,6 +199,8 @@ public class MeasuredPillarDataController {
         measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
         measuredPillarData.calcPillarLegsPoint();
+        measuredPillarData.calcPillarTopPoints();
+        fileProcess.savePillarProjectData();
         inputPillarDataWindow.stage.hide();
         this.pillarDisplayer = new PillarDisplayer(this);
     }
