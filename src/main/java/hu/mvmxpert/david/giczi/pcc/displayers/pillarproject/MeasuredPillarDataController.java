@@ -1,10 +1,13 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
-import hu.mvmxpert.david.giczi.pcc.displayers.utils.BaseType;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class MeasuredPillarDataController {
 
@@ -32,6 +35,20 @@ public class MeasuredPillarDataController {
         alert.setTitle(title);
         alert.setHeaderText(text);
         alert.showAndWait();
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public boolean getConfirmationAlert(String title, String text) {
+        ButtonType yes = new ButtonType("Igen", ButtonBar.ButtonData.OK_DONE);
+        ButtonType no = new ButtonType("Nem", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, null, yes, no);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("file:images/MVM.jpg"));
+        alert.initOwner(fxHomeWindow.homeStage);
+        alert.setTitle(title);
+        alert.setHeaderText(text);
+        Optional<ButtonType> option = alert.showAndWait();
+        return option.get() == ButtonType.OK;
     }
 
     public void openMeasuredData(){

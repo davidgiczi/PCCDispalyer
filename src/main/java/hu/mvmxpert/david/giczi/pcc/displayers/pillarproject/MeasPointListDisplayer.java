@@ -120,6 +120,12 @@ public class MeasPointListDisplayer {
             CheckBox check = new CheckBox("Használ");
             check.setFont(font);
             check.setSelected(true);
+            check.setOnMouseClicked(mouseEvent -> {
+                int rowIndex = vBoxForMeasuredData.getChildren().indexOf((Node) hbox) - 3;
+                clickValue[rowIndex] = 0;
+                 hbox.setBackground(
+                         new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+            });
             hbox.getChildren().addAll(measID, x, y, z, type, check);
             vBoxForMeasuredData.getChildren().add(hbox);
         }

@@ -87,6 +87,7 @@ public class MeasuredPillarData {
             pillarLegPoint.setGroupID(i);
             pillarBasePoints.add(pillarLegPoint);
         }
+
         addIDsForPillarLegs();
     }
 

@@ -1,7 +1,14 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
+import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,22 +17,32 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PillarDisplayer {
     private final AnchorPane pane = new AnchorPane();
     public MeasuredPillarDataController measuredPillarDataController;
+    private List<MeasPoint> transformedPillarBasePoints;
+    private ComboBox<String> scaleComboBox;
     private static final double MILLIMETER = 1000.0 / 225.0;
+    private static double SCALE;
     private final Font normalFont = Font.font("Arial", FontWeight.NORMAL, 14);
     private final Font boldFont = Font.font("Arial", FontWeight.BOLD, 16);
 
 
     public PillarDisplayer(MeasuredPillarDataController measuredPillarDataController){
         this.measuredPillarDataController = measuredPillarDataController;
+        SCALE = 100;
         Stage stage = new Stage();
         stage.setOnCloseRequest(windowEvent -> {
             measuredPillarDataController.fxHomeWindow.homeStage.show();
@@ -36,7 +53,11 @@ public class PillarDisplayer {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if( mouseEvent.getButton() == MouseButton.SECONDARY ){
+               if( measuredPillarDataController.getConfirmationAlert(
+                       "Az oszlop magassági adatainak láthatósága",
+                       "Láthatók legyenek az oszlop magasságára, dőlésére vonatkozó adatok?") ){
 
+               }
                 }
             }
         });
@@ -64,6 +85,9 @@ public class PillarDisplayer {
     private void addContent(){
         addNorthSign();
         addCenterPillarData();
+        getTransformedPillarBaseCoordsForDisplayer();
+        addBase();
+        addComboBoxForScaleValue();
     }
 
     private void addNorthSign(){
@@ -173,6 +197,99 @@ public class PillarDisplayer {
         ClipboardContent content = new ClipboardContent();
         content.putString(text);
         clipboard.setContent(content);
+    }
+
+    private void getTransformedPillarBaseCoordsForDisplayer() {
+        transformedPillarBasePoints = new ArrayList<>();
+        double X = measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getX_coord();
+        double Y = measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getY_coord();
+        for (MeasPoint pillarBasePoint : measuredPillarDataController.measuredPillarData.getPillarBasePoints()) {
+            MeasPoint point = new MeasPoint(pillarBasePoint.getPointID(),
+                    Math.round((pillarBasePoint.getX_coord() - X) * 1000.0) * MILLIMETER / SCALE,
+                    Math.round((pillarBasePoint.getY_coord() - Y) * 1000.0) * MILLIMETER / SCALE,
+                    pillarBasePoint.getZ_coord(), PointType.ALAP);
+        transformedPillarBasePoints.add(point);
+        }
+    }
+
+    private void addBase(){
+        if( transformedPillarBasePoints.size() != 4 ){
+            measuredPillarDataController.getInfoAlert("Nem megfelelő bemeneti adatok",
+                    "Az oszlop alapja nem ábrázolható.");
+            return;
+        }
+        Line line1 = new Line();
+        line1.setStroke(Color.BLUE);
+        line1.setStrokeWidth(2);
+        line1.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(0).getX_coord()));
+        line1.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(0).getY_coord()));
+        line1.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(1).getX_coord()));
+        line1.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(1).getY_coord()));
+        Line line2 = new Line();
+        line2.setStroke(Color.BLUE);
+        line2.setStrokeWidth(2);
+        line2.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(1).getX_coord()));
+        line2.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(1).getY_coord()));
+        line2.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(2).getX_coord()));
+        line2.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(2).getY_coord()));
+        Line line3 = new Line();
+        line3.setStroke(Color.BLUE);
+        line3.setStrokeWidth(2);
+        line3.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(2).getX_coord()));
+        line3.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(2).getY_coord()));
+        line3.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(3).getX_coord()));
+        line3.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(3).getY_coord()));
+        Line line4 = new Line();
+        line4.setStroke(Color.BLUE);
+        line4.setStrokeWidth(2);
+        line4.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(3).getX_coord()));
+        line4.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(3).getY_coord()));
+        line4.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(0).getX_coord()));
+        line4.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(0).getY_coord()));
+        pane.getChildren().addAll(line1, line2, line3, line4);
+    }
+    private void addComboBoxForScaleValue(){
+        ObservableList<String> options =
+                FXCollections.observableArrayList(
+                        "50",
+                        "100",
+                        "150",
+                        "200",
+                        "250",
+                        "400",
+                        "500",
+                        "750",
+                        "1000"
+                );
+        HBox hbox = new HBox();
+        scaleComboBox = new ComboBox<>(options);
+        scaleComboBox.setValue("200");
+        scaleComboBox
+                .setStyle("-fx-background-color: white;-fx-font: 16px \"Book-Antique\";-fx-font-weight: bold;");
+        scaleComboBox.setCursor(Cursor.HAND);
+        scaleComboBox.setOnAction(e -> setOnActionEvent());
+        Label textM = new Label("M= 1: ");
+        textM.setFont(Font.font("Book-Antique", FontWeight.BOLD, FontPosture.REGULAR, 16));
+        textM.setPadding(new Insets(5.5, 0 , 0 , 0));
+        hbox.getChildren().addAll(textM, scaleComboBox);
+        hbox.setLayoutX(5 * MILLIMETER);
+        hbox.setLayoutY(2 * MILLIMETER);
+        pane.getChildren().add(hbox);
+    }
+    private void setOnActionEvent(){
+        String selectedScale = scaleComboBox.getSelectionModel().getSelectedItem();
+        SCALE = Integer.parseInt(selectedScale);
+        pane.getChildren().clear();
+        addContent();
+        scaleComboBox.setValue(selectedScale);
     }
 
 }
