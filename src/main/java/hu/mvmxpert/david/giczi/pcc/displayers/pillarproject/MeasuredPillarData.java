@@ -123,8 +123,8 @@ public class MeasuredPillarData {
            }
            return;
        }
-        Point center = new Point("center", pillarCenterPoint.getX_coord(),
-                pillarCenterPoint.getY_coord());
+        Point center = new Point("center", getPillarBaseCenterPoint().getX_coord(),
+                getPillarBaseCenterPoint().getY_coord());
         Point direction = new Point("direction", baseLineDirectionPoint.getX_coord(),
                 baseLineDirectionPoint.getY_coord());
         AzimuthAndDistance baseLineDirection = new AzimuthAndDistance(center, direction);

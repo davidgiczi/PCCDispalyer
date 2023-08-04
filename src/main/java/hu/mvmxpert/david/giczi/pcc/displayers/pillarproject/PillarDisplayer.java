@@ -1,6 +1,9 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
+import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
+import hu.mvmxpert.david.giczi.pcc.displayers.service.AzimuthAndDistance;
+import hu.mvmxpert.david.giczi.pcc.displayers.service.PolarPoint;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -85,6 +88,7 @@ public class PillarDisplayer {
         getTransformedPillarBaseCoordsForDisplayer();
         addBase();
         addCircleForBasePoints();
+        addPreviousAndNextPillarDirections();
         addComboBoxForScaleValue();
     }
 
@@ -265,7 +269,7 @@ public class PillarDisplayer {
                 );
         HBox hbox = new HBox();
         scaleComboBox = new ComboBox<>(options);
-        scaleComboBox.setValue("200");
+        scaleComboBox.setValue("100");
         scaleComboBox
                 .setStyle("-fx-background-color: white;-fx-font: 16px \"Book-Antique\";-fx-font-weight: bold;");
         scaleComboBox.setCursor(Cursor.HAND);
@@ -303,5 +307,75 @@ public class PillarDisplayer {
             pane.getChildren().add(circle);
         }
     }
+    private void addPreviousAndNextPillarDirections(){
+        Point transformedPillarCenterPoint =  new Point("pillarCenterPoint", 0.0, 0.0);
+        Point transformedDirectionPillarPoint = new Point("transformedDirectionPoint",
+                Math.round((measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord() -
+                        measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getX_coord()) * 1000.0)
+                        * MILLIMETER / SCALE,
+                Math.round((measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getY_coord() -
+                        measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getY_coord()) * 1000.0)
+                        * MILLIMETER / SCALE
+                );
+            AzimuthAndDistance mainLineDirection =
+                    new AzimuthAndDistance(transformedPillarCenterPoint, transformedDirectionPillarPoint);
+            PolarPoint slavePoint = new PolarPoint(transformedPillarCenterPoint,
+                100 * MILLIMETER, mainLineDirection.calcAzimuth(),
+                "forwardDirection");
 
+            Line forwardDirection = new Line();
+            forwardDirection.setStrokeWidth(2);
+            forwardDirection.setStroke(Color.MAGENTA);
+            forwardDirection.startXProperty()
+                    .bind(pane.widthProperty()
+                            .divide(10)
+                            .multiply(5));
+            forwardDirection.startYProperty()
+                    .bind(pane.heightProperty()
+                            .divide(2));
+            forwardDirection.endXProperty()
+                    .bind(pane.widthProperty()
+                            .divide(10)
+                            .multiply(5).add(slavePoint.calcPolarPoint().getX_coord()));
+            forwardDirection.endYProperty()
+                    .bind(pane.heightProperty()
+                            .divide(2)
+                            .subtract(slavePoint.calcPolarPoint().getY_coord()));
+
+            addArrow(transformedPillarCenterPoint, transformedDirectionPillarPoint);
+            pane.getChildren().add(forwardDirection);
+
+
+    }
+
+    private void addArrow(Point startPoint, Point endPoint){
+        AzimuthAndDistance baseLineData = new AzimuthAndDistance(startPoint, endPoint);
+        PolarPoint slavePoint1 = new PolarPoint(startPoint, 5 * MILLIMETER,
+                baseLineData.calcAzimuth() + Math.PI / 6, "arrow1");
+        PolarPoint slavePoint2 = new PolarPoint(startPoint, 5 * MILLIMETER,
+                baseLineData.calcAzimuth() - Math.PI / 6, "arrow2");
+        Line arrow1 = new Line();
+        arrow1.setStroke(Color.MAGENTA);
+        arrow1.setStrokeWidth(2);
+        arrow1.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+                .add(startPoint.getX_coord()));
+        arrow1.startYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(startPoint.getY_coord()));
+        arrow1.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+                .add(slavePoint1.calcPolarPoint().getX_coord()));
+        arrow1.endYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(slavePoint1.calcPolarPoint().getY_coord()));
+        Line arrow2 = new Line();
+        arrow2.setStroke(Color.MAGENTA);
+        arrow2.setStrokeWidth(2);
+        arrow2.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+                .add(startPoint.getX_coord()));
+        arrow2.startYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(startPoint.getY_coord()));
+        arrow2.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+                .add(slavePoint2.calcPolarPoint().getX_coord()));
+        arrow2.endYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(slavePoint2.calcPolarPoint().getY_coord()));
+        pane.getChildren().addAll(arrow1, arrow2);
+    }
 }

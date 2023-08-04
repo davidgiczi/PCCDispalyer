@@ -200,7 +200,7 @@ public class MeasuredPillarDataController {
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
         measuredPillarData.calcPillarLegsPoint();
         measuredPillarData.calcPillarTopPoints();
-        fileProcess.savePillarProjectData();
+        //fileProcess.savePillarProjectData();
         inputPillarDataWindow.stage.hide();
         this.pillarDisplayer = new PillarDisplayer(this);
     }
