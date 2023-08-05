@@ -13,6 +13,7 @@ public class MeasuredPillarData {
     private List<MeasPoint> pillarTopPoints;
     private MeasPoint pillarCenterPoint;
     private MeasPoint baseLineDirectionPoint;
+    public double radRotation;
     private int angleRotation;
     private int minRotation;
     private int secRotation;
@@ -131,7 +132,7 @@ public class MeasuredPillarData {
         for (MeasPoint pillarBasePoint : pillarBasePoints) {
             pillarBasePoint.setAzimuth(center);
         }
-       double radRotation = Math.toRadians(angleRotation + minRotation + secRotation);
+        radRotation = Math.toRadians(angleRotation + minRotation + secRotation);
         if( radRotation == Math.PI ){
 
               for(int i = 0; i < pillarBasePoints.size(); i++){

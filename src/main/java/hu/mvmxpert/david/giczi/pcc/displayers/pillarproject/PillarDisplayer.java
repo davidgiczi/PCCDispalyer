@@ -88,7 +88,8 @@ public class PillarDisplayer {
         getTransformedPillarBaseCoordsForDisplayer();
         addBase();
         addCircleForBasePoints();
-        addPreviousAndNextPillarDirections();
+        addNextPillarDirection();
+        addPreviousPillarDirection();
         addComboBoxForScaleValue();
     }
 
@@ -306,8 +307,24 @@ public class PillarDisplayer {
             circle.setCursor(Cursor.HAND);
             pane.getChildren().add(circle);
         }
+        addCircleForCenter();
     }
-    private void addPreviousAndNextPillarDirections(){
+
+    private void addCircleForCenter(){
+        Circle center = new Circle();
+        center.setRadius(5);
+        center.setStroke(Color.MAGENTA);
+        center.setStrokeWidth(2);
+        center.setFill(Color.TRANSPARENT);
+        center.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5));
+        center.centerYProperty().bind(pane.heightProperty().divide(2));
+        Tooltip tooltip = new Tooltip(measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID());
+        Tooltip.install(center, tooltip);
+        center.setCursor(Cursor.HAND);
+        pane.getChildren().add(center);
+    }
+
+    private void addNextPillarDirection(){
         Point transformedPillarCenterPoint =  new Point("pillarCenterPoint", 0.0, 0.0);
         Point transformedDirectionPillarPoint = new Point("transformedDirectionPoint",
                 Math.round((measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord() -
@@ -319,8 +336,12 @@ public class PillarDisplayer {
                 );
             AzimuthAndDistance mainLineDirection =
                     new AzimuthAndDistance(transformedPillarCenterPoint, transformedDirectionPillarPoint);
-            PolarPoint slavePoint = new PolarPoint(transformedPillarCenterPoint,
-                100 * MILLIMETER, mainLineDirection.calcAzimuth(),
+            PolarPoint startPoint = new PolarPoint(transformedPillarCenterPoint,
+                3 * MILLIMETER, mainLineDirection.calcAzimuth(),
+                "forwardDirection");
+
+            PolarPoint endPoint = new PolarPoint(startPoint.calcPolarPoint(),
+                70 * MILLIMETER, mainLineDirection.calcAzimuth(),
                 "forwardDirection");
 
             Line forwardDirection = new Line();
@@ -329,23 +350,64 @@ public class PillarDisplayer {
             forwardDirection.startXProperty()
                     .bind(pane.widthProperty()
                             .divide(10)
-                            .multiply(5));
+                            .multiply(5).add(startPoint.calcPolarPoint().getX_coord()));
             forwardDirection.startYProperty()
                     .bind(pane.heightProperty()
-                            .divide(2));
+                            .divide(2).subtract(startPoint.calcPolarPoint().getY_coord()));
             forwardDirection.endXProperty()
                     .bind(pane.widthProperty()
                             .divide(10)
-                            .multiply(5).add(slavePoint.calcPolarPoint().getX_coord()));
+                            .multiply(5).add(endPoint.calcPolarPoint().getX_coord()));
             forwardDirection.endYProperty()
                     .bind(pane.heightProperty()
                             .divide(2)
-                            .subtract(slavePoint.calcPolarPoint().getY_coord()));
-
-            addArrow(transformedPillarCenterPoint, transformedDirectionPillarPoint);
+                            .subtract(endPoint.calcPolarPoint().getY_coord()));
             pane.getChildren().add(forwardDirection);
+            addArrow(endPoint.calcPolarPoint(), startPoint.calcPolarPoint());
+    }
 
+    private void addPreviousPillarDirection(){
+        Point transformedPillarCenterPoint =  new Point("pillarCenterPoint", 0.0, 0.0);
+        Point transformedDirectionPillarPoint = new Point("transformedDirectionPoint",
+                Math.round((measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord() -
+                        measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getX_coord()) * 1000.0)
+                        * MILLIMETER / SCALE,
+                Math.round((measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getY_coord() -
+                        measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getY_coord()) * 1000.0)
+                        * MILLIMETER / SCALE
+        );
+        AzimuthAndDistance mainLineDirection =
+                new AzimuthAndDistance(transformedPillarCenterPoint, transformedDirectionPillarPoint);
+        PolarPoint startPoint = new PolarPoint(transformedPillarCenterPoint,
+                3 * MILLIMETER,
+                mainLineDirection.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
+                "forwardDirection");
 
+        PolarPoint endPoint = new PolarPoint(startPoint.calcPolarPoint(),
+                70 * MILLIMETER,
+                mainLineDirection.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
+                "forwardDirection");
+
+        Line forwardDirection = new Line();
+        forwardDirection.setStrokeWidth(2);
+        forwardDirection.setStroke(Color.MAGENTA);
+        forwardDirection.startXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(5).add(startPoint.calcPolarPoint().getX_coord()));
+        forwardDirection.startYProperty()
+                .bind(pane.heightProperty()
+                        .divide(2).subtract(startPoint.calcPolarPoint().getY_coord()));
+        forwardDirection.endXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(5).add(endPoint.calcPolarPoint().getX_coord()));
+        forwardDirection.endYProperty()
+                .bind(pane.heightProperty()
+                        .divide(2)
+                        .subtract(endPoint.calcPolarPoint().getY_coord()));
+        pane.getChildren().add(forwardDirection);
+        addArrow(endPoint.calcPolarPoint(), startPoint.calcPolarPoint());
     }
 
     private void addArrow(Point startPoint, Point endPoint){
@@ -357,22 +419,22 @@ public class PillarDisplayer {
         Line arrow1 = new Line();
         arrow1.setStroke(Color.MAGENTA);
         arrow1.setStrokeWidth(2);
-        arrow1.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+        arrow1.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
                 .add(startPoint.getX_coord()));
         arrow1.startYProperty().bind(pane.heightProperty().divide(2)
                 .subtract(startPoint.getY_coord()));
-        arrow1.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+        arrow1.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
                 .add(slavePoint1.calcPolarPoint().getX_coord()));
         arrow1.endYProperty().bind(pane.heightProperty().divide(2)
                 .subtract(slavePoint1.calcPolarPoint().getY_coord()));
         Line arrow2 = new Line();
         arrow2.setStroke(Color.MAGENTA);
         arrow2.setStrokeWidth(2);
-        arrow2.startXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+        arrow2.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
                 .add(startPoint.getX_coord()));
         arrow2.startYProperty().bind(pane.heightProperty().divide(2)
                 .subtract(startPoint.getY_coord()));
-        arrow2.endXProperty().bind(pane.widthProperty().divide(10).multiply(6)
+        arrow2.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
                 .add(slavePoint2.calcPolarPoint().getX_coord()));
         arrow2.endYProperty().bind(pane.heightProperty().divide(2)
                 .subtract(slavePoint2.calcPolarPoint().getY_coord()));
