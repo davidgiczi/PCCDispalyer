@@ -63,6 +63,14 @@ public class MeasuredPillarDataController {
 
     public void createNewProject(){
         measuredPointListDisplayer.stage.hide();
+        measuredPillarData.calcPillarLegsPoint();
+        measuredPillarData.calcPillarTopPoints();
+        if( measuredPillarData.getPillarBasePoints().size() != 2 &&
+                measuredPillarData.getPillarBasePoints().size() != 4){
+            getInfoAlert("Nem megfelelő bemeneti adatok",
+                    "Az oszlop alapja nem ábrázolható.");
+            return;
+        }
         this.inputPillarDataWindow = new InputPillarDataWindow(this);
     }
 
@@ -198,8 +206,7 @@ public class MeasuredPillarDataController {
         }
         measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
-        measuredPillarData.calcPillarLegsPoint();
-        measuredPillarData.calcPillarTopPoints();
+        measuredPillarData.addIDsForPillarLegs();
         //fileProcess.savePillarProjectData();
         inputPillarDataWindow.stage.hide();
         this.pillarDisplayer = new PillarDisplayer(this);

@@ -51,6 +51,7 @@ public class InputPillarDataWindow {
         addCenterPillarDataFields();
         addDirectionPillarDataFields();
         addCalcButton();
+        addDTestData();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
@@ -203,7 +204,7 @@ public class InputPillarDataWindow {
         yCoordHbox.setPadding(new Insets(5,5,5,5));
         yCoordHbox.setSpacing(40);
         yCoordHbox.setAlignment(Pos.CENTER);
-        Text yCoordText = new Text("Y koordináta [m]:");
+        Text yCoordText = new Text("X koordináta [m]:");
         yCoordText.setFont(boldFont);
         centerPillarField_Y = new TextField();
         centerPillarField_Y.setCursor(Cursor.HAND);
@@ -218,7 +219,7 @@ public class InputPillarDataWindow {
         xCoordHbox.setPadding(new Insets(5,5,5,5));
         xCoordHbox.setSpacing(40);
         xCoordHbox.setAlignment(Pos.CENTER);
-        Text xCoordText = new Text("X koordináta [m]:");
+        Text xCoordText = new Text("Y koordináta [m]:");
         xCoordText.setFont(boldFont);
         centerPillarField_X = new TextField();
         centerPillarField_X.setCursor(Cursor.HAND);
@@ -333,7 +334,7 @@ public class InputPillarDataWindow {
         yCoordHbox.setPadding(new Insets(5,5,5,5));
         yCoordHbox.setSpacing(40);
         yCoordHbox.setAlignment(Pos.CENTER);
-        Text yCoordText = new Text("Y koordináta [m]:");
+        Text yCoordText = new Text("X koordináta [m]:");
         yCoordText.setFont(boldFont);
         directionPillarField_Y = new TextField();
         directionPillarField_Y.setCursor(Cursor.HAND);
@@ -348,7 +349,7 @@ public class InputPillarDataWindow {
         xCoordHbox.setPadding(new Insets(5,5,5,5));
         xCoordHbox.setSpacing(40);
         xCoordHbox.setAlignment(Pos.CENTER);
-        Text xCoordText = new Text("X koordináta [m]:");
+        Text xCoordText = new Text("Y koordináta [m]:");
         xCoordText.setFont(boldFont);
         directionPillarField_X = new TextField();
         directionPillarField_X.setCursor(Cursor.HAND);
@@ -375,4 +376,14 @@ public class InputPillarDataWindow {
     vBox.getChildren().add(calcButtonHbox);
     }
 
+    private void addDTestData(){
+        projectNameField.setText("TestProject");
+        projectPathField.setText("testPath");
+        centerPillarIDField.setText("1");
+        centerPillarField_X.setText("727707.6421");
+        centerPillarField_Y.setText("218428.3689");
+        directionPillarIDField.setText("2");
+        directionPillarField_X.setText("727921.3643");
+        directionPillarField_Y.setText("218638.8988");
+    }
 }
