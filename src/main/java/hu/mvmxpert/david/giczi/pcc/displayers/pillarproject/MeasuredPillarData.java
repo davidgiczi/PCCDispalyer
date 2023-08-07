@@ -116,6 +116,7 @@ public class MeasuredPillarData {
     }
 
     public void addIDsForPillarLegs(){
+        radRotation = Math.toRadians(angleRotation + minRotation / 60.0 + secRotation / 3600.0);
        if( pillarBasePoints.size() != 4 ){
            for( int i = 65; i < 65 + pillarBasePoints.size(); i++ ){
                pillarBasePoints.get(i - 65).setPointID(String.valueOf((char) i));
@@ -130,16 +131,16 @@ public class MeasuredPillarData {
         for (MeasPoint pillarBasePoint : pillarBasePoints) {
             pillarBasePoint.setAzimuth(center);
         }
-        radRotation = Math.toRadians(angleRotation + minRotation / 60.0 + secRotation / 3600.0);
-        if( radRotation == Math.PI ){
 
-              for(int i = 0; i < pillarBasePoints.size(); i++){
-                  for(int j = i + 1; j < pillarBasePoints.size(); j++) {
-                      if (pillarBasePoints.get(i).getAzimuth() > pillarBasePoints.get(j).getAzimuth()) {
-                          Collections.swap(pillarBasePoints, i, j);
-                      }
-                  }
+        for(int i = 0; i < pillarBasePoints.size(); i++){
+            for(int j = i + 1; j < pillarBasePoints.size(); j++) {
+                if (pillarBasePoints.get(i).getAzimuth() > pillarBasePoints.get(j).getAzimuth()) {
+                    Collections.swap(pillarBasePoints, i, j);
+                }
             }
+        }
+
+        if( radRotation == Math.PI ){
 
             if( pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() &&
                     baseLineDirection.calcAzimuth() < pillarBasePoints.get(1).getAzimuth() ){
@@ -171,12 +172,9 @@ public class MeasuredPillarData {
             }
             return;
         }
+
         int centerID = Integer.parseInt(pillarCenterPoint.getPointID());
         int directionID = Integer.parseInt(baseLineDirectionPoint.getPointID());
-
-        if( centerID == directionID ){
-            return;
-        }
 
         if( centerID < directionID ){
             radRotation = (Math.PI - radRotation) / 2;

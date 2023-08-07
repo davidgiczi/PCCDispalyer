@@ -87,11 +87,11 @@ public class PillarDisplayer {
         getTransformedPillarBaseCoordsForDisplayer();
         if( measuredPillarDataController.measuredPillarData.getPillarBasePoints().size() == 4){
             add4LegsBase();
+            addPillarAxis();
         }
         else{
             add2LegsBase();
         }
-        addPillarAxis();
         addCircleForBasePoints();
         addNextPillarDirection();
         addPreviousPillarDirection();
@@ -393,38 +393,120 @@ public class PillarDisplayer {
     }
 
     private void addPillarAxis(){
-        AzimuthAndDistance halfDistance1 = new AzimuthAndDistance(
+        AzimuthAndDistance half1Data = new AzimuthAndDistance(
                 new Point("1", transformedPillarBasePoints.get(0).getX_coord(),
                         transformedPillarBasePoints.get(0).getY_coord()),
                 new Point("2", transformedPillarBasePoints.get(1).getX_coord(),
                         transformedPillarBasePoints.get(1).getY_coord()));
         Point halfDistancePoint1 = new PolarPoint( new Point("1", transformedPillarBasePoints.get(0).getX_coord(),
-                transformedPillarBasePoints.get(0).getY_coord()), halfDistance1.calcDistance() / 2.0,
-                halfDistance1.calcAzimuth(), "1/2").calcPolarPoint();
-        AzimuthAndDistance halfDistance2 = new AzimuthAndDistance(
+                transformedPillarBasePoints.get(0).getY_coord()), half1Data.calcDistance() / 2.0,
+                half1Data.calcAzimuth(), "1-2").calcPolarPoint();
+        AzimuthAndDistance half2Data = new AzimuthAndDistance(
                 new Point("2", transformedPillarBasePoints.get(1).getX_coord(),
                         transformedPillarBasePoints.get(1).getY_coord()),
                 new Point("3", transformedPillarBasePoints.get(2).getX_coord(),
                         transformedPillarBasePoints.get(2).getY_coord()));
         Point halfDistancePoint2 = new PolarPoint( new Point("2", transformedPillarBasePoints.get(1).getX_coord(),
-                transformedPillarBasePoints.get(1).getY_coord()), halfDistance2.calcDistance() / 2.0,
-                halfDistance2.calcAzimuth(), "2/3").calcPolarPoint();
-        AzimuthAndDistance halfDistance3 = new AzimuthAndDistance(
+                transformedPillarBasePoints.get(1).getY_coord()), half2Data.calcDistance() / 2.0,
+                half2Data.calcAzimuth(), "2-3").calcPolarPoint();
+        AzimuthAndDistance half3Data = new AzimuthAndDistance(
                 new Point("3", transformedPillarBasePoints.get(2).getX_coord(),
                         transformedPillarBasePoints.get(2).getY_coord()),
                 new Point("4", transformedPillarBasePoints.get(3).getX_coord(),
                         transformedPillarBasePoints.get(3).getY_coord()));
         Point halfDistancePoint3 = new PolarPoint( new Point("3", transformedPillarBasePoints.get(2).getX_coord(),
-                transformedPillarBasePoints.get(2).getY_coord()), halfDistance3.calcDistance() / 2.0,
-                halfDistance3.calcAzimuth(), "3/4").calcPolarPoint();
-        AzimuthAndDistance halfDistance4 = new AzimuthAndDistance(
+                transformedPillarBasePoints.get(2).getY_coord()), half3Data.calcDistance() / 2.0,
+                half3Data.calcAzimuth(), "3-4").calcPolarPoint();
+        AzimuthAndDistance half4Data = new AzimuthAndDistance(
                 new Point("4", transformedPillarBasePoints.get(3).getX_coord(),
                         transformedPillarBasePoints.get(3).getY_coord()),
                 new Point("1", transformedPillarBasePoints.get(0).getX_coord(),
                         transformedPillarBasePoints.get(0).getY_coord()));
         Point halfDistancePoint4 = new PolarPoint( new Point("4", transformedPillarBasePoints.get(3).getX_coord(),
-                transformedPillarBasePoints.get(3).getY_coord()), halfDistance4.calcDistance() / 2.0,
-                halfDistance4.calcAzimuth(), "4/1").calcPolarPoint();
+                transformedPillarBasePoints.get(3).getY_coord()), half4Data.calcDistance() / 2.0,
+                half4Data.calcAzimuth(), "4-1").calcPolarPoint();
+       AzimuthAndDistance axis1Data =
+               new AzimuthAndDistance(new Point("center", 0.0, 0.0), halfDistancePoint1);
+       PolarPoint startPoint1 =
+               new PolarPoint(new Point("center" , 0.0,0.0), 3 * MILLIMETER,
+                       axis1Data.calcAzimuth(), "startPoint1");
+       PolarPoint endPoint1 =
+               new PolarPoint(startPoint1.calcPolarPoint(),
+                       5000 * MILLIMETER / SCALE, axis1Data.calcAzimuth(), "endPoint1");
+        Line axis1 = new Line();
+        axis1.setStroke(Color.RED);
+        axis1.setStrokeWidth(2);
+        axis1.getStrokeDashArray().addAll(10d);
+        axis1.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(startPoint1.calcPolarPoint().getX_coord()));
+        axis1.startYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(startPoint1.calcPolarPoint().getY_coord()));
+        axis1.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(endPoint1.calcPolarPoint().getX_coord()));
+        axis1.endYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(endPoint1.calcPolarPoint().getY_coord()));
+
+        AzimuthAndDistance axis2Data =
+                new AzimuthAndDistance(new Point("center", 0.0, 0.0), halfDistancePoint2);
+        PolarPoint startPoint2 =
+                new PolarPoint(new Point("center" , 0.0,0.0), 3 * MILLIMETER,
+                        axis2Data.calcAzimuth(), "startPoint2");
+       PolarPoint endPoint2 = new PolarPoint(startPoint2.calcPolarPoint(),
+                        5000 * MILLIMETER / SCALE, axis2Data.calcAzimuth(), "endPoint1");
+        Line axis2 = new Line();
+        axis2.setStroke(Color.RED);
+        axis2.setStrokeWidth(2);
+        axis2.getStrokeDashArray().addAll(10d);
+        axis2.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(startPoint2.calcPolarPoint().getX_coord()));
+        axis2.startYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(startPoint2.calcPolarPoint().getY_coord()));
+        axis2.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(endPoint2.calcPolarPoint().getX_coord()));
+        axis2.endYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(endPoint2.calcPolarPoint().getY_coord()));
+
+        AzimuthAndDistance axis3Data =
+                new AzimuthAndDistance(new Point("center", 0.0, 0.0), halfDistancePoint3);
+        PolarPoint startPoint3 =
+                new PolarPoint(new Point("center" , 0.0,0.0), 3 * MILLIMETER,
+                        axis3Data.calcAzimuth(), "startPoint3");
+        PolarPoint endPoint3 = new PolarPoint(startPoint3.calcPolarPoint(),
+                5000 * MILLIMETER / SCALE, axis3Data.calcAzimuth(), "endPoint3");
+        Line axis3 = new Line();
+        axis3.setStroke(Color.RED);
+        axis3.setStrokeWidth(2);
+        axis3.getStrokeDashArray().addAll(10d);
+        axis3.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(startPoint3.calcPolarPoint().getX_coord()));
+        axis3.startYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(startPoint3.calcPolarPoint().getY_coord()));
+        axis3.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(endPoint3.calcPolarPoint().getX_coord()));
+        axis3.endYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(endPoint3.calcPolarPoint().getY_coord()));
+
+        AzimuthAndDistance axis4Data =
+                new AzimuthAndDistance(new Point("center", 0.0, 0.0), halfDistancePoint4);
+        PolarPoint startPoint4 =
+                new PolarPoint(new Point("center" , 0.0,0.0), 3 * MILLIMETER,
+                        axis4Data.calcAzimuth(), "startPoint4");
+        PolarPoint endPoint4 = new PolarPoint(startPoint4.calcPolarPoint(),
+                5000 * MILLIMETER / SCALE, axis4Data.calcAzimuth(), "endPoint4");
+        Line axis4 = new Line();
+        axis4.setStroke(Color.RED);
+        axis4.setStrokeWidth(2);
+        axis4.getStrokeDashArray().addAll(10d);
+        axis4.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(startPoint4.calcPolarPoint().getX_coord()));
+        axis4.startYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(startPoint4.calcPolarPoint().getY_coord()));
+        axis4.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(endPoint4.calcPolarPoint().getX_coord()));
+        axis4.endYProperty().bind(pane.heightProperty().divide(2)
+                .subtract(endPoint4.calcPolarPoint().getY_coord()));
+
+        pane.getChildren().addAll(axis1, axis2, axis3, axis4);
 
     }
 
@@ -487,12 +569,12 @@ public class PillarDisplayer {
         PolarPoint startPoint = new PolarPoint(transformedPillarCenterPoint,
                 3 * MILLIMETER,
                 mainLineDirection.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
-                "forwardDirection");
+                "backwardDirection");
 
         PolarPoint endPoint = new PolarPoint(startPoint.calcPolarPoint(),
                 7000 * MILLIMETER / SCALE,
                 mainLineDirection.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
-                "forwardDirection");
+                "backwardDirection");
 
         Line forwardDirection = new Line();
         forwardDirection.setStrokeWidth(2);
