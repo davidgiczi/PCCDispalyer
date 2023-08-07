@@ -379,11 +379,13 @@ public class InputPillarDataWindow {
     private void addDTestData(){
         projectNameField.setText("TestProject");
         projectPathField.setText("testPath");
-        centerPillarIDField.setText("1");
-        centerPillarField_X.setText("727707.6421");
-        centerPillarField_Y.setText("218428.3689");
-        directionPillarIDField.setText("2");
-        directionPillarField_X.setText("727921.3643");
-        directionPillarField_Y.setText("218638.8988");
+        centerPillarIDField.setText("172");
+        centerPillarField_X.setText("670466.77");
+        centerPillarField_Y.setText("244468.42");
+        directionPillarIDField.setText("171");
+        directionPillarField_X.setText("670586.37");
+        directionPillarField_Y.setText("244288.56");
+        rotationAngleField.setText("125");
+        rotationSecField.setText("59");
     }
 }
