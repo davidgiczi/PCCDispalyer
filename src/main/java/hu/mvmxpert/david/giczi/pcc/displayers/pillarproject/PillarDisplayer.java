@@ -552,22 +552,21 @@ public class PillarDisplayer {
     }
 
     private void addPreviousPillarDirection(){
-        Point pillarCenterPoint = new Point("pillarCenterPoint", 0.0,0.0);
-        Point directionPillarPoint = new Point("transformedDirectionPoint",
+        Point pillarCenterPoint =  new Point("pillarCenterPoint", 0.0, 0.0);
+        Point directionPoint = new Point("transformedDirectionPoint",
                 (measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord() -
-                measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getX_coord()),
+                        measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getX_coord()),
                 (measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getY_coord() -
                         measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getY_coord()));
-        AzimuthAndDistance mainLineDirection =
-                new AzimuthAndDistance(pillarCenterPoint, directionPillarPoint);
-        PolarPoint startPoint = new PolarPoint(pillarCenterPoint,
-                3 * MILLIMETER,
-                mainLineDirection.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
-                "backwardDirection");
+       AzimuthAndDistance baseLineData = new AzimuthAndDistance(pillarCenterPoint, directionPoint);
 
-        PolarPoint endPoint = new PolarPoint(startPoint.calcPolarPoint(),
+       PolarPoint startPoint = new PolarPoint(pillarCenterPoint, 3 * MILLIMETER,
+                baseLineData.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
+                "prevPoint");
+
+       PolarPoint endPoint = new PolarPoint(startPoint.calcPolarPoint(),
                 7000 * MILLIMETER / SCALE,
-                mainLineDirection.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
+                baseLineData.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
                 "backwardDirection");
 
         Line backwardDirection = new Line();
@@ -631,7 +630,7 @@ public class PillarDisplayer {
 
     private void addDistanceInformation(){
         Point centerPoint = new Point(measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID(),
-                measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getX_coord(),
+        measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getX_coord(),
         measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getY_coord());
         Point directionPoint = new Point(measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getPointID(),
                 measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord(),
