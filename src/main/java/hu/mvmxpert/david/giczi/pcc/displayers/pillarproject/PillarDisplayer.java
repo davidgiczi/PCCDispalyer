@@ -85,13 +85,17 @@ public class PillarDisplayer {
         addCenterPillarData();
         addComboBoxForScaleValue();
         getTransformedPillarBaseCoordsForDisplayer();
-        if( measuredPillarDataController.measuredPillarData.getPillarBasePoints().size() == 4){
+        if( measuredPillarDataController.measuredPillarData.getPillarBasePoints().size() == 4 ){
             add4LegsBase();
             addPillarAxis();
         }
-        else{
+        else if( measuredPillarDataController.measuredPillarData.getPillarBasePoints().size() == 3 ){
+            add3LegsBase();
+        }
+        else {
             add2LegsBase();
         }
+
         addCircleForBasePoints();
         addNextPillarDirection();
         addPreviousPillarDirection();
@@ -302,6 +306,70 @@ public class PillarDisplayer {
         Tooltip distanceTip4 = new Tooltip(distance4);
         Tooltip.install(line4, distanceTip4);
         pane.getChildren().addAll(line1, line2, line3, line4);
+    }
+
+    private void add3LegsBase(){
+        Line line1 = new Line();
+        line1.setStroke(Color.BLUE);
+        line1.setStrokeWidth(2);
+        line1.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(0).getX_coord()));
+        line1.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(0).getY_coord()));
+        line1.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(1).getX_coord()));
+        line1.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(1).getY_coord()));
+        String distance1 = String.format("%.2fm",
+                new AzimuthAndDistance(new Point("1",
+                        measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(0).getX_coord(),
+                        measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(0).getY_coord()),
+                        new Point("2",
+                                measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(1).getX_coord(),
+                                measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(1).getY_coord())
+                ).calcDistance()).replace(",", ".");
+        line1.setCursor(Cursor.CLOSED_HAND);
+        Tooltip distanceTip1 = new Tooltip(distance1);
+        Tooltip.install(line1, distanceTip1);
+        Line line2 = new Line();
+        line2.setStroke(Color.BLUE);
+        line2.setStrokeWidth(2);
+        line2.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(1).getX_coord()));
+        line2.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(1).getY_coord()));
+        line2.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(2).getX_coord()));
+        line2.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(2).getY_coord()));
+        line2.setCursor(Cursor.CLOSED_HAND);
+        String distance2 = String.format("%.2fm",
+                new AzimuthAndDistance(new Point("2",
+                        measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(1).getX_coord(),
+                        measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(1).getY_coord()),
+                        new Point("3",
+                                measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(2).getX_coord(),
+                                measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(2).getY_coord())
+                ).calcDistance()).replace(",", ".");
+        Tooltip distanceTip2 = new Tooltip(distance2);
+        Tooltip.install(line2, distanceTip2);
+        Line line3 = new Line();
+        line3.setStroke(Color.BLUE);
+        line3.setStrokeWidth(2);
+        line3.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(2).getX_coord()));
+        line3.startYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(2).getY_coord()));
+        line3.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+                .add(transformedPillarBasePoints.get(0).getX_coord()));
+        line3.endYProperty().bind(pane.heightProperty().divide(2).subtract(transformedPillarBasePoints.get(0).getY_coord()));
+        line3.setCursor(Cursor.CLOSED_HAND);
+        String distance3 = String.format("%.2fm",
+                new AzimuthAndDistance(new Point("3",
+                        measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(2).getX_coord(),
+                        measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(2).getY_coord()),
+                        new Point("4",
+                                measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(0).getX_coord(),
+                                measuredPillarDataController.measuredPillarData.getPillarBasePoints().get(0).getY_coord())
+                ).calcDistance()).replace(",", ".");
+        Tooltip distanceTip3 = new Tooltip(distance3);
+        Tooltip.install(line3, distanceTip3);
+        pane.getChildren().addAll(line1, line2, line3);
     }
     private void add2LegsBase(){
         Line line = new Line();

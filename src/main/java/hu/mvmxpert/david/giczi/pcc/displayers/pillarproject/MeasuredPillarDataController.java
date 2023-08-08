@@ -65,8 +65,8 @@ public class MeasuredPillarDataController {
         measuredPointListDisplayer.stage.hide();
         measuredPillarData.calcPillarLegsPoint();
         measuredPillarData.calcPillarTopPoints();
-        if( measuredPillarData.getPillarBasePoints().size() != 2 &&
-                measuredPillarData.getPillarBasePoints().size() != 4){
+        if( measuredPillarData.getPillarBasePoints().size() <  2 ||
+                measuredPillarData.getPillarBasePoints().size() > 4){
             getInfoAlert("Nem megfelelő bemeneti adatok",
                     "Az oszlop alapja nem ábrázolható.");
             return;
