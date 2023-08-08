@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PillarDisplayer {
+public class PillarBaseDisplayer {
     private final AnchorPane pane = new AnchorPane();
     public MeasuredPillarDataController measuredPillarDataController;
     private List<MeasPoint> transformedPillarBasePoints;
@@ -42,7 +42,7 @@ public class PillarDisplayer {
     private final Font normalFont = Font.font("Arial", FontWeight.NORMAL, 14);
     private final Font boldFont = Font.font("Arial", FontWeight.BOLD, 16);
 
-    public PillarDisplayer(MeasuredPillarDataController measuredPillarDataController){
+    public PillarBaseDisplayer(MeasuredPillarDataController measuredPillarDataController){
         this.measuredPillarDataController = measuredPillarDataController;
         SCALE = 100;
         Stage stage = new Stage();
@@ -53,10 +53,7 @@ public class PillarDisplayer {
         pane.setStyle("-fx-background-color: white");
         pane.setOnMouseClicked(mouseEvent -> {
             if( mouseEvent.getButton() == MouseButton.SECONDARY ){
-           if( measuredPillarDataController.getConfirmationAlert(
-                   "Az oszlop magassági adatainak láthatósága",
-                   "Láthatók legyenek az oszlop magasságára, dőlésére vonatkozó adatok?") ){
-           }
+                new PillarBaseDifferenceDisplayer(measuredPillarDataController);
             }
         });
         addContent();

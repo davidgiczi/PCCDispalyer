@@ -14,7 +14,8 @@ public class MeasuredPillarDataController {
     public final FileProcess fileProcess;
     public final MeasuredPillarData measuredPillarData;
     public MeasPointListDisplayer measuredPointListDisplayer;
-    public PillarDisplayer pillarDisplayer;
+    public PillarBaseDisplayer pillarDisplayer;
+    public PillarBaseDifferenceDisplayer pillarBaseDifferenceDisplayer;
     public InputPillarDataWindow inputPillarDataWindow;
     public FXHomeWindow fxHomeWindow;
 
@@ -37,18 +38,17 @@ public class MeasuredPillarDataController {
         alert.showAndWait();
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public boolean getConfirmationAlert(String title, String text) {
         ButtonType yes = new ButtonType("Igen", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("Nem", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, null, yes, no);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION ,null, no, yes);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         alert.initOwner(fxHomeWindow.homeStage);
         alert.setTitle(title);
         alert.setHeaderText(text);
         Optional<ButtonType> option = alert.showAndWait();
-        return option.get() == ButtonType.OK;
+        return option.orElse(no) == yes;
     }
 
     public void openMeasuredData(){
@@ -209,7 +209,7 @@ public class MeasuredPillarDataController {
         measuredPillarData.addIDsForPillarLegs();
         //fileProcess.savePillarProjectData();
         inputPillarDataWindow.stage.hide();
-        this.pillarDisplayer = new PillarDisplayer(this);
+        this.pillarDisplayer = new PillarBaseDisplayer(this);
     }
 
 }

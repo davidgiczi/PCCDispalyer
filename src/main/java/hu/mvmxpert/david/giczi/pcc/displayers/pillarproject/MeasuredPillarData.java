@@ -325,4 +325,64 @@ public class MeasuredPillarData {
         });
     }
 
+    public double getXDifferenceOnMainLine(){
+        AzimuthAndDistance mainLineData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("direction",
+                                baseLineDirectionPoint.getX_coord(), baseLineDirectionPoint.getY_coord()));
+        AzimuthAndDistance differenceData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("topCenter",
+                                getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
+        return differenceData.calcDistance()
+                * Math.cos(Math.abs(mainLineData.calcAzimuth() - differenceData.calcAzimuth()));
+    }
+
+    public double getYDifferenceOnMainLine(){
+        AzimuthAndDistance mainLineData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("direction",
+                                baseLineDirectionPoint.getX_coord(), baseLineDirectionPoint.getY_coord()));
+        AzimuthAndDistance differenceData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("topCenter",
+                                getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
+        return differenceData.calcDistance()
+                * Math.sin(Math.abs(mainLineData.calcAzimuth() - differenceData.calcAzimuth()));
+    }
+
+    public double getXDifferenceOnBackwardLine(){
+        AzimuthAndDistance mainLineData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("direction",
+                                baseLineDirectionPoint.getX_coord(), baseLineDirectionPoint.getY_coord()));
+        AzimuthAndDistance differenceData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("topCenter",
+                                getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
+        return differenceData.calcDistance()
+                * Math.cos(Math.abs(mainLineData.calcAzimuth() + radRotation - differenceData.calcAzimuth()));
+    }
+
+    public double getYDifferenceOnBackwardLine(){
+        AzimuthAndDistance mainLineData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("direction",
+                                baseLineDirectionPoint.getX_coord(), baseLineDirectionPoint.getY_coord()));
+        AzimuthAndDistance differenceData =
+                new AzimuthAndDistance(new Point("baseCenter",
+                        getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
+                        new Point("topCenter",
+                                getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
+        return differenceData.calcDistance()
+                * Math.sin(Math.abs(mainLineData.calcAzimuth() + radRotation - differenceData.calcAzimuth()));
+    }
+
 }
