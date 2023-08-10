@@ -53,6 +53,12 @@ public class PillarBaseDisplayer {
         pane.setStyle("-fx-background-color: white");
         pane.setOnMouseClicked(mouseEvent -> {
             if( mouseEvent.getButton() == MouseButton.SECONDARY ){
+                if( measuredPillarDataController.measuredPillarData.getPillarTopPoints().isEmpty() ) {
+                    measuredPillarDataController.getInfoAlert(
+                            "Az oszlop magasságára/dőlésére vonatkozó adatok nem jelenítheők meg",
+                            "Az oszlop csúcsára vonatkozó mérési adatok nem kerültek beolvasásra.");
+                    return;
+                }
                 new PillarBaseDifferenceDisplayer(measuredPillarDataController);
             }
         });

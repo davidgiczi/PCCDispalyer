@@ -115,14 +115,14 @@ public class MeasuredPillarData {
         }
     }
 
-    public void addIDsForPillarLegs(){
+    public void addIDsForPillarLegs() {
         radRotation = Math.toRadians(angleRotation + minRotation / 60.0 + secRotation / 3600.0);
-       if( pillarBasePoints.size() != 4 ){
-           for( int i = 65; i < 65 + pillarBasePoints.size(); i++ ){
-               pillarBasePoints.get(i - 65).setLegNameValue(String.valueOf((char) i));
-           }
-           return;
-       }
+        if (pillarBasePoints.size() != 4) {
+            for (int i = 65; i < 65 + pillarBasePoints.size(); i++) {
+                pillarBasePoints.get(i - 65).setLegNameValue(String.valueOf((char) i));
+            }
+            return;
+        }
         Point center = new Point("center", getPillarBaseCenterPoint().getX_coord(),
                 getPillarBaseCenterPoint().getY_coord());
         Point direction = new Point("direction", baseLineDirectionPoint.getX_coord(),
@@ -132,8 +132,8 @@ public class MeasuredPillarData {
             pillarBasePoint.setAzimuth(center);
         }
 
-        for(int i = 0; i < pillarBasePoints.size(); i++){
-            for(int j = i + 1; j < pillarBasePoints.size(); j++) {
+        for (int i = 0; i < pillarBasePoints.size(); i++) {
+            for (int j = i + 1; j < pillarBasePoints.size(); j++) {
                 if (pillarBasePoints.get(i).getAzimuth() > pillarBasePoints.get(j).getAzimuth()) {
                     Collections.swap(pillarBasePoints, i, j);
                 }
@@ -143,87 +143,86 @@ public class MeasuredPillarData {
         int centerID = Integer.parseInt(pillarCenterPoint.getPointID());
         int directionID = Integer.parseInt(baseLineDirectionPoint.getPointID());
 
-        if( radRotation == Math.PI && centerID < directionID){
+        if (centerID < directionID) {
 
-            if( 0 < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() <= pillarBasePoints.get(0).getAzimuth()){
-                pillarBasePoints.get(0).setLegNameValue("B");
-                pillarBasePoints.get(1).setLegNameValue("C");
-                pillarBasePoints.get(2).setLegNameValue("D");
-                pillarBasePoints.get(3).setLegNameValue("A");
+            if (radRotation == Math.PI) {
+
+                if (0 < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(0).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("B");
+                    pillarBasePoints.get(1).setLegNameValue("C");
+                    pillarBasePoints.get(2).setLegNameValue("D");
+                    pillarBasePoints.get(3).setLegNameValue("A");
+                } else if (pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(1).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("A");
+                    pillarBasePoints.get(1).setLegNameValue("B");
+                    pillarBasePoints.get(2).setLegNameValue("C");
+                    pillarBasePoints.get(3).setLegNameValue("D");
+                } else if (pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(2).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("D");
+                    pillarBasePoints.get(1).setLegNameValue("A");
+                    pillarBasePoints.get(2).setLegNameValue("B");
+                    pillarBasePoints.get(3).setLegNameValue("C");
+                } else if (pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(3).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("C");
+                    pillarBasePoints.get(1).setLegNameValue("D");
+                    pillarBasePoints.get(2).setLegNameValue("A");
+                    pillarBasePoints.get(3).setLegNameValue("B");
+                } else if (pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= 2 * Math.PI) {
+                    pillarBasePoints.get(0).setLegNameValue("B");
+                    pillarBasePoints.get(1).setLegNameValue("C");
+                    pillarBasePoints.get(2).setLegNameValue("D");
+                    pillarBasePoints.get(3).setLegNameValue("A");
+                }
+                return;
             }
-            else if( pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() <= pillarBasePoints.get(1).getAzimuth() ){
-                pillarBasePoints.get(0).setLegNameValue("A");
-                pillarBasePoints.get(1).setLegNameValue("B");
-                pillarBasePoints.get(2).setLegNameValue("C");
-                pillarBasePoints.get(3).setLegNameValue("D");
-            }
-            else if( pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() <= pillarBasePoints.get(2).getAzimuth() ){
-                pillarBasePoints.get(0).setLegNameValue("D");
-                pillarBasePoints.get(1).setLegNameValue("A");
-                pillarBasePoints.get(2).setLegNameValue("B");
-                pillarBasePoints.get(3).setLegNameValue("C");
-            }
-            else if( pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() <= pillarBasePoints.get(3).getAzimuth() ){
-                pillarBasePoints.get(0).setLegNameValue("C");
-                pillarBasePoints.get(1).setLegNameValue("D");
-                pillarBasePoints.get(2).setLegNameValue("A");
-                pillarBasePoints.get(3).setLegNameValue("B");
-            }
-            else if( pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() &&
-                    baseLineDirection.calcAzimuth() <= 2 * Math.PI){
-                pillarBasePoints.get(0).setLegNameValue("B");
-                pillarBasePoints.get(1).setLegNameValue("C");
-                pillarBasePoints.get(2).setLegNameValue("D");
-                pillarBasePoints.get(3).setLegNameValue("A");
-            }
-            return;
         }
 
-        if( radRotation == Math.PI && centerID > directionID){
+        if (centerID > directionID) {
 
-            if( 0 < baseLineDirection.calcAzimuth() + Math.PI &&
-                    baseLineDirection.calcAzimuth() + Math.PI <= pillarBasePoints.get(0).getAzimuth()){
-                pillarBasePoints.get(0).setLegNameValue("B");
-                pillarBasePoints.get(1).setLegNameValue("C");
-                pillarBasePoints.get(2).setLegNameValue("D");
-                pillarBasePoints.get(3).setLegNameValue("A");
+            if (radRotation == Math.PI) {
+
+                if (0 < baseLineDirection.calcAzimuth() - Math.PI &&
+                        baseLineDirection.calcAzimuth() - Math.PI <= pillarBasePoints.get(0).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("B");
+                    pillarBasePoints.get(1).setLegNameValue("C");
+                    pillarBasePoints.get(2).setLegNameValue("D");
+                    pillarBasePoints.get(3).setLegNameValue("A");
+                } else if (pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() - Math.PI &&
+                        baseLineDirection.calcAzimuth() - Math.PI <= pillarBasePoints.get(1).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("A");
+                    pillarBasePoints.get(1).setLegNameValue("B");
+                    pillarBasePoints.get(2).setLegNameValue("C");
+                    pillarBasePoints.get(3).setLegNameValue("D");
+                } else if (pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() - Math.PI &&
+                        baseLineDirection.calcAzimuth() - Math.PI <= pillarBasePoints.get(2).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("D");
+                    pillarBasePoints.get(1).setLegNameValue("A");
+                    pillarBasePoints.get(2).setLegNameValue("B");
+                    pillarBasePoints.get(3).setLegNameValue("C");
+                } else if (pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() - Math.PI &&
+                        baseLineDirection.calcAzimuth() - Math.PI <= pillarBasePoints.get(3).getAzimuth()) {
+                    pillarBasePoints.get(0).setLegNameValue("C");
+                    pillarBasePoints.get(1).setLegNameValue("D");
+                    pillarBasePoints.get(2).setLegNameValue("A");
+                    pillarBasePoints.get(3).setLegNameValue("B");
+                } else if (pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() - Math.PI &&
+                        baseLineDirection.calcAzimuth() - Math.PI <= 2 * Math.PI) {
+                    pillarBasePoints.get(0).setLegNameValue("B");
+                    pillarBasePoints.get(1).setLegNameValue("C");
+                    pillarBasePoints.get(2).setLegNameValue("D");
+                    pillarBasePoints.get(3).setLegNameValue("A");
+                }
+                return;
             }
-            else if( pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() + Math.PI &&
-                    baseLineDirection.calcAzimuth() + Math.PI <= pillarBasePoints.get(1).getAzimuth() ){
-                pillarBasePoints.get(0).setLegNameValue("A");
-                pillarBasePoints.get(1).setLegNameValue("B");
-                pillarBasePoints.get(2).setLegNameValue("C");
-                pillarBasePoints.get(3).setLegNameValue("D");
-            }
-            else if( pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() + Math.PI &&
-                    baseLineDirection.calcAzimuth() + Math.PI <= pillarBasePoints.get(2).getAzimuth() ){
-                pillarBasePoints.get(0).setLegNameValue("D");
-                pillarBasePoints.get(1).setLegNameValue("A");
-                pillarBasePoints.get(2).setLegNameValue("B");
-                pillarBasePoints.get(3).setLegNameValue("C");
-            }
-            else if( pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() + Math.PI &&
-                    baseLineDirection.calcAzimuth() + Math.PI <= pillarBasePoints.get(3).getAzimuth() ){
-                pillarBasePoints.get(0).setLegNameValue("C");
-                pillarBasePoints.get(1).setLegNameValue("D");
-                pillarBasePoints.get(2).setLegNameValue("A");
-                pillarBasePoints.get(3).setLegNameValue("B");
-            }
-            else if( pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() + Math.PI &&
-                    baseLineDirection.calcAzimuth() + Math.PI <= 2 * Math.PI){
-                pillarBasePoints.get(0).setLegNameValue("B");
-                pillarBasePoints.get(1).setLegNameValue("C");
-                pillarBasePoints.get(2).setLegNameValue("D");
-                pillarBasePoints.get(3).setLegNameValue("A");
-            }
-            return;
         }
 
         if( centerID < directionID ){
+
             double rotation = (Math.PI - radRotation) / 2;
 
           if( 0 < (baseLineDirection.calcAzimuth() - rotation) &&
@@ -261,10 +260,13 @@ public class MeasuredPillarData {
                 pillarBasePoints.get(2).setLegNameValue("D");
                 pillarBasePoints.get(3).setLegNameValue("A");
             }
+            return;
         }
-        else {
+
+        if( centerID > directionID)   {
 
             double rotation = (Math.PI + radRotation) / 2;
+
             if( 0 < (baseLineDirection.calcAzimuth() + rotation) &&
                     (baseLineDirection.calcAzimuth() + rotation) <= pillarBasePoints.get(0).getAzimuth()){
                 pillarBasePoints.get(0).setLegNameValue("B");
@@ -301,7 +303,6 @@ public class MeasuredPillarData {
                 pillarBasePoints.get(3).setLegNameValue("A");
             }
         }
-
     }
 
     public MeasPoint getPillarBaseCenterPoint(){
