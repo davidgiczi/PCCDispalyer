@@ -54,6 +54,8 @@ public class MeasuredPillarDataController {
     public void openMeasuredData(){
         fileProcess.getMeasureFileData();
         if( fileProcess.getMeasData() == null || fileProcess.getMeasData().isEmpty() ){
+            getInfoAlert("Nem beolvasható adat",
+                    "Nem található beolvasható mérési eredmény a fájlban.");
             return;
         }
         measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
@@ -76,7 +78,17 @@ public class MeasuredPillarDataController {
 
     public void addMoreMeasuredPillarData(){
         measuredPointListDisplayer.stage.hide();
-        openMeasuredData();
+        fileProcess.getMeasureFileData();
+        if( fileProcess.getMeasData() == null || fileProcess.getMeasData().isEmpty() ){
+            getInfoAlert("Nem beolvasható adat",
+                    "Nem található beolvasható mérési eredmény a fájlban.");
+            measuredPointListDisplayer.stage.show();
+            return;
+        }
+        measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
+        measuredPointListDisplayer.initClickValues();
+        measuredPointListDisplayer.addMeasData();
+        measuredPointListDisplayer.stage.show();
     }
 
     public void openNewMeasuredPillarData(){

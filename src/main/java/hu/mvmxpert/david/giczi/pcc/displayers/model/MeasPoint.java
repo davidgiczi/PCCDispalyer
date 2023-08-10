@@ -9,6 +9,7 @@ import java.util.Objects;
 public class MeasPoint  {
 
     private String pointID;
+    private String legNameValue;
     private final double x_coord;
     private final double y_coord;
     private final double z_coord;
@@ -33,6 +34,13 @@ public class MeasPoint  {
 
     public void setPointID(String pointID) {
         this.pointID = pointID;
+    }
+
+    public String getLegNameValue() {
+        return legNameValue;
+    }
+    public void setLegNameValue(String legNameValue) {
+        this.legNameValue = legNameValue;
     }
 
     public double getX_coord() {

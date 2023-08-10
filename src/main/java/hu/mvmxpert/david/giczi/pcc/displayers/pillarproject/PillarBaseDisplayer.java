@@ -425,17 +425,28 @@ public class PillarBaseDisplayer {
     }
 
     private void addCircleForBasePoints(){
-        for (MeasPoint transformedPillarBasePoint : transformedPillarBasePoints) {
+        for (int i = 0; i < transformedPillarBasePoints.size(); i++) {
             Circle circle = new Circle();
             circle.setRadius(5);
             circle.setStroke(Color.MAGENTA);
             circle.setStrokeWidth(2);
             circle.setFill(Color.TRANSPARENT);
             circle.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5)
-                    .add(transformedPillarBasePoint.getX_coord()));
+                    .add(transformedPillarBasePoints.get(i).getX_coord()));
             circle.centerYProperty().bind(pane.heightProperty().divide(2)
-                    .subtract(transformedPillarBasePoint.getY_coord()));
-            Tooltip tooltip = new Tooltip(transformedPillarBasePoint.getPointID());
+                    .subtract(transformedPillarBasePoints.get(i).getY_coord()));
+            Tooltip tooltip = new Tooltip(
+                    "\"" +measuredPillarDataController.
+                            measuredPillarData.getPillarBasePoints().get(i).getLegNameValue() + "\" láb\tY=" +
+                    String.format("%.3fm",
+                            measuredPillarDataController.measuredPillarData.
+                                    getPillarBasePoints().get(i).getX_coord()).replace(",", ".") +
+                    "\tX=" + String.format("%.3fm",
+                    measuredPillarDataController.measuredPillarData.
+                            getPillarBasePoints().get(i).getY_coord()).replace(",", ".") +
+                    "\th=" + String.format("%.3fm",
+                    measuredPillarDataController.measuredPillarData.
+                            getPillarBasePoints().get(i).getZ_coord()).replace(",", "."));
             Tooltip.install(circle, tooltip);
             circle.setCursor(Cursor.HAND);
             pane.getChildren().add(circle);
