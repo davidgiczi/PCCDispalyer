@@ -55,7 +55,7 @@ public class PillarBaseDisplayer {
             if( mouseEvent.getButton() == MouseButton.SECONDARY ){
                 if( measuredPillarDataController.measuredPillarData.getPillarTopPoints().isEmpty() ) {
                     measuredPillarDataController.getInfoAlert(
-                            "Az oszlop magasságára/dőlésére vonatkozó adatok nem jelenítheők meg",
+                            "Az oszlop magasságára/dőlésére vonatkozó adatok nem jeleníthetők meg",
                             "Az oszlop csúcsára vonatkozó mérési adatok nem kerültek beolvasásra.");
                     return;
                 }
@@ -443,7 +443,7 @@ public class PillarBaseDisplayer {
                     .subtract(transformedPillarBasePoints.get(i).getY_coord()));
             Tooltip tooltip = new Tooltip(
                     "\"" +measuredPillarDataController.
-                            measuredPillarData.getPillarBasePoints().get(i).getLegNameValue() + "\" láb\tY=" +
+                            measuredPillarData.getPillarBasePoints().get(i).getPointID() + "\" láb\tY=" +
                     String.format("%.3fm",
                             measuredPillarDataController.measuredPillarData.
                                     getPillarBasePoints().get(i).getX_coord()).replace(",", ".") +

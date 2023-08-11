@@ -86,7 +86,6 @@ public class MeasuredPillarDataController {
             return;
         }
         measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
-        measuredPointListDisplayer.initClickValues();
         measuredPointListDisplayer.addMeasData();
         measuredPointListDisplayer.stage.show();
     }

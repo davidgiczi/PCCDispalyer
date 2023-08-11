@@ -15,39 +15,23 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MeasPointListDisplayer {
 
     public Stage stage;
     private final GridPane root;
-    private final VBox measDataVBox;
-    private final ScrollPane scrollPane;
-    private final List<Integer> clickValues;
+    private VBox measDataVBox;
+    private ScrollPane scrollPane;
+    private int[] clickValues;
     private final MeasuredPillarDataController measuredPillarDataController;
     private final Font font = Font.font("Arial", FontWeight.BOLD, 13);
 
     public MeasPointListDisplayer(MeasuredPillarDataController measuredPillarDataController){
         this.measuredPillarDataController = measuredPillarDataController;
-
-        clickValues = new ArrayList<>();
-        initClickValues();
-        measDataVBox = new VBox();
         root = new GridPane();
         addInstructionButtons();
-        scrollPane = new ScrollPane();
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         addMeasData();
-        scrollPane.setContent(measDataVBox);
-        root.add(scrollPane, 0, 4);
-        measDataVBox.setStyle("-fx-background-color: white");
         Scene scene = new Scene(root);
-
         stage = new Stage();
         stage.setOnCloseRequest(windowEvent -> measuredPillarDataController.init());
         stage.setWidth(510);
@@ -59,10 +43,11 @@ public class MeasPointListDisplayer {
         stage.show();
     }
 
-    private void parseDisplayerData(){
-            for (int i = 0; i < measDataVBox.getChildren().size(); i++ ) {
+    public void parseDisplayerData(){
+            for (int i = 0;
+                 i < measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size(); i++ ) {
           measuredPillarDataController.measuredPillarData
-                  .getMeasPillarPoints().get(i).setGroupID(clickValues.get(i));
+                  .getMeasPillarPoints().get(i).setGroupID(clickValues[i]);
                 HBox hbox = (HBox) measDataVBox.getChildren().get(i);
                 for( int j = 0; j < hbox.getChildren().size(); j++) {
                     if ( hbox.getChildren().get(j) instanceof CheckBox ) {
@@ -79,7 +64,6 @@ public class MeasPointListDisplayer {
         createProjectButton.setPrefWidth(495);
         createProjectButton.setPadding(new Insets(10, 10, 10, 10));
         createProjectButton.setOnMouseClicked(e -> {
-            parseDisplayerData();
             measuredPillarDataController.createNewProject();
               });
         Button addMoreMeasuredDataButton = new Button("További mérési adatok hozzáadása");
@@ -104,29 +88,33 @@ public class MeasPointListDisplayer {
         root.add(addNewMeasuredDataButton, 0, 2);
     }
 
-    public void initClickValues() {
-        for (int i = measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size();
-             i < measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size() +
-                     measuredPillarDataController.fileProcess.getMeasData().size(); i++) {
-            clickValues.add(0);
-        }
-    }
 
     public void addMeasData() {
+
+        clickValues = new int[measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size()];
+        measDataVBox = new VBox();
+        measDataVBox.setStyle("-fx-background-color: white");
+        scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
         for (int i = 0; i < measuredPillarDataController
                 .measuredPillarData.getMeasPillarPoints().size(); i++) {
             MeasPoint measPoint = measuredPillarDataController
                     .measuredPillarData.getMeasPillarPoints().get(i);
+            clickValues[i] = measPoint.getGroupID();
             HBox hbox = new HBox(20);
             hbox.setPadding(new Insets(10, 10, 10, 10));
             hbox.setCursor(Cursor.HAND);
             hbox.setStyle("-fx-border-color: lightgray");
-            if( i % 2 != 0){
+            if( clickValues[i] == 0 && i % 2 != 0 ){
                 hbox.setBackground( new Background(
                         new BackgroundFill(Color.rgb(211, 211, 211),
                                 null, null)));
             }
-            else {
+            else if( clickValues[i] != 0 ){
                 hbox.setBackground(
                         new Background(
                                 new BackgroundFill(getColorValue(measPoint.getGroupID()),
@@ -134,11 +122,11 @@ public class MeasPointListDisplayer {
             }
             hbox.setOnMouseClicked(mouseEvent -> {
                 int rowIndex = measDataVBox.getChildren().indexOf((Node) mouseEvent.getSource());
-                clickValues.set(rowIndex, clickValues.get(rowIndex) + 1);
+                clickValues[rowIndex]++;
                 hbox.setBackground(new Background(
                         new BackgroundFill(getColorValue(rowIndex), null, null)));
-                if ( clickValues.get(rowIndex) == 5 ) {
-                    clickValues.set(rowIndex, 0);
+                if ( clickValues[rowIndex] == 5 ) {
+                    clickValues[rowIndex] = 0;
                 }
             });
             Text measID = new Text(measPoint.getPointID());
@@ -159,7 +147,7 @@ public class MeasPointListDisplayer {
             check.setOnMouseClicked(mouseEvent -> {
                 if ( !check.isSelected() ) {
                     int rowIndex = measDataVBox.getChildren().indexOf((Node) hbox);
-                    clickValues.set(rowIndex, 0);
+                    clickValues[rowIndex] = 0;
                     if( rowIndex % 2 == 0) {
                         hbox.setBackground(
                                 new Background(
@@ -176,11 +164,17 @@ public class MeasPointListDisplayer {
             hbox.getChildren().addAll(measID, x, y, z, type, check);
             measDataVBox.getChildren().add(hbox);
         }
+        scrollPane.setContent(measDataVBox);
+        parseDisplayerData();
+       if( root.getChildren().size() == 4 ){
+            root.getChildren().remove(3);
+        }
+        root.add(scrollPane, 0, 4);
     }
 
     private Color getColorValue(int rowIndex) {
 
-        switch (clickValues.get(rowIndex)) {
+        switch (clickValues[rowIndex]) {
             case 1:
                 return Color.YELLOW;
             case 2:
