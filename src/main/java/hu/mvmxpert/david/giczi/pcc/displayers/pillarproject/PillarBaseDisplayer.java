@@ -184,7 +184,11 @@ public class PillarBaseDisplayer {
         pane.getChildren().addAll(idText, designedXText, designedX,
                 designedYText, designedY, measXText, measX, measYText, measY,
                 deltaXText, deltaX, deltaYText, deltaY);
-        copyText( idText.getText() + "\t" +
+        setDataToClipboard();
+    }
+
+    public void setDataToClipboard(){
+        copyText( measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID() + "\t" +
                 String.format("%10.3f", measuredPillarDataController
                         .measuredPillarData.getPillarCenterPoint()
                         .getX_coord()).replace(",", ".") + "\t" +

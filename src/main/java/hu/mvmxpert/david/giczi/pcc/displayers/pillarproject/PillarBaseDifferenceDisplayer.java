@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -27,6 +26,9 @@ public class PillarBaseDifferenceDisplayer {
         this.measuredPillarDataController = measuredPillarDataController;
         SCALE = 100;
         Stage stage = new Stage();
+        stage.setOnCloseRequest(windowEvent ->
+                measuredPillarDataController.pillarBaseDisplayer.setDataToClipboard()
+                );
         pane.setStyle("-fx-background-color: white");
         ScrollPane scrollPane = getScrollPane(pane);
         addCenterPillarDifferenceData();
@@ -51,28 +53,28 @@ public class PillarBaseDifferenceDisplayer {
 
     private void addCenterPillarDifferenceData(){
         Text pillarHeightText = new Text("magasság [m]");
-        pillarHeightText.xProperty().bind(pane.widthProperty().divide(20).multiply(5));
+        pillarHeightText.xProperty().bind(pane.widthProperty().divide(20).multiply(3));
         pillarHeightText.setY(5 * MILLIMETER);
         pillarHeightText.setFont(boldFont);
         Text pillarHeight = new Text(String.format("%.2f",
                 (measuredPillarDataController.measuredPillarData.getPillarTopCenterPoint().getZ_coord() -
                 measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getZ_coord()))
                 .replace(",", "."));
-        pillarHeight.xProperty().bind(pane.widthProperty().divide(20).multiply(5));
+        pillarHeight.xProperty().bind(pane.widthProperty().divide(20).multiply(3));
         pillarHeight.setY(10 * MILLIMETER);
         pillarHeight.setFont(normalFont);
 
-        Text frontDiffXText = new Text("x [cm]");
+        Text frontDiffXText = new Text("Nyomvonal irányában [cm]");
         frontDiffXText.setFont(boldFont);
-        frontDiffXText.xProperty().bind(pane.widthProperty().divide(20).multiply(9));
+        frontDiffXText.xProperty().bind(pane.widthProperty().divide(20).multiply(7));
         frontDiffXText.setY(5 * MILLIMETER);
         Text frontDiffX = new Text(String.format("%.1f", 100 * Math.abs(measuredPillarDataController
                 .measuredPillarData.getXDifferenceOnMainLine())).replace(",", "."));
-        frontDiffX.xProperty().bind(pane.widthProperty().divide(20).multiply(9));
+        frontDiffX.xProperty().bind(pane.widthProperty().divide(20).multiply(7));
         frontDiffX.setY(10 * MILLIMETER);
         frontDiffX.setFont(normalFont);
 
-        Text frontDiffYText = new Text("y [cm]");
+        Text frontDiffYText = new Text("Nyomvonalra merőlegesen [cm]");
         frontDiffYText.setFont(boldFont);
         frontDiffYText.xProperty().bind(pane.widthProperty().divide(20).multiply(13));
         frontDiffYText.setY(5 * MILLIMETER);
@@ -85,27 +87,15 @@ public class PillarBaseDifferenceDisplayer {
         pane.getChildren().addAll(pillarHeightText, frontDiffXText, frontDiffYText,
                 pillarHeight, frontDiffX, frontDiffY);
 
-       /* copyText( idText.getText() + "\t" +
-                String.format("%10.3f", measuredPillarDataController
-                        .measuredPillarData.getPillarCenterPoint()
-                        .getX_coord()).replace(",", ".") + "\t" +
-                String.format("%10.3f", measuredPillarDataController
-                        .measuredPillarData.getPillarCenterPoint()
-                        .getY_coord()).replace(",", ".") + "\t" +
-                String.format("%10.3f", measuredPillarDataController
-                        .measuredPillarData.getPillarBaseCenterPoint()
-                        .getX_coord()).replace(",", ".") + "\t" +
-                String.format("%10.3f", measuredPillarDataController
-                        .measuredPillarData.getPillarBaseCenterPoint()
-                        .getY_coord()).replace(",", ".") + "\t" +
-                String.format("%+3.1f", 100 * (measuredPillarDataController
-                        .measuredPillarData.getPillarCenterPoint().getX_coord()
-                        - measuredPillarDataController.measuredPillarData
-                        .getPillarBaseCenterPoint().getX_coord())).replace(",", ".") + "\t" +
-                String.format("%+3.1f", 100 * (measuredPillarDataController
-                        .measuredPillarData.getPillarCenterPoint().getY_coord()
-                        - measuredPillarDataController.measuredPillarData
-                        .getPillarBaseCenterPoint().getY_coord())).replace(",", "."));*/
+        copyText(measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID() + "\t" +
+                String.format("%.2f",
+                                (measuredPillarDataController.measuredPillarData.getPillarTopCenterPoint().getZ_coord() -
+                                        measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getZ_coord()))
+                        .replace(",", ".") + "\t" +
+                String.format("%.1f", 100 * Math.abs(measuredPillarDataController
+                        .measuredPillarData.getXDifferenceOnMainLine())).replace(",", ".") + "\t" +
+                String.format("%.1f", 100 * Math.abs(measuredPillarDataController
+                        .measuredPillarData.getYDifferenceOnMainLine())).replace(",", "."));
     }
 
     private void copyText(String text){

@@ -119,7 +119,11 @@ public class MeasPointListDisplayer {
                                 new BackgroundFill(getColorValue(i),
                                         null, null)));
             }
+            CheckBox check = new CheckBox("Használ");
             hbox.setOnMouseClicked(mouseEvent -> {
+                if( !check.isSelected() ){
+                    return;
+                }
                 int rowIndex = measDataVBox.getChildren().indexOf((Node) mouseEvent.getSource());
                 clickValues[rowIndex]++;
                 hbox.setBackground(new Background(
@@ -138,7 +142,6 @@ public class MeasPointListDisplayer {
             z.setFont(font);
             Text type = new Text(measPoint.getPointType().name());
             type.setFont(font);
-            CheckBox check = new CheckBox("Használ");
             if( measPoint.isUsed() ){
                 check.setSelected(true);
             }

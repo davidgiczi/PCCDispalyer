@@ -14,7 +14,7 @@ public class MeasuredPillarDataController {
     public final FileProcess fileProcess;
     public final MeasuredPillarData measuredPillarData;
     public MeasPointListDisplayer measuredPointListDisplayer;
-    public PillarBaseDisplayer pillarDisplayer;
+    public PillarBaseDisplayer pillarBaseDisplayer;
     public PillarBaseDifferenceDisplayer pillarBaseDifferenceDisplayer;
     public InputPillarDataWindow inputPillarDataWindow;
     public FXHomeWindow fxHomeWindow;
@@ -230,9 +230,9 @@ public class MeasuredPillarDataController {
         measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
         measuredPillarData.addIDsForPillarLegs();
-        //fileProcess.savePillarProjectData();
+        fileProcess.savePillarProjectData();
         inputPillarDataWindow.stage.hide();
-        this.pillarDisplayer = new PillarBaseDisplayer(this);
+        this.pillarBaseDisplayer = new PillarBaseDisplayer(this);
     }
 
 }
