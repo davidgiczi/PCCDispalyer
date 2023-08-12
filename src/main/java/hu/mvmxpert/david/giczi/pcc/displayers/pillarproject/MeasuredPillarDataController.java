@@ -26,7 +26,13 @@ public class MeasuredPillarDataController {
     }
 
     public void init(){
-      measuredPillarData.getMeasPillarPoints().clear();
+        if( measuredPillarData.getMeasPillarPoints() != null && !
+                measuredPillarData.getMeasPillarPoints().isEmpty() ){
+            measuredPillarData.getMeasPillarPoints().clear();
+        }
+        if( fileProcess.getMeasData() != null && !fileProcess.getMeasData().isEmpty()){
+            fileProcess.getMeasData().clear();
+        }
     }
     public void getInfoAlert(String title, String text) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -52,19 +58,23 @@ public class MeasuredPillarDataController {
     }
 
     public void openMeasuredData(){
+        init();
         fileProcess.getMeasureFileData();
         if( fileProcess.getMeasData() == null || fileProcess.getMeasData().isEmpty() ){
-            getInfoAlert("Nem beolvasható adat",
-                    "Nem található beolvasható mérési eredmény a fájlban.");
             return;
         }
         measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
+        if( measuredPillarData.getMeasPillarPoints() == null || measuredPillarData.getMeasPillarPoints().isEmpty()) {
+            getInfoAlert("Nem beolvasható adat",
+                    "Nem található beolvasható mérési eredmény a fájlban.");
+        }
         this.measuredPointListDisplayer =
                 new MeasPointListDisplayer(this);
     }
 
     public void createNewProject(){
         measuredPointListDisplayer.stage.hide();
+        measuredPointListDisplayer.parseDisplayerData();
         measuredPillarData.calcPillarLegsPoint();
         measuredPillarData.calcPillarTopPoints();
         if( measuredPillarData.getPillarBasePoints().size() <  2 ||
@@ -78,14 +88,16 @@ public class MeasuredPillarDataController {
 
     public void addMoreMeasuredPillarData(){
         measuredPointListDisplayer.stage.hide();
+        measuredPointListDisplayer.parseDisplayerData();
         fileProcess.getMeasureFileData();
-        if( fileProcess.getMeasData() == null || fileProcess.getMeasData().isEmpty() ){
+        measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
+        if( measuredPillarData.getMeasPillarPoints() == null || measuredPillarData.getMeasPillarPoints().isEmpty() ){
             getInfoAlert("Nem beolvasható adat",
                     "Nem található beolvasható mérési eredmény a fájlban.");
             measuredPointListDisplayer.stage.show();
             return;
         }
-        measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
+
         measuredPointListDisplayer.addMeasData();
         measuredPointListDisplayer.stage.show();
     }

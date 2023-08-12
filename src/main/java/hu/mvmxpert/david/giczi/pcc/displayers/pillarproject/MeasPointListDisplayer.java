@@ -44,9 +44,8 @@ public class MeasPointListDisplayer {
     }
 
     public void parseDisplayerData(){
-            for (int i = 0;
-                 i < measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size(); i++ ) {
-          measuredPillarDataController.measuredPillarData
+            for (int i = 0; i < measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size(); i++ ) {
+                    measuredPillarDataController.measuredPillarData
                   .getMeasPillarPoints().get(i).setGroupID(clickValues[i]);
                 HBox hbox = (HBox) measDataVBox.getChildren().get(i);
                 for( int j = 0; j < hbox.getChildren().size(); j++) {
@@ -109,15 +108,15 @@ public class MeasPointListDisplayer {
             hbox.setPadding(new Insets(10, 10, 10, 10));
             hbox.setCursor(Cursor.HAND);
             hbox.setStyle("-fx-border-color: lightgray");
-            if( clickValues[i] == 0 && i % 2 != 0 ){
+            if( measPoint.getGroupID() == 0 && i % 2 != 0 ){
                 hbox.setBackground( new Background(
                         new BackgroundFill(Color.rgb(211, 211, 211),
                                 null, null)));
             }
-            else if( clickValues[i] != 0 ){
+            else if( measPoint.getGroupID() != 0 ){
                 hbox.setBackground(
                         new Background(
-                                new BackgroundFill(getColorValue(measPoint.getGroupID()),
+                                new BackgroundFill(getColorValue(i),
                                         null, null)));
             }
             hbox.setOnMouseClicked(mouseEvent -> {
@@ -165,7 +164,6 @@ public class MeasPointListDisplayer {
             measDataVBox.getChildren().add(hbox);
         }
         scrollPane.setContent(measDataVBox);
-        parseDisplayerData();
        if( root.getChildren().size() == 4 ){
             root.getChildren().remove(3);
         }
