@@ -51,6 +51,7 @@ public class InputPillarDataWindow {
         addCenterPillarDataFields();
         addDirectionPillarDataFields();
         addCalcButton();
+        addData();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
@@ -375,4 +376,14 @@ public class InputPillarDataWindow {
     vBox.getChildren().add(calcButtonHbox);
     }
 
+    private void addData(){
+        projectNameField.setText("TestProject");
+        projectPathField.setText("TestProjectPath");
+        centerPillarIDField.setText("174");
+        centerPillarField_X.setText("670134.37");
+        centerPillarField_Y.setText("244725.10");
+        directionPillarIDField.setText("175");
+        directionPillarField_X.setText("669961.80");
+        directionPillarField_Y.setText("245037.62");
+    }
 }

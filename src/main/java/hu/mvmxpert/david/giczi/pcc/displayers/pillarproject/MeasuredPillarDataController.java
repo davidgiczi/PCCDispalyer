@@ -230,7 +230,7 @@ public class MeasuredPillarDataController {
         measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
         measuredPillarData.addIDsForPillarLegs();
-        fileProcess.savePillarProjectData();
+        //fileProcess.savePillarProjectData();
         inputPillarDataWindow.stage.hide();
         this.pillarBaseDisplayer = new PillarBaseDisplayer(this);
     }

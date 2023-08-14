@@ -186,38 +186,36 @@ public class MeasuredPillarData {
 
             if (radRotation == Math.PI) {
 
-                double azimuth = baseLineDirection.calcAzimuth() >= Math.PI ?
-                        baseLineDirection.calcAzimuth() - Math.PI : baseLineDirection.calcAzimuth() + Math.PI;
-
-                if (0 < azimuth && azimuth <= pillarBasePoints.get(0).getAzimuth()) {
-                    pillarBasePoints.get(0).setPointID("B");
-                    pillarBasePoints.get(1).setPointID("C");
-                    pillarBasePoints.get(2).setPointID("D");
-                    pillarBasePoints.get(3).setPointID("A");
-                } else if (pillarBasePoints.get(0).getAzimuth() < azimuth &&
-                        azimuth <= pillarBasePoints.get(1).getAzimuth()) {
-                    pillarBasePoints.get(0).setPointID("A");
-                    pillarBasePoints.get(1).setPointID("B");
-                    pillarBasePoints.get(2).setPointID("C");
-                    pillarBasePoints.get(3).setPointID("D");
-                } else if (pillarBasePoints.get(1).getAzimuth() < azimuth &&
-                        azimuth <= pillarBasePoints.get(2).getAzimuth()) {
+                if (0 < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(0).getAzimuth()) {
                     pillarBasePoints.get(0).setPointID("D");
                     pillarBasePoints.get(1).setPointID("A");
                     pillarBasePoints.get(2).setPointID("B");
                     pillarBasePoints.get(3).setPointID("C");
-                } else if (pillarBasePoints.get(2).getAzimuth() < azimuth &&
-                        azimuth <= pillarBasePoints.get(3).getAzimuth()) {
+                } else if (pillarBasePoints.get(0).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(1).getAzimuth()) {
                     pillarBasePoints.get(0).setPointID("C");
                     pillarBasePoints.get(1).setPointID("D");
                     pillarBasePoints.get(2).setPointID("A");
                     pillarBasePoints.get(3).setPointID("B");
-                } else if (pillarBasePoints.get(3).getAzimuth() <azimuth &&
-                        azimuth <= 2 * Math.PI) {
+                } else if (pillarBasePoints.get(1).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(2).getAzimuth()) {
                     pillarBasePoints.get(0).setPointID("B");
                     pillarBasePoints.get(1).setPointID("C");
                     pillarBasePoints.get(2).setPointID("D");
                     pillarBasePoints.get(3).setPointID("A");
+                } else if (pillarBasePoints.get(2).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= pillarBasePoints.get(3).getAzimuth()) {
+                    pillarBasePoints.get(0).setPointID("A");
+                    pillarBasePoints.get(1).setPointID("B");
+                    pillarBasePoints.get(2).setPointID("C");
+                    pillarBasePoints.get(3).setPointID("D");
+                } else if (pillarBasePoints.get(3).getAzimuth() < baseLineDirection.calcAzimuth() &&
+                        baseLineDirection.calcAzimuth() <= 2 * Math.PI) {
+                    pillarBasePoints.get(0).setPointID("D");
+                    pillarBasePoints.get(1).setPointID("A");
+                    pillarBasePoints.get(2).setPointID("B");
+                    pillarBasePoints.get(3).setPointID("C");
                 }
                 return;
             }

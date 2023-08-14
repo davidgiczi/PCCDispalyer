@@ -46,6 +46,7 @@ public class PillarBaseDisplayer {
         this.measuredPillarDataController = measuredPillarDataController;
         SCALE = 100;
         Stage stage = new Stage();
+        stage.initOwner(measuredPillarDataController.fxHomeWindow.homeStage);
         stage.setOnCloseRequest(windowEvent -> {
             measuredPillarDataController.fxHomeWindow.homeStage.show();
             measuredPillarDataController.init();
@@ -141,7 +142,7 @@ public class PillarBaseDisplayer {
         designedY.setFont(normalFont);
         designedY.xProperty().bind(pane.widthProperty().divide(22).multiply(8));
         designedY.setY(10 * MILLIMETER);
-        Text measXText = new Text("EOV X (mért)");
+        Text measXText = new Text("EOV Y (mért)");
         measXText.setFont(boldFont);
         measXText.xProperty().bind(pane.widthProperty().divide(21).multiply(10));
         measXText.setY(5 * MILLIMETER);
@@ -150,7 +151,7 @@ public class PillarBaseDisplayer {
        measX.xProperty().bind(pane.widthProperty().divide(22).multiply(10));
        measX.setY(10 * MILLIMETER);
        measX.setFont(normalFont);
-        Text measYText = new Text("EOV Y (mért)");
+        Text measYText = new Text("EOV X (mért)");
         measYText.setFont(boldFont);
         measYText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
         measYText.setY(5 * MILLIMETER);
@@ -827,4 +828,5 @@ public class PillarBaseDisplayer {
                         .subtract(2 * MILLIMETER));
         pane.getChildren().add(text);
     }
+
 }

@@ -33,6 +33,7 @@ public class MeasPointListDisplayer {
         addMeasData();
         Scene scene = new Scene(root);
         stage = new Stage();
+        stage.initOwner(measuredPillarDataController.fxHomeWindow.homeStage);
         stage.setOnCloseRequest(windowEvent -> measuredPillarDataController.init());
         stage.setWidth(510);
         stage.setHeight(600);
