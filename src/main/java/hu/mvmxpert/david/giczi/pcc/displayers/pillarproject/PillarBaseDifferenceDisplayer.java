@@ -70,13 +70,14 @@ public class PillarBaseDifferenceDisplayer {
     private void addContent(){
         topCenterPoint = new Point("topCenterPoint",
                 1000 * (measuredPillarDataController.measuredPillarData
-                        .getPillarBaseCenterPoint().getX_coord() -
+                        .getPillarTopCenterPoint().getX_coord() -
                         measuredPillarDataController.measuredPillarData
-                                .getPillarTopCenterPoint().getX_coord()) * MILLIMETER / SCALE,
+                        .getPillarBaseCenterPoint().getX_coord()
+                        ) * MILLIMETER / SCALE,
                 1000 *  (measuredPillarDataController.measuredPillarData
-                        .getPillarBaseCenterPoint().getY_coord() -
+                        .getPillarTopCenterPoint().getY_coord() -
                         measuredPillarDataController.measuredPillarData
-                                .getPillarTopCenterPoint().getY_coord()) * MILLIMETER / SCALE);
+                        .getPillarBaseCenterPoint().getY_coord()) * MILLIMETER / SCALE);
         addCenterPillarDifferenceDataForForwardDirection();
         if( measuredPillarDataController.measuredPillarData.radRotation != Math.PI ){
             addCenterPillarDifferenceDataForBackwardDirection();
@@ -200,7 +201,7 @@ public class PillarBaseDifferenceDisplayer {
         center.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5));
         center.centerYProperty().bind(pane.heightProperty().divide(2));
         Tooltip centerTooltip = new Tooltip(measuredPillarDataController.measuredPillarData
-                .getPillarCenterPoint().getPointID()
+                .getPillarBaseCenterPoint().getPointID()
                 +    "\tY=" + String.format("%.3fm",
                 measuredPillarDataController.measuredPillarData.
                         getPillarBaseCenterPoint().getX_coord()).replace(",", ".") +
@@ -214,7 +215,7 @@ public class PillarBaseDifferenceDisplayer {
         center.setCursor(Cursor.HAND);
         Circle topCenter = new Circle();
         topCenter.setRadius(5);
-        topCenter.setStroke(Color.GREEN);
+        topCenter.setStroke(Color.BLUE);
         topCenter.setStrokeWidth(2);
         topCenter.setFill(Color.TRANSPARENT);
         topCenter.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5).add(topCenterPoint.getX_coord()));
@@ -249,7 +250,8 @@ public class PillarBaseDifferenceDisplayer {
                 "forwardDirection");
 
         PolarPoint endPoint = new PolarPoint(startPoint.calcPolarPoint(),
-                60 * MILLIMETER / SCALE, mainLineDirection.calcAzimuth(),
+                (1000 * measuredPillarDataController.measuredPillarData.getXDifferenceOnMainLine() + 20) * MILLIMETER / SCALE,
+                mainLineDirection.calcAzimuth(),
                 "forwardDirection");
 
         Line forwardDirection = new Line();
@@ -290,7 +292,7 @@ public class PillarBaseDifferenceDisplayer {
                 "prevPoint");
 
         PolarPoint endPoint = new PolarPoint(startPoint.calcPolarPoint(),
-                60 * MILLIMETER / SCALE,
+                (1000 * measuredPillarDataController.measuredPillarData.getXDifferenceOnMainLine() + 20) * MILLIMETER / SCALE,
                 baseLineData.calcAzimuth() + measuredPillarDataController.measuredPillarData.radRotation,
                 "backwardDirection");
 
@@ -373,14 +375,13 @@ public class PillarBaseDifferenceDisplayer {
     private void addForwardDifferences(){
         Point pillarCenterPoint =  new Point("pillarCenterPoint", 0.0, 0.0);
         Point directionPillarPoint = new Point("transformedDirectionPoint",
-                (measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord() -
-                        measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getX_coord()),
+                (measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getX_coord()  -
+                        measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getX_coord()),
                 (measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getY_coord() -
-                        measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getY_coord()));
+                        measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getY_coord()));
         AzimuthAndDistance mainLineDirection =
                 new AzimuthAndDistance(pillarCenterPoint, directionPillarPoint);
-        Point startPoint = new Point("center", 0.0, 0.0);
-        PolarPoint endPoint = new PolarPoint(startPoint,
+        PolarPoint endPoint = new PolarPoint(pillarCenterPoint,
              1000 * measuredPillarDataController.measuredPillarData.getXDifferenceOnMainLine()
                      * MILLIMETER / SCALE,
                 mainLineDirection.calcAzimuth(),
@@ -388,14 +389,14 @@ public class PillarBaseDifferenceDisplayer {
 
         Line forwardXDifference = new Line();
         forwardXDifference.setStrokeWidth(2);
-        forwardXDifference.setStroke(Color.GREEN);
+        forwardXDifference.setStroke(Color.LIMEGREEN);
         forwardXDifference.startXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
-                        .multiply(5).add(startPoint.getX_coord()));
+                        .multiply(5).add(pillarCenterPoint.getX_coord()));
         forwardXDifference.startYProperty()
                 .bind(pane.heightProperty()
-                        .divide(2).subtract(startPoint.getY_coord()));
+                        .divide(2).subtract(pillarCenterPoint.getY_coord()));
         forwardXDifference.endXProperty()
                 .bind(pane.widthProperty()
                         .divide(10)
@@ -404,7 +405,27 @@ public class PillarBaseDifferenceDisplayer {
                 .bind(pane.heightProperty()
                         .divide(2)
                         .subtract(endPoint.calcPolarPoint().getY_coord()));
-        pane.getChildren().add(forwardXDifference);
+        Line forwardYDifference = new Line();
+        forwardYDifference.setStrokeWidth(2);
+        forwardYDifference.setStroke(Color.LIMEGREEN);
+        forwardYDifference.startXProperty()
+                .bind(pane.widthProperty()
+                        .divide(10)
+                        .multiply(5).add(endPoint.calcPolarPoint().getX_coord()));
+        forwardYDifference.startYProperty()
+                .bind(pane.heightProperty()
+                        .divide(2)
+                        .subtract(endPoint.calcPolarPoint().getY_coord()));
+        forwardYDifference.endXProperty()
+                        .bind(pane.widthProperty()
+                                .divide(10)
+                                .multiply(5).add(topCenterPoint.getX_coord()));
+        forwardYDifference.endYProperty()
+                        .bind(pane.heightProperty()
+                                .divide(2)
+                                .subtract(topCenterPoint.getY_coord()));
+
+        pane.getChildren().addAll(forwardXDifference, forwardYDifference);
     }
     private void addBackwardDifferences(){
 

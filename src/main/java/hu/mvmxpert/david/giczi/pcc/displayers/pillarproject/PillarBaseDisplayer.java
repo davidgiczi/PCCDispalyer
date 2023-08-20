@@ -474,7 +474,7 @@ public class PillarBaseDisplayer {
         center.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5));
         center.centerYProperty().bind(pane.heightProperty().divide(2));
         Tooltip tooltip = new Tooltip(measuredPillarDataController.measuredPillarData
-                .getPillarCenterPoint().getPointID()
+                .getPillarBaseCenterPoint().getPointID()
             +    "\tY=" + String.format("%.3fm",
                         measuredPillarDataController.measuredPillarData.
                                 getPillarBaseCenterPoint().getX_coord()).replace(",", ".") +

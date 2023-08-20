@@ -332,7 +332,6 @@ public class MeasuredPillarData {
         double y = 0.0;
         double z = 0.0;
         for (MeasPoint topPoint : pillarTopPoints) {
-            System.out.println(topPoint);
             x += topPoint.getX_coord();
             y += topPoint.getY_coord();
             z += topPoint.getZ_coord();
@@ -340,7 +339,7 @@ public class MeasuredPillarData {
         x = x / pillarTopPoints.size();
         y = y / pillarTopPoints.size();
         z = z / pillarTopPoints.size();
-        return new MeasPoint("TopCentrum", x , y, z, PointType.CSUCS);
+        return new MeasPoint("TopCenter", x , y, z, PointType.CSUCS);
     }
 
     public void convertMeasuredDataToMeasPoints(List<String> measData){
@@ -386,6 +385,7 @@ public class MeasuredPillarData {
                         getPillarBaseCenterPoint().getX_coord(), getPillarBaseCenterPoint().getY_coord()),
                         new Point("topCenter",
                                 getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
+
         return differenceData.calcDistance()
                 * Math.cos(mainLineData.calcAzimuth() - differenceData.calcAzimuth());
     }
