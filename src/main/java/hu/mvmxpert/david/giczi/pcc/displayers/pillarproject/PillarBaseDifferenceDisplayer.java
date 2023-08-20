@@ -40,11 +40,6 @@ public class PillarBaseDifferenceDisplayer {
     public PillarBaseDifferenceDisplayer(MeasuredPillarDataController measuredPillarDataController){
         this.measuredPillarDataController = measuredPillarDataController;
         SCALE = 2;
-        topCenterPoint = new Point("topCenterPoint",
-             1000 * (measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getX_coord() -
-                        measuredPillarDataController.measuredPillarData.getPillarTopCenterPoint().getX_coord()) * MILLIMETER / SCALE,
-               1000 *  (measuredPillarDataController.measuredPillarData.getPillarBaseCenterPoint().getY_coord() -
-                        measuredPillarDataController.measuredPillarData.getPillarTopCenterPoint().getY_coord()) * MILLIMETER / SCALE);
         Stage stage = new Stage();
         stage.initOwner(measuredPillarDataController.fxHomeWindow.homeStage);
         stage.setOnCloseRequest(windowEvent ->
@@ -73,6 +68,15 @@ public class PillarBaseDifferenceDisplayer {
     }
 
     private void addContent(){
+        topCenterPoint = new Point("topCenterPoint",
+                1000 * (measuredPillarDataController.measuredPillarData
+                        .getPillarBaseCenterPoint().getX_coord() -
+                        measuredPillarDataController.measuredPillarData
+                                .getPillarTopCenterPoint().getX_coord()) * MILLIMETER / SCALE,
+                1000 *  (measuredPillarDataController.measuredPillarData
+                        .getPillarBaseCenterPoint().getY_coord() -
+                        measuredPillarDataController.measuredPillarData
+                                .getPillarTopCenterPoint().getY_coord()) * MILLIMETER / SCALE);
         addCenterPillarDifferenceDataForForwardDirection();
         if( measuredPillarDataController.measuredPillarData.radRotation != Math.PI ){
             addCenterPillarDifferenceDataForBackwardDirection();
@@ -102,7 +106,7 @@ public class PillarBaseDifferenceDisplayer {
         frontDiffXText.setFont(boldFont);
         frontDiffXText.xProperty().bind(pane.widthProperty().divide(20).multiply(8));
         frontDiffXText.setY(5 * MILLIMETER);
-        Text frontDiffX = new Text(String.format("%.1f", 100 * Math.abs(measuredPillarDataController
+        Text frontDiffX = new Text(String.format("%+.1f", 100 * Math.abs(measuredPillarDataController
                 .measuredPillarData.getXDifferenceOnMainLine())).replace(",", "."));
         frontDiffX.xProperty().bind(pane.widthProperty().divide(20).multiply(8));
         frontDiffX.setY(10 * MILLIMETER);
@@ -112,7 +116,7 @@ public class PillarBaseDifferenceDisplayer {
         frontDiffYText.setFont(boldFont);
         frontDiffYText.xProperty().bind(pane.widthProperty().divide(20).multiply(14));
         frontDiffYText.setY(5 * MILLIMETER);
-        Text frontDiffY = new Text(String.format("%.1f", 100 * Math.abs(measuredPillarDataController
+        Text frontDiffY = new Text(String.format("%+.1f", 100 * Math.abs(measuredPillarDataController
                 .measuredPillarData.getYDifferenceOnMainLine())).replace(",", "."));
         frontDiffY.setFont(normalFont);
         frontDiffY.xProperty().bind(pane.widthProperty().divide(20).multiply(14));
@@ -134,13 +138,13 @@ public class PillarBaseDifferenceDisplayer {
 
     private void addCenterPillarDifferenceDataForBackwardDirection(){
 
-        Text backDiffX = new Text(String.format("%.1f", 100 * Math.abs(measuredPillarDataController
+        Text backDiffX = new Text(String.format("%+.1f", 100 * Math.abs(measuredPillarDataController
                 .measuredPillarData.getXDifferenceOnBackwardLine())).replace(",", "."));
         backDiffX.xProperty().bind(pane.widthProperty().divide(20).multiply(8));
         backDiffX.setY(15 * MILLIMETER);
         backDiffX.setFont(normalFont);
 
-        Text backDiffY = new Text(String.format("%.1f", 100 * Math.abs(measuredPillarDataController
+        Text backDiffY = new Text(String.format("%+.1f", 100 * Math.abs(measuredPillarDataController
                 .measuredPillarData.getYDifferenceOnBackwardLine())).replace(",", "."));
         backDiffY.setFont(normalFont);
         backDiffY.xProperty().bind(pane.widthProperty().divide(20).multiply(14));
@@ -195,8 +199,18 @@ public class PillarBaseDifferenceDisplayer {
         center.setFill(Color.TRANSPARENT);
         center.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5));
         center.centerYProperty().bind(pane.heightProperty().divide(2));
-        Tooltip tooltip = new Tooltip(measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID());
-        Tooltip.install(center, tooltip);
+        Tooltip centerTooltip = new Tooltip(measuredPillarDataController.measuredPillarData
+                .getPillarCenterPoint().getPointID()
+                +    "\tY=" + String.format("%.3fm",
+                measuredPillarDataController.measuredPillarData.
+                        getPillarBaseCenterPoint().getX_coord()).replace(",", ".") +
+                "\tX=" + String.format("%.3fm",
+                measuredPillarDataController.measuredPillarData.
+                        getPillarBaseCenterPoint().getY_coord()).replace(",", ".") +
+                "\th=" + String.format("%.3fm",
+                measuredPillarDataController.measuredPillarData.
+                        getPillarBaseCenterPoint().getZ_coord()).replace(",", "."));
+        Tooltip.install(center, centerTooltip);
         center.setCursor(Cursor.HAND);
         Circle topCenter = new Circle();
         topCenter.setRadius(5);
@@ -204,7 +218,20 @@ public class PillarBaseDifferenceDisplayer {
         topCenter.setStrokeWidth(2);
         topCenter.setFill(Color.TRANSPARENT);
         topCenter.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5).add(topCenterPoint.getX_coord()));
-        topCenter.centerYProperty().bind(pane.heightProperty().divide(2).add(topCenterPoint.getY_coord()));
+        topCenter.centerYProperty().bind(pane.heightProperty().divide(2).subtract(topCenterPoint.getY_coord()));
+        Tooltip topCenterTooltip = new Tooltip(measuredPillarDataController.measuredPillarData
+                .getPillarTopCenterPoint().getPointID()
+                +    "\tY=" + String.format("%.3fm",
+                measuredPillarDataController.measuredPillarData.
+                        getPillarTopCenterPoint().getX_coord()).replace(",", ".") +
+                "\tX=" + String.format("%.3fm",
+                measuredPillarDataController.measuredPillarData.
+                        getPillarTopCenterPoint().getY_coord()).replace(",", ".") +
+                "\th=" + String.format("%.3fm",
+                measuredPillarDataController.measuredPillarData.
+                        getPillarTopCenterPoint().getZ_coord()).replace(",", "."));
+        Tooltip.install(topCenter, topCenterTooltip);
+        topCenter.setCursor(Cursor.HAND);
         pane.getChildren().addAll(center, topCenter);
     }
 

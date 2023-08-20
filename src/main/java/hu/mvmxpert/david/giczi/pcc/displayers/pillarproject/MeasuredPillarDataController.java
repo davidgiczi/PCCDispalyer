@@ -97,7 +97,7 @@ public class MeasuredPillarDataController {
             measuredPointListDisplayer.stage.show();
             return;
         }
-
+        measuredPointListDisplayer.stage.setTitle(FileProcess.MEAS_FILE_NAME);
         measuredPointListDisplayer.addMeasData();
         measuredPointListDisplayer.stage.show();
     }

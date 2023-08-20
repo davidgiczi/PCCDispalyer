@@ -473,7 +473,17 @@ public class PillarBaseDisplayer {
         center.setFill(Color.TRANSPARENT);
         center.centerXProperty().bind(pane.widthProperty().divide(10).multiply(5));
         center.centerYProperty().bind(pane.heightProperty().divide(2));
-        Tooltip tooltip = new Tooltip(measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID());
+        Tooltip tooltip = new Tooltip(measuredPillarDataController.measuredPillarData
+                .getPillarCenterPoint().getPointID()
+            +    "\tY=" + String.format("%.3fm",
+                        measuredPillarDataController.measuredPillarData.
+                                getPillarBaseCenterPoint().getX_coord()).replace(",", ".") +
+                        "\tX=" + String.format("%.3fm",
+                        measuredPillarDataController.measuredPillarData.
+                                getPillarBaseCenterPoint().getY_coord()).replace(",", ".") +
+                        "\th=" + String.format("%.3fm",
+                        measuredPillarDataController.measuredPillarData.
+                                getPillarBaseCenterPoint().getZ_coord()).replace(",", "."));
         Tooltip.install(center, tooltip);
         center.setCursor(Cursor.HAND);
         pane.getChildren().add(center);

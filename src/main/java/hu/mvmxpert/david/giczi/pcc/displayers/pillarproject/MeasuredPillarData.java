@@ -317,7 +317,7 @@ public class MeasuredPillarData {
         x = x / pillarBasePoints.size();
         y = y / pillarBasePoints.size();
         z = z / pillarBasePoints.size();
-        return new MeasPoint("baseCenter", x , y, z, PointType.ALAP);
+        return new MeasPoint(pillarCenterPoint.getPointID(), x , y, z, PointType.ALAP);
     }
     public void calcPillarTopPoints(){
         pillarTopPoints = new ArrayList<>();
@@ -332,6 +332,7 @@ public class MeasuredPillarData {
         double y = 0.0;
         double z = 0.0;
         for (MeasPoint topPoint : pillarTopPoints) {
+            System.out.println(topPoint);
             x += topPoint.getX_coord();
             y += topPoint.getY_coord();
             z += topPoint.getZ_coord();
@@ -339,7 +340,7 @@ public class MeasuredPillarData {
         x = x / pillarTopPoints.size();
         y = y / pillarTopPoints.size();
         z = z / pillarTopPoints.size();
-        return new MeasPoint("topCenter", x , y, z, PointType.CSUCS);
+        return new MeasPoint("TopCentrum", x , y, z, PointType.CSUCS);
     }
 
     public void convertMeasuredDataToMeasPoints(List<String> measData){
@@ -386,7 +387,7 @@ public class MeasuredPillarData {
                         new Point("topCenter",
                                 getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
         return differenceData.calcDistance()
-                * Math.cos(Math.abs(mainLineData.calcAzimuth() - differenceData.calcAzimuth()));
+                * Math.cos(mainLineData.calcAzimuth() - differenceData.calcAzimuth());
     }
 
     public double getYDifferenceOnMainLine(){
@@ -401,7 +402,7 @@ public class MeasuredPillarData {
                         new Point("topCenter",
                                 getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
         return differenceData.calcDistance()
-                * Math.sin(Math.abs(mainLineData.calcAzimuth() - differenceData.calcAzimuth()));
+                * Math.sin(mainLineData.calcAzimuth() - differenceData.calcAzimuth());
     }
 
     public double getXDifferenceOnBackwardLine(){
@@ -416,7 +417,7 @@ public class MeasuredPillarData {
                         new Point("topCenter",
                                 getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
         return differenceData.calcDistance()
-                * Math.cos(Math.abs(mainLineData.calcAzimuth() + radRotation - differenceData.calcAzimuth()));
+                * Math.cos(mainLineData.calcAzimuth() + radRotation - differenceData.calcAzimuth());
     }
 
     public double getYDifferenceOnBackwardLine(){
@@ -431,7 +432,7 @@ public class MeasuredPillarData {
                         new Point("topCenter",
                                 getPillarTopCenterPoint().getX_coord(), getPillarTopCenterPoint().getY_coord()));
         return differenceData.calcDistance()
-                * Math.sin(Math.abs(mainLineData.calcAzimuth() + radRotation - differenceData.calcAzimuth()));
+                * Math.sin(mainLineData.calcAzimuth() + radRotation - differenceData.calcAzimuth());
     }
 
 }
