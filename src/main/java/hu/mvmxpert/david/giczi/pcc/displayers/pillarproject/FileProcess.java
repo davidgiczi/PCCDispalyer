@@ -16,6 +16,7 @@ public class FileProcess {
 	public MeasuredPillarDataController measuredPillarDataController;
 	public static String FOLDER_PATH;
 	public static String MEAS_FILE_NAME;
+	public static boolean NOT_EXISTED_PROJECT;
 	private List<String> measData;
 	private String delimiter = ";";
 
@@ -51,6 +52,7 @@ public class FileProcess {
 		if ( selectedFile != null ) {
 			FOLDER_PATH = selectedFile.getParent();
 			PROJECT_FILE_NAME = selectedFile.getName().substring(0, selectedFile.getName().indexOf('.'));
+			NOT_EXISTED_PROJECT = false;
 		}
 		return getProjectFileData();
 	}
@@ -92,6 +94,7 @@ public class FileProcess {
 			setData(selectedFile);
 			MEAS_FILE_NAME = selectedFile.getName();
 			FOLDER_PATH = selectedFile.getParent();
+			NOT_EXISTED_PROJECT = true;
 		}
 	}
 

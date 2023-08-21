@@ -7,6 +7,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.Optional;
 
 public class MeasuredPillarDataController {
@@ -15,9 +16,9 @@ public class MeasuredPillarDataController {
     public final MeasuredPillarData measuredPillarData;
     public MeasPointListDisplayer measuredPointListDisplayer;
     public PillarBaseDisplayer pillarBaseDisplayer;
-    public PillarBaseDifferenceDisplayer pillarBaseDifferenceDisplayer;
     public InputPillarDataWindow inputPillarDataWindow;
     public FXHomeWindow fxHomeWindow;
+    public List<String> projectFileData;
 
     public MeasuredPillarDataController(FXHomeWindow fxHomeWindow){
         this.fxHomeWindow = fxHomeWindow;
@@ -230,9 +231,25 @@ public class MeasuredPillarDataController {
         measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
         measuredPillarData.addIDsForPillarLegs();
-        //fileProcess.savePillarProjectData();
+        if( FileProcess.NOT_EXISTED_PROJECT){
+            fileProcess.savePillarProjectData();
+        }
         inputPillarDataWindow.stage.hide();
         this.pillarBaseDisplayer = new PillarBaseDisplayer(this);
+    }
+
+    public void openProject(){
+       projectFileData = fileProcess.openProject();
+       if( projectFileData.isEmpty() ){
+           return;
+       }
+        init();
+        measuredPillarData.parseProjectFileData(projectFileData);
+        if( inputPillarDataWindow != null ){
+            inputPillarDataWindow.stage.hide();
+        }
+        inputPillarDataWindow = new InputPillarDataWindow(this);
+
     }
 
 }

@@ -94,7 +94,7 @@ public class MeasPoint  {
     @Override
     public String toString() {
         return pointID + "#" +  x_coord + "#" + y_coord + "#" +
-                z_coord + "#" + groupID + "#" + pointType;
+                z_coord +  "#" + pointType;
     }
 
 }

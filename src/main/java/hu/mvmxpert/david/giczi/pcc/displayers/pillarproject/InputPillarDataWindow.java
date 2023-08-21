@@ -50,8 +50,8 @@ public class InputPillarDataWindow {
         addProjectDataFields();
         addCenterPillarDataFields();
         addDirectionPillarDataFields();
+        initDataFieldsByProjectFile();
         addCalcButton();
-        addData();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
@@ -62,7 +62,6 @@ public class InputPillarDataWindow {
         stage.setScene(scene);
         stage.show();
     }
-
     private void addProjectDataFields(){
         Line leftTopLine = new Line();
         leftTopLine.setStroke(color);
@@ -102,6 +101,9 @@ public class InputPillarDataWindow {
         projectDataTextHbox.setAlignment(Pos.CENTER);
         projectDataTextHbox.getChildren().add(projectDataText);
         projectNameField = new TextField();
+        if( !FileProcess.NOT_EXISTED_PROJECT ){
+            projectNameField.setText(FileProcess.PROJECT_FILE_NAME);
+        }
         projectNameField.setCursor(Cursor.HAND);
         projectNameField.setFont(normalFont);
         projectNameField.setStyle("-fx-text-inner-color: #708090; -fx-text-box-border: #708090;" +
@@ -121,6 +123,9 @@ public class InputPillarDataWindow {
         filePathText.setFont(boldFont);
         filePathTextHbox.getChildren().add(filePathText);
         projectPathField = new TextField();
+        if( !FileProcess.NOT_EXISTED_PROJECT ){
+            projectPathField.setText(FileProcess.FOLDER_PATH);
+        }
         projectPathField.setCursor(Cursor.HAND);
         projectPathField.setPrefColumnCount(26);
         projectPathField.setStyle("-fx-text-inner-color: #708090; -fx-text-box-border: #708090;" +
@@ -271,9 +276,22 @@ public class InputPillarDataWindow {
         rotationHbox.setPadding(new Insets(10,10,10,10));
         rotationHbox.getChildren().addAll(rotationAngleField, angleText,
        rotationMinField, minText, rotationSecField, secText);
-
         vBox.getChildren().addAll(pillarIDTextHbox, xCoordHbox,
                 yCoordHbox, rotationTextHbox, rotationHbox);
+    }
+
+    private void initDataFieldsByProjectFile(){
+        if( !FileProcess.NOT_EXISTED_PROJECT ){
+            centerPillarIDField.setText(measuredPillarDataController.projectFileData.get(0));
+            centerPillarField_X.setText(measuredPillarDataController.projectFileData.get(1));
+            centerPillarField_Y.setText(measuredPillarDataController.projectFileData.get(2));
+            directionPillarIDField.setText(measuredPillarDataController.projectFileData.get(3));
+            directionPillarField_X.setText(measuredPillarDataController.projectFileData.get(4));
+            directionPillarField_Y.setText(measuredPillarDataController.projectFileData.get(5));
+            rotationAngleField.setText(measuredPillarDataController.projectFileData.get(6));
+            rotationMinField.setText(measuredPillarDataController.projectFileData.get(7));
+            rotationSecField.setText(measuredPillarDataController.projectFileData.get(8));
+        }
     }
 
     private void addDirectionPillarDataFields(){
@@ -334,8 +352,18 @@ public class InputPillarDataWindow {
         yCoordHbox.setPadding(new Insets(5,5,5,5));
         yCoordHbox.setSpacing(40);
         yCoordHbox.setAlignment(Pos.CENTER);
+        Text xCoordText = new Text("Y koordináta [m]:");
+        xCoordText.setFont(boldFont);
         Text yCoordText = new Text("X koordináta [m]:");
         yCoordText.setFont(boldFont);
+        directionPillarField_X = new TextField();
+        directionPillarField_X.setCursor(Cursor.HAND);
+        directionPillarField_X.setFont(normalFont);
+        directionPillarField_X.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        directionPillarField_X.setPrefColumnCount(15);
+        directionPillarField_X.setFont(normalFont);
         directionPillarField_Y = new TextField();
         directionPillarField_Y.setCursor(Cursor.HAND);
         directionPillarField_Y.setFont(normalFont);
@@ -349,16 +377,6 @@ public class InputPillarDataWindow {
         xCoordHbox.setPadding(new Insets(5,5,5,5));
         xCoordHbox.setSpacing(40);
         xCoordHbox.setAlignment(Pos.CENTER);
-        Text xCoordText = new Text("Y koordináta [m]:");
-        xCoordText.setFont(boldFont);
-        directionPillarField_X = new TextField();
-        directionPillarField_X.setCursor(Cursor.HAND);
-        directionPillarField_X.setFont(normalFont);
-        directionPillarField_X.setStyle("-fx-text-inner-color: #708090; " +
-                "-fx-text-box-border: #708090;" +
-                "-fx-focus-color: #708090;");
-        directionPillarField_X.setPrefColumnCount(15);
-        directionPillarField_X.setFont(normalFont);
         xCoordHbox.getChildren().addAll(xCoordText, directionPillarField_X);
         vBox.getChildren().addAll(pillarIDTextHbox,
                 xCoordHbox, yCoordHbox);
@@ -376,14 +394,4 @@ public class InputPillarDataWindow {
     vBox.getChildren().add(calcButtonHbox);
     }
 
-    private void addData(){
-        projectNameField.setText("TestProject");
-        projectPathField.setText("TestProjectPath");
-        centerPillarIDField.setText("174");
-        centerPillarField_X.setText("670134.37");
-        centerPillarField_Y.setText("244725.10");
-        directionPillarIDField.setText("175");
-        directionPillarField_X.setText("669961.80");
-        directionPillarField_Y.setText("245037.62");
-    }
 }

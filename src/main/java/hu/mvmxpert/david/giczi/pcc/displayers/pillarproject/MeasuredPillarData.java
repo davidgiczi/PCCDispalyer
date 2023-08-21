@@ -435,4 +435,43 @@ public class MeasuredPillarData {
                 * Math.sin(mainLineData.calcAzimuth() + radRotation - differenceData.calcAzimuth());
     }
 
+    public void parseProjectFileData(List<String> projectFileData){
+        this.pillarCenterPoint = new MeasPoint(projectFileData.get(0),
+                Double.parseDouble(projectFileData.get(1)),
+                Double.parseDouble(projectFileData.get(2)),
+                0.0,
+                PointType.CENTER);
+        this.baseLineDirectionPoint = new MeasPoint(projectFileData.get(3),
+                Double.parseDouble(projectFileData.get(4)),
+                Double.parseDouble(projectFileData.get(5)),
+                0.0,
+                PointType.DIRECTION);
+        this.angleRotation = Integer.parseInt(projectFileData.get(6));
+        this.minRotation = Integer.parseInt(projectFileData.get(7));
+        this.secRotation = Integer.parseInt(projectFileData.get(8));
+        this.pillarBasePoints = new ArrayList<>();
+        int i = 9;
+       while( projectFileData.get(i).endsWith("ALAP") ){
+            String[] baseData = projectFileData.get(i).split("#");
+            MeasPoint basePoint = new MeasPoint(baseData[0],
+                    Double.parseDouble(baseData[1]),
+                    Double.parseDouble(baseData[2]),
+                    Double.parseDouble(baseData[3]),
+                    PointType.ALAP);
+            pillarBasePoints.add(basePoint);
+            i++;
+        }
+        this.pillarTopPoints = new ArrayList<>();
+        while( i < projectFileData.size() && projectFileData.get(i).endsWith("CSUCS") ){
+            String[] baseData = projectFileData.get(i).split("#");
+            MeasPoint topPoint = new MeasPoint(baseData[0],
+                    Double.parseDouble(baseData[1]),
+                    Double.parseDouble(baseData[2]),
+                    Double.parseDouble(baseData[3]),
+                    PointType.CSUCS);
+            pillarTopPoints.add(topPoint);
+            i++;
+        }
+    }
+
 }
