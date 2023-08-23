@@ -234,6 +234,11 @@ public class MeasuredPillarDataController {
         if( FileProcess.NOT_EXISTED_PROJECT){
             fileProcess.savePillarProjectData();
         }
+        else {
+          if( getConfirmationAlert("Projekt mentése", "Létező projekt, felülírod?") ){
+              fileProcess.savePillarProjectData();
+          }
+        }
         inputPillarDataWindow.stage.hide();
         this.pillarBaseDisplayer = new PillarBaseDisplayer(this);
     }
