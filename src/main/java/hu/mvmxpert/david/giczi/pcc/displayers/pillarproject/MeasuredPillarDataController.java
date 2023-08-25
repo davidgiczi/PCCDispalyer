@@ -15,6 +15,7 @@ public class MeasuredPillarDataController {
     public final FileProcess fileProcess;
     public final MeasuredPillarData measuredPillarData;
     public MeasPointListDisplayer measuredPointListDisplayer;
+    public PillarBaseDifferenceDisplayer pillarBaseDifferenceDisplayer;
     public PillarBaseDisplayer pillarBaseDisplayer;
     public InputPillarDataWindow inputPillarDataWindow;
     public FXHomeWindow fxHomeWindow;

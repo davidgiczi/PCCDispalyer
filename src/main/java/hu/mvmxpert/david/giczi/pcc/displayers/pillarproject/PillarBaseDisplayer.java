@@ -60,7 +60,12 @@ public class PillarBaseDisplayer {
                             "Az oszlop csúcsára vonatkozó mérési adatok nem kerültek beolvasásra.");
                     return;
                 }
-                new PillarBaseDifferenceDisplayer(measuredPillarDataController);
+                if( measuredPillarDataController.pillarBaseDifferenceDisplayer == null ||
+                !measuredPillarDataController.pillarBaseDifferenceDisplayer.stage.isShowing()){
+                    measuredPillarDataController.pillarBaseDifferenceDisplayer =
+                            new PillarBaseDifferenceDisplayer(measuredPillarDataController);
+                }
+
             }
         });
         addContent();
