@@ -70,7 +70,7 @@ public class FXHomeWindow extends Application {
 		controlSteakoutedPoint.setDisable(true);
 		MenuItem controll = new MenuItem("Kitűzött pontok ellenőrzése");
 		controlSteakoutedPoint.getItems().add(controll);
-		Menu pillarProject = new Menu("Oszlop projekt");
+		Menu pillarProject = new Menu("Oszlop bemérés");
 		MenuItem openPillarProject = new MenuItem("Projekt megnyitása");
 
 		openPillarProject.setOnAction(e -> {

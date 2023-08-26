@@ -6,6 +6,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -45,6 +46,17 @@ public class InputPillarDataWindow {
         {measuredPillarDataController.init();
         measuredPillarDataController.fxHomeWindow.homeStage.show();});
         pane = new AnchorPane();
+        pane.setOnMouseClicked(mouseEvent -> {
+            if( mouseEvent.getButton() == MouseButton.SECONDARY ){
+                measuredPillarDataController.fxHomeWindow.homeStage.hide();
+                if( measuredPillarDataController
+                        .getConfirmationAlert("Bemeneti adatok cseréje",
+                                "Kívánod cserélni a bemért oszlop-, és az előző/következő oszlop adatait?") ) {
+                        exchangeMeasuredPillarAndDirectionPillarInputData();
+                        measuredPillarDataController.openMeasuredData();
+                }
+            }
+        });
         vBox = new VBox();
         pane.setStyle("-fx-background-color: white");
         addProjectDataFields();
@@ -56,11 +68,23 @@ public class InputPillarDataWindow {
         Scene scene = new Scene(pane);
         stage.setWidth(400);
         stage.setHeight(580);
-        stage.setTitle(FileProcess.MEAS_FILE_NAME);
+        stage.setTitle("Adatok megadása");
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void exchangeMeasuredPillarAndDirectionPillarInputData(){
+        String centerPillarID = centerPillarIDField.getText();
+        String centerPillarX = centerPillarField_X.getText();
+        String centerPillarY = centerPillarField_Y.getText();
+        centerPillarIDField.setText(directionPillarIDField.getText());
+        centerPillarField_X.setText(directionPillarField_X.getText());
+        centerPillarField_Y.setText(directionPillarField_Y.getText());
+        directionPillarIDField.setText(centerPillarID);
+        directionPillarField_X.setText(centerPillarX);
+        directionPillarField_Y.setText(centerPillarY);
     }
     private void addProjectDataFields(){
         Line leftTopLine = new Line();
@@ -101,7 +125,7 @@ public class InputPillarDataWindow {
         projectDataTextHbox.setAlignment(Pos.CENTER);
         projectDataTextHbox.getChildren().add(projectDataText);
         projectNameField = new TextField();
-        if( !FileProcess.NOT_EXISTED_PROJECT ){
+        if( FileProcess.isExistedProjectFile() ){
             projectNameField.setText(FileProcess.PROJECT_FILE_NAME);
         }
         projectNameField.setCursor(Cursor.HAND);
@@ -123,7 +147,7 @@ public class InputPillarDataWindow {
         filePathText.setFont(boldFont);
         filePathTextHbox.getChildren().add(filePathText);
         projectPathField = new TextField();
-        if( !FileProcess.NOT_EXISTED_PROJECT ){
+        if( FileProcess.isExistedProjectFile() ){
             projectPathField.setText(FileProcess.FOLDER_PATH);
         }
         projectPathField.setCursor(Cursor.HAND);
@@ -281,7 +305,7 @@ public class InputPillarDataWindow {
     }
 
     private void initDataFieldsByProjectFile(){
-        if( !FileProcess.NOT_EXISTED_PROJECT ){
+        if( FileProcess.isExistedProjectFile() ){
             centerPillarIDField.setText(measuredPillarDataController.projectFileData.get(0));
             centerPillarField_X.setText(measuredPillarDataController.projectFileData.get(1));
             centerPillarField_Y.setText(measuredPillarDataController.projectFileData.get(2));

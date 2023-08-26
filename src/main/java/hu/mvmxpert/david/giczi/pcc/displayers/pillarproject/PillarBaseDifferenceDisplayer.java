@@ -281,7 +281,7 @@ public class PillarBaseDifferenceDisplayer {
         pane.getChildren().add(forwardDirection);
         addArrow(endPoint.calcPolarPoint(), startPoint.calcPolarPoint());
         setText(measuredPillarDataController.measuredPillarData.getBaseLineDirectionPoint().getPointID(),
-                endPoint.calcPolarPoint(), Color.MAGENTA, 16);
+                endPoint.calcPolarPoint(), Color.RED, 16);
     }
 
     private void addPreviousPillarDirection(){

@@ -28,12 +28,15 @@ public class MeasuredPillarDataController {
     }
 
     public void init(){
-        if( measuredPillarData.getMeasPillarPoints() != null && !
-                measuredPillarData.getMeasPillarPoints().isEmpty() ){
+        if( measuredPillarData.getMeasPillarPoints() != null &&
+                !measuredPillarData.getMeasPillarPoints().isEmpty() ){
             measuredPillarData.getMeasPillarPoints().clear();
         }
         if( fileProcess.getMeasData() != null && !fileProcess.getMeasData().isEmpty()){
             fileProcess.getMeasData().clear();
+        }
+        if( projectFileData != null && !projectFileData.isEmpty()){
+            projectFileData.clear();
         }
     }
     public void getInfoAlert(String title, String text) {
@@ -79,13 +82,9 @@ public class MeasuredPillarDataController {
         measuredPointListDisplayer.parseDisplayerData();
         measuredPillarData.calcPillarLegsPoint();
         measuredPillarData.calcPillarTopPoints();
-        if( measuredPillarData.getPillarBasePoints().size() <  2 ||
-                measuredPillarData.getPillarBasePoints().size() > 4){
-            getInfoAlert("Nem megfelelő bemeneti adatok",
-                    "Az oszlop alapja nem ábrázolható.");
-            return;
+        if( projectFileData == null ){
+            this.inputPillarDataWindow = new InputPillarDataWindow(this);
         }
-        this.inputPillarDataWindow = new InputPillarDataWindow(this);
     }
 
     public void addMoreMeasuredPillarData(){
@@ -121,6 +120,7 @@ public class MeasuredPillarDataController {
            getInfoAlert("Hiányzó mentési mappa","Mentési mappa választása szükséges");
            return;
        }
+       FileProcess.FOLDER_PATH = inputPillarDataWindow.projectPathField.getText();
         int centerPillarID;
        try {
             centerPillarID =
@@ -232,13 +232,17 @@ public class MeasuredPillarDataController {
         measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
         measuredPillarData.addIDsForPillarLegs();
-        if( FileProcess.NOT_EXISTED_PROJECT){
-            fileProcess.savePillarProjectData();
+        if( FileProcess.isExistedProjectFile() ){
+
+            if( getConfirmationAlert("Projekt fájl mentése", "Létező projekt fájl, felülírod?") ){
+                fileProcess.savePillarProjectData();
+            }
+            else {
+                return;
+            }
         }
         else {
-          if( getConfirmationAlert("Projekt mentése", "Létező projekt, felülírod?") ){
-              fileProcess.savePillarProjectData();
-          }
+            fileProcess.savePillarProjectData();
         }
         inputPillarDataWindow.stage.hide();
         this.pillarBaseDisplayer = new PillarBaseDisplayer(this);
@@ -249,13 +253,11 @@ public class MeasuredPillarDataController {
        if( projectFileData.isEmpty() ){
            return;
        }
-        init();
-        measuredPillarData.parseProjectFileData(projectFileData);
+       measuredPillarData.parseProjectFileData(projectFileData);
         if( inputPillarDataWindow != null ){
             inputPillarDataWindow.stage.hide();
         }
         inputPillarDataWindow = new InputPillarDataWindow(this);
-
     }
 
 }
