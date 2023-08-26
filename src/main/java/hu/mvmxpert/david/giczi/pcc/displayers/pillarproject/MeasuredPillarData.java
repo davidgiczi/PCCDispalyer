@@ -117,12 +117,22 @@ public class MeasuredPillarData {
 
     public void addIDsForPillarLegs() {
         radRotation = Math.toRadians(angleRotation + minRotation / 60.0 + secRotation / 3600.0);
-        if (pillarBasePoints.size() != 4) {
-            for (int i = 65; i < 65 + pillarBasePoints.size(); i++) {
-                pillarBasePoints.get(i - 65).setPointID(String.valueOf((char) i));
-            }
+
+        if( pillarBasePoints.size() == 1 ){
+           pillarBasePoints.get(0).setPointID(measuredPillarDataController
+                   .measuredPillarData
+                   .getPillarCenterPoint()
+                   .getPointID());
             return;
         }
+        else if( pillarBasePoints.size() != 4 ) {
+
+                for (int i = 65; i < 65 + pillarBasePoints.size(); i++) {
+                    pillarBasePoints.get(i - 65).setPointID(String.valueOf((char) i));
+                }
+                return;
+        }
+
         Point center = new Point("center", getPillarBaseCenterPoint().getX_coord(),
                 getPillarBaseCenterPoint().getY_coord());
         Point direction = new Point("direction", baseLineDirectionPoint.getX_coord(),
@@ -439,7 +449,7 @@ public class MeasuredPillarData {
 
         this.pillarBasePoints = new ArrayList<>();
         int i = 9;
-       while( projectFileData.get(i).endsWith("ALAP") ){
+       while( i < projectFileData.size() && projectFileData.get(i).endsWith("ALAP") ){
             String[] baseData = projectFileData.get(i).split("#");
             MeasPoint basePoint = new MeasPoint(baseData[0],
                     Double.parseDouble(baseData[1]),

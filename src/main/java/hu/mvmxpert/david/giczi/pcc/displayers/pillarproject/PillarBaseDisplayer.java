@@ -187,7 +187,9 @@ public class PillarBaseDisplayer {
     }
 
     public void setDataToClipboard(){
-        copyText( measuredPillarDataController.measuredPillarData.getPillarCenterPoint().getPointID() + "\t" +
+        copyText( measuredPillarDataController
+                .measuredPillarData
+                .getPillarCenterPoint().getPointID() + "." + "\t" +
                 String.format("%10.3f", measuredPillarDataController
                         .measuredPillarData.getPillarCenterPoint()
                         .getX_coord()).replace(",", ".") + "\t" +

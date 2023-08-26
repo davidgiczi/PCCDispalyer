@@ -51,7 +51,7 @@ public class InputPillarDataWindow {
                 measuredPillarDataController.fxHomeWindow.homeStage.hide();
                 if( measuredPillarDataController
                         .getConfirmationAlert("Bemeneti adatok cseréje",
-                                "Kívánod cserélni a bemért oszlop-, és az előző/következő oszlop adatait?") ) {
+                                "Kívánod cserélni a bemért-, és az előző/következő oszlop adatait?") ) {
                         exchangeMeasuredPillarAndDirectionPillarInputData();
                         measuredPillarDataController.openMeasuredData();
                 }
@@ -68,7 +68,7 @@ public class InputPillarDataWindow {
         Scene scene = new Scene(pane);
         stage.setWidth(400);
         stage.setHeight(580);
-        stage.setTitle("Adatok megadása");
+        stage.setTitle("Tervezés szerinti adatok megadása");
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
         stage.setScene(scene);
