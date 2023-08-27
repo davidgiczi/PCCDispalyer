@@ -44,7 +44,8 @@ public class InputPillarDataWindow {
         stage = new Stage();
         stage.setOnCloseRequest(windowEvent ->
         {measuredPillarDataController.init();
-        measuredPillarDataController.fxHomeWindow.homeStage.show();});
+        measuredPillarDataController.fxHomeWindow.homeStage.show();
+        measuredPillarDataController.setCreatedInputPillarDataWindow(true);});
         pane = new AnchorPane();
         pane.setOnMouseClicked(mouseEvent -> {
             if( mouseEvent.getButton() == MouseButton.SECONDARY ){
@@ -54,7 +55,7 @@ public class InputPillarDataWindow {
                                 "Kívánod cserélni a bemért-, és az előző/következő oszlop adatait?") ) {
                         exchangeMeasuredPillarAndDirectionPillarInputData();
                         measuredPillarDataController.openMeasuredData();
-                        measuredPillarDataController.isBasedOnInputProject = true;
+                        measuredPillarDataController.setCreatedInputPillarDataWindow(false);
                 }
             }
         });
