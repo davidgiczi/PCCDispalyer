@@ -114,7 +114,7 @@ public class MeasuredPillarDataController {
        if( !InputDataValidator.isValidProjectName(inputPillarDataWindow.projectNameField.getText() ) ){
            getInfoAlert("Hibás projektnév megadása", "A projekt neve legalább 3 betű karakter lehet.");
            return;
-       };
+       }
        FileProcess.PROJECT_FILE_NAME = inputPillarDataWindow.projectNameField.getText().trim();
        if( FileProcess.FOLDER_PATH == null ){
            getInfoAlert("Hiányzó mentési mappa","Mentési mappa választása szükséges");

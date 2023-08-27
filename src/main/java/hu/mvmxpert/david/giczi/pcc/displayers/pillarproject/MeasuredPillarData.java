@@ -108,7 +108,8 @@ public class MeasuredPillarData {
                 pcs++;
             }
             z = z / pcs;
-            MeasPoint pillarLegPoint = new MeasPoint(null, x, y, z, PointType.ALAP);
+            MeasPoint pillarLegPoint = new MeasPoint(pillarLegPoints.get(0).getPointID(),
+                    x, y, z, PointType.ALAP);
             pillarLegPoint.setUsed(true);
             pillarLegPoint.setGroupID(i);
             pillarBasePoints.add(pillarLegPoint);
@@ -118,26 +119,12 @@ public class MeasuredPillarData {
     public void addIDsForPillarLegs() {
         radRotation = Math.toRadians(angleRotation + minRotation / 60.0 + secRotation / 3600.0);
 
-        if( pillarBasePoints.size() == 1 ){
-           pillarBasePoints.get(0).setPointID(measuredPillarDataController
-                   .measuredPillarData
-                   .getPillarCenterPoint()
-                   .getPointID());
-            return;
-        }
-        else if( pillarBasePoints.size() != 4 ) {
-
-                for (int i = 65; i < 65 + pillarBasePoints.size(); i++) {
-                    pillarBasePoints.get(i - 65).setPointID(String.valueOf((char) i));
-                }
-                return;
-        }
-
         Point center = new Point("center", getPillarBaseCenterPoint().getX_coord(),
                 getPillarBaseCenterPoint().getY_coord());
         Point direction = new Point("direction", baseLineDirectionPoint.getX_coord(),
                 baseLineDirectionPoint.getY_coord());
         AzimuthAndDistance baseLineDirection = new AzimuthAndDistance(center, direction);
+
         for (MeasPoint pillarBasePoint : pillarBasePoints) {
             pillarBasePoint.setAzimuth(center);
         }
@@ -148,6 +135,17 @@ public class MeasuredPillarData {
                     Collections.swap(pillarBasePoints, i, j);
                 }
             }
+        }
+
+        if( pillarBasePoints.size() == 1 ){
+           pillarBasePoints.get(0).setPointID(measuredPillarDataController
+                   .measuredPillarData
+                   .getPillarCenterPoint()
+                   .getPointID());
+            return;
+        }
+        else if( pillarBasePoints.size() != 4 ) {
+                return;
         }
 
         int centerID = Integer.parseInt(pillarCenterPoint.getPointID());

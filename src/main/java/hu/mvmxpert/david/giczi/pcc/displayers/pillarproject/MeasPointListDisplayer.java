@@ -45,7 +45,8 @@ public class MeasPointListDisplayer {
     }
 
     public void parseDisplayerData(){
-            for (int i = 0; i < measuredPillarDataController.measuredPillarData.getMeasPillarPoints().size(); i++ ) {
+            for (int i = 0; i < measuredPillarDataController
+                    .measuredPillarData.getMeasPillarPoints().size(); i++ ) {
                     measuredPillarDataController.measuredPillarData
                   .getMeasPillarPoints().get(i).setGroupID(clickValues[i]);
                 HBox hbox = (HBox) measDataVBox.getChildren().get(i);
