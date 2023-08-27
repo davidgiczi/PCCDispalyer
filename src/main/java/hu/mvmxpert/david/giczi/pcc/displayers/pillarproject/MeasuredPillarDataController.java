@@ -35,8 +35,8 @@ public class MeasuredPillarDataController {
         if( fileProcess.getMeasData() != null && !fileProcess.getMeasData().isEmpty()){
             fileProcess.getMeasData().clear();
         }
-        if( projectFileData != null && !projectFileData.isEmpty()){
-            projectFileData.clear();
+        if( projectFileData != null ){
+            projectFileData = null;
         }
     }
     public void getInfoAlert(String title, String text) {
