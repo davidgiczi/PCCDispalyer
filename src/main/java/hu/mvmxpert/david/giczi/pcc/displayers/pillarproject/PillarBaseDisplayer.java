@@ -50,6 +50,7 @@ public class PillarBaseDisplayer {
         stage.setOnCloseRequest(windowEvent -> {
             measuredPillarDataController.fxHomeWindow.homeStage.show();
             measuredPillarDataController.init();
+            measuredPillarDataController.isBasedOnInputProject = false;
         });
         pane.setStyle("-fx-background-color: white");
         pane.setOnMouseClicked(mouseEvent -> {

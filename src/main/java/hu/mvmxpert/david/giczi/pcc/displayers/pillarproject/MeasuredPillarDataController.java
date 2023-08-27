@@ -20,6 +20,7 @@ public class MeasuredPillarDataController {
     public InputPillarDataWindow inputPillarDataWindow;
     public FXHomeWindow fxHomeWindow;
     public List<String> projectFileData;
+    public boolean isBasedOnInputProject;
 
     public MeasuredPillarDataController(FXHomeWindow fxHomeWindow){
         this.fxHomeWindow = fxHomeWindow;
@@ -82,7 +83,7 @@ public class MeasuredPillarDataController {
         measuredPointListDisplayer.parseDisplayerData();
         measuredPillarData.calcPillarLegsPoint();
         measuredPillarData.calcPillarTopPoints();
-        if( projectFileData == null ){
+        if( !isBasedOnInputProject ){
             this.inputPillarDataWindow = new InputPillarDataWindow(this);
         }
     }

@@ -54,6 +54,7 @@ public class InputPillarDataWindow {
                                 "Kívánod cserélni a bemért-, és az előző/következő oszlop adatait?") ) {
                         exchangeMeasuredPillarAndDirectionPillarInputData();
                         measuredPillarDataController.openMeasuredData();
+                        measuredPillarDataController.isBasedOnInputProject = true;
                 }
             }
         });
