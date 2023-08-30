@@ -1,5 +1,6 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
+import hu.mvmxpert.david.giczi.pcc.displayers.service.Intersection;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -48,7 +49,9 @@ public class FXHomeWindow extends Application {
 	}
 	
 	public static void main(String[] args) {
+		new Intersection();
 		launch(args);
+
 	}
 	
 	private void addMenu() {

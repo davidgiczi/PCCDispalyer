@@ -7,7 +7,8 @@ public enum PointType {
     ALAP,
     alap,
     CENTER,
-    DIRECTION;
+    DIRECTION,
+    INTERSECTION;
 
 
 }
