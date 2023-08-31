@@ -87,37 +87,28 @@ public class Intersection {
                         polarPointB.calcPolarPoint(). getY_coord() ) / 2.0,
                 (intersectionElevationA + intersectionElevationB) / 2.0,
                 PointType.INTERSECTION);
-
-        System.out.println(polarPointA.calcPolarPoint().getX_coord());
-        System.out.println(polarPointA.calcPolarPoint().getY_coord());
-        System.out.println(intersectionElevationA);
-        System.out.println();
-        System.out.println(polarPointB.calcPolarPoint().getX_coord());
-        System.out.println(polarPointB.calcPolarPoint().getY_coord());
-        System.out.println(intersectionElevationB);
-
     }
 
     private void addTestData(){
         standingPointA = new MeasPoint("A",
-                640240.212, 216979.066, 95.655, null);
-        standingPointB = new MeasPoint("A",
-                640445.988, 217483.894, 96.118, null);
-        azimuthAngleA = 77;
-        azimuthMinuteA = 8;
-        azimuthSecA = 18;
+                670303.497, 244438.553, 100.00, null);
+        standingPointB = new MeasPoint("B",
+                670429.011, 244510.593, 100.00, null);
+        azimuthAngleA = 128;
+        azimuthMinuteA = 17;
+        azimuthSecA = 4;
 
-        azimuthAngleB = 159;
-        azimuthMinuteB = 12;
-        azimuthSecB = 37;
+        azimuthAngleB = 176;
+        azimuthMinuteB = 11;
+        azimuthSecB = 51;
 
-       elevationAngleA = 4;
-       elevationMinuteA = 29;
-       elevationSecA = 8;
+       elevationAngleA = 0;
+       elevationMinuteA = 0;
+       elevationSecA = 0;
 
-       elevationAngleB = 3;
-       elevationMinuteB = 40;
-       elevationSecB = 37;
+       elevationAngleB = 0;
+       elevationMinuteB = 0;
+       elevationSecB = 0;
     }
 
     public MeasPoint getStandingPointA() {

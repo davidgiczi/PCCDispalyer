@@ -18,6 +18,7 @@ public class MeasuredPillarDataController {
     public PillarBaseDifferenceDisplayer pillarBaseDifferenceDisplayer;
     public PillarBaseDisplayer pillarBaseDisplayer;
     public InputPillarDataWindow inputPillarDataWindow;
+    public IntersectionInputDataWindow intersectionInputDataWindow;
     public FXHomeWindow fxHomeWindow;
     public List<String> projectFileData;
     private boolean isCreatedInputPillarDataWindow;
@@ -264,6 +265,16 @@ public class MeasuredPillarDataController {
             inputPillarDataWindow.stage.hide();
         }
         inputPillarDataWindow = new InputPillarDataWindow(this);
+    }
+
+    public void openIntersectionInputDataWindow(){
+        if( intersectionInputDataWindow == null ){
+            intersectionInputDataWindow = new IntersectionInputDataWindow(this);
+        }
+    }
+
+    public void onClickCountButtonForIntersectionProcess(){
+
     }
 
 }

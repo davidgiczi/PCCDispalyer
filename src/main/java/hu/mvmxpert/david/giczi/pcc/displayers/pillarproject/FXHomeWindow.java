@@ -4,10 +4,7 @@ import hu.mvmxpert.david.giczi.pcc.displayers.service.Intersection;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -84,7 +81,12 @@ public class FXHomeWindow extends Application {
 		createPillarProject.setOnAction(e -> {
 			measuredPillarDataController.openMeasuredData();
 		});
-		pillarProject.getItems().addAll(openPillarProject,createPillarProject);
+		MenuItem intersection = new MenuItem("Előmetszés számítása");
+		intersection.setOnAction( e -> {
+			measuredPillarDataController.openIntersectionInputDataWindow();
+		});
+		pillarProject.getItems().addAll(openPillarProject,createPillarProject,
+				new SeparatorMenuItem(), intersection);
 		menuBar.getMenus().addAll(projectProcess, setBaseData,
 				controlSteakoutedPoint, pillarProject);
 		VBox vBox = new VBox(menuBar);
