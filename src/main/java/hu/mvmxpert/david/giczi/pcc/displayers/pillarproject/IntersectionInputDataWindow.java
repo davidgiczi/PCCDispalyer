@@ -68,11 +68,12 @@ public class IntersectionInputDataWindow {
         addWireDataFields();
         addNewPointDataFields();
         addStandingPointADataFields();
-        //addCalcButton();
+        //addStandingPointBDataFields();
+        addCalcButton();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
-        stage.setHeight(680);
+        stage.setHeight(800);
         stage.setTitle("Előmetszés számítása");
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
@@ -270,6 +271,7 @@ public class IntersectionInputDataWindow {
         newPointIdField.setPrefColumnCount(12);
         newPointIdField.setFont(normalFont);
         newPointIdField.setCursor(Cursor.HAND);
+        newPointIdField.setText("METSZESPONT");
         newPointIdTextHbox.getChildren().addAll(newPointIdText, newPointIdField );
         vBox.getChildren().add(newPointIdTextHbox);
     }
@@ -292,19 +294,19 @@ public class IntersectionInputDataWindow {
         leftLine.setStartX(5);
         leftLine.setStartY(355);
         leftLine.setEndX(5);
-        leftLine.setEndY(600);
+        leftLine.setEndY(560);
         Line rightLine = new Line();
         rightLine.setStroke(color);
         rightLine.setStartX(380);
         rightLine.setStartY(355);
         rightLine.setEndX(380);
-        rightLine.setEndY(600);
+        rightLine.setEndY(560);
         Line bottomLine = new Line();
         bottomLine.setStroke(color);
         bottomLine.setStartX(5);
-        bottomLine.setStartY(600);
+        bottomLine.setStartY(560);
         bottomLine.setEndX(380);
-        bottomLine.setEndY(600);
+        bottomLine.setEndY(560);
         pane.getChildren().addAll(leftTopLine, rightTopLine,
                 leftLine, rightLine, bottomLine);
         Text standingAPointDataText = new Text("1. álláspontra vonatkozó adatok megadása");
@@ -319,7 +321,7 @@ public class IntersectionInputDataWindow {
         HBox standingAPointIdTextHbox = new HBox();
         standingAPointIdTextHbox.setPadding(new Insets(5,5,5,5));
         standingAPointIdTextHbox.setAlignment(Pos.CENTER);
-        standingAPointIdTextHbox.setSpacing(35);
+        standingAPointIdTextHbox.setSpacing(45);
         Text standingAPointIdText = new Text("Az 1. pont azonosítója:");
         standingAPointIdText.setFont(boldFont);
         standingAIdField = new TextField();
@@ -348,17 +350,269 @@ public class IntersectionInputDataWindow {
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
         standingAPointXHbox.getChildren().addAll(standingAPointXText, standingAPointField_X);
+        vBox.getChildren().add(standingAPointXHbox);
 
-        Text standingAPointY = new Text("X koordináta [m]:");
-        standingAPointY.setFont(boldFont);
+        HBox standingPointAYHbox = new HBox();
+        standingPointAYHbox.setPadding(new Insets(5,5,5,5));
+        standingPointAYHbox.setSpacing(40);
+        standingPointAYHbox.setAlignment(Pos.CENTER);
+        Text standingPointAYText = new Text("X koordináta [m]:");
+        standingPointAYText.setFont(boldFont);
+        standingAPointField_Y = new TextField();
+        standingAPointField_Y .setCursor(Cursor.HAND);
+        standingAPointField_Y .setFont(normalFont);
+        standingAPointField_Y .setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointField_Y .setPrefColumnCount(15);
+        standingAPointField_Y.setFont(normalFont);
+        standingPointAYHbox.getChildren().addAll(standingPointAYText, standingAPointField_Y);
+        vBox.getChildren().add(standingPointAYHbox);
 
-        /*HBox xCoordHbox = new HBox();
-        xCoordHbox.setPadding(new Insets(5,5,5,5));
-        xCoordHbox.setSpacing(40);
-        xCoordHbox.setAlignment(Pos.CENTER);
-        xCoordHbox.getChildren().addAll(xCoordText, directionPillarField_X);
-        vBox.getChildren().addAll(standingAPointIdTextHbox,
-                xCoordHbox, standingAPointXHbox);*/
+        Text horizontalText = new Text("\tHz:         ");
+        horizontalText.setFont(boldFont);
+        Text angleHzText = new Text("fok");
+        angleHzText.setFont(boldFont);
+        Text minHzText = new Text("perc");
+        minHzText.setFont(boldFont);
+        Text secHzText = new Text("mperc");
+        secHzText.setFont(boldFont);
+        standingAPointAzimuthAngleField = new TextField();
+        standingAPointAzimuthAngleField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointAzimuthAngleField.setFont(normalFont);
+        standingAPointAzimuthAngleField.setCursor(Cursor.HAND);
+        standingAPointAzimuthAngleField.setPrefColumnCount(3);
+        standingAPointAzimuthMinField = new TextField();
+        standingAPointAzimuthMinField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointAzimuthMinField.setFont(normalFont);
+        standingAPointAzimuthMinField.setCursor(Cursor.HAND);
+        standingAPointAzimuthMinField.setPrefColumnCount(3);
+        standingAPointAzimuthSecField = new TextField();
+        standingAPointAzimuthSecField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointAzimuthSecField.setFont(normalFont);
+        standingAPointAzimuthSecField.setCursor(Cursor.HAND);
+        standingAPointAzimuthSecField.setPrefColumnCount(3);
+        HBox staningPointAAzimuthHbox = new HBox();
+        staningPointAAzimuthHbox.setAlignment(Pos.CENTER);
+        staningPointAAzimuthHbox.setSpacing(5);
+        staningPointAAzimuthHbox.setPadding(new Insets(10,10,10,10));
+        staningPointAAzimuthHbox.getChildren().addAll(horizontalText, standingAPointAzimuthAngleField,
+                angleHzText, standingAPointAzimuthMinField, minHzText, standingAPointAzimuthSecField, secHzText);
+        vBox.getChildren().addAll(staningPointAAzimuthHbox);
+
+        Text verticalText = new Text("\tVz:         ");
+        verticalText.setFont(boldFont);
+        Text angleVzText = new Text("fok");
+        angleVzText.setFont(boldFont);
+        Text minVzText = new Text("perc");
+        minVzText.setFont(boldFont);
+        Text secVzText = new Text("mperc");
+        secVzText.setFont(boldFont);
+        standingAPointElevationAngleField = new TextField();
+        standingAPointElevationAngleField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointElevationAngleField.setFont(normalFont);
+        standingAPointElevationAngleField.setCursor(Cursor.HAND);
+        standingAPointElevationAngleField.setPrefColumnCount(3);
+        standingAPointElevationMinField = new TextField();
+        standingAPointElevationMinField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointElevationMinField.setFont(normalFont);
+        standingAPointElevationMinField.setCursor(Cursor.HAND);
+        standingAPointElevationMinField.setPrefColumnCount(3);
+        standingAPointElevationSecField = new TextField();
+        standingAPointElevationSecField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointElevationSecField.setFont(normalFont);
+        standingAPointElevationSecField.setCursor(Cursor.HAND);
+        standingAPointElevationSecField.setPrefColumnCount(3);
+        HBox staningPointAElevationHbox = new HBox();
+        staningPointAElevationHbox.setAlignment(Pos.CENTER);
+        staningPointAElevationHbox.setSpacing(5);
+        staningPointAElevationHbox.setPadding(new Insets(10,10,10,10));
+        staningPointAElevationHbox.getChildren().addAll(verticalText, standingAPointElevationAngleField,
+                angleVzText, standingAPointElevationMinField, minVzText,
+                standingAPointElevationSecField, secVzText);
+        vBox.getChildren().addAll(staningPointAElevationHbox);
+
+    }
+
+    private void addStandingPointBDataFields(){
+        Line leftTopLine = new Line();
+        leftTopLine.setStroke(color);
+        leftTopLine.setStartX(5);
+        leftTopLine.setStartY(570);
+        leftTopLine.setEndX(40);
+        leftTopLine.setEndY(570);
+        Line rightTopLine = new Line();
+        rightTopLine.setStroke(color);
+        rightTopLine.setStartX(340);
+        rightTopLine.setStartY(570);
+        rightTopLine.setEndX(380);
+        rightTopLine.setEndY(570);
+        Line leftLine = new Line();
+        leftLine.setStroke(color);
+        leftLine.setStartX(5);
+        leftLine.setStartY(570);
+        leftLine.setEndX(5);
+        leftLine.setEndY(665);
+        Line rightLine = new Line();
+        rightLine.setStroke(color);
+        rightLine.setStartX(380);
+        rightLine.setStartY(570);
+        rightLine.setEndX(380);
+        rightLine.setEndY(665);
+        Line bottomLine = new Line();
+        bottomLine.setStroke(color);
+        bottomLine.setStartX(5);
+        bottomLine.setStartY(665);
+        bottomLine.setEndX(380);
+        bottomLine.setEndY(665);
+        pane.getChildren().addAll(leftTopLine, rightTopLine,
+                leftLine, rightLine, bottomLine);
+        Text standingBPointDataText = new Text("2. álláspontra vonatkozó adatok megadása");
+        standingBPointDataText.setFont(normalFont);
+        standingBPointDataText.setFill(color);
+        HBox standingBPointTextHbox = new HBox();
+        standingBPointTextHbox.setPadding(new Insets(10,10,10,10));
+        standingBPointTextHbox.setAlignment(Pos.CENTER);
+        standingBPointTextHbox.getChildren().add(standingBPointDataText);
+        vBox.getChildren().add(standingBPointTextHbox);
+
+        HBox standingBPointIdTextHbox = new HBox();
+        standingBPointIdTextHbox.setPadding(new Insets(5,5,5,5));
+        standingBPointIdTextHbox.setAlignment(Pos.CENTER);
+        standingBPointIdTextHbox.setSpacing(45);
+        Text standingBPointIdText = new Text("A 2. pont azonosítója:");
+        standingBPointIdText.setFont(boldFont);
+        standingBIdField = new TextField();
+        standingBIdField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBIdField.setPrefColumnCount(12);
+        standingBIdField.setFont(normalFont);
+        standingBIdField.setCursor(Cursor.HAND);
+        standingBPointIdTextHbox.getChildren().addAll(standingBPointIdText, standingBIdField);
+        vBox.getChildren().add(standingBPointIdTextHbox);
+
+        HBox standingBPointXHbox = new HBox();
+        standingBPointXHbox.setPadding(new Insets(5,5,5,5));
+        standingBPointXHbox.setSpacing(40);
+        standingBPointXHbox.setAlignment(Pos.CENTER);
+        Text standingBPointXText = new Text("Y koordináta [m]:");
+        standingBPointXText.setFont(boldFont);
+        standingBPointField_X = new TextField();
+        standingBPointField_X.setPrefColumnCount(15);
+        standingBPointField_X.setFont(normalFont);
+        standingBPointField_X  = new TextField();
+        standingBPointField_X.setCursor(Cursor.HAND);
+        standingBPointField_X.setFont(normalFont);
+        standingBPointField_X.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointXHbox.getChildren().addAll(standingBPointXText, standingBPointField_X);
+
+        HBox standingPointBYHbox = new HBox();
+        standingPointBYHbox.setPadding(new Insets(5,5,5,5));
+        standingPointBYHbox.setSpacing(40);
+        standingPointBYHbox.setAlignment(Pos.CENTER);
+        Text standingPointAXText = new Text("X koordináta [m]:");
+        standingPointAXText.setFont(boldFont);
+        standingBPointField_Y = new TextField();
+        standingBPointField_Y.setCursor(Cursor.HAND);
+        standingBPointField_Y.setFont(normalFont);
+        standingBPointField_Y.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointField_Y.setPrefColumnCount(15);
+        standingBPointField_Y.setFont(normalFont);
+        standingPointBYHbox.getChildren().addAll(standingPointAXText, standingAPointField_X);
+        vBox.getChildren().add(standingPointBYHbox);
+
+        Text horizontalText = new Text("\tHz:         ");
+        horizontalText.setFont(boldFont);
+        Text angleHzText = new Text("fok");
+        angleHzText.setFont(boldFont);
+        Text minHzText = new Text("perc");
+        minHzText.setFont(boldFont);
+        Text secHzText = new Text("mperc");
+        secHzText.setFont(boldFont);
+        standingBPointAzimuthAngleField = new TextField();
+        standingBPointAzimuthAngleField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointAzimuthAngleField.setFont(normalFont);
+        standingBPointAzimuthAngleField.setCursor(Cursor.HAND);
+        standingBPointAzimuthAngleField.setPrefColumnCount(3);
+        standingBPointAzimuthMinField = new TextField();
+        standingBPointAzimuthMinField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointAzimuthMinField.setFont(normalFont);
+        standingBPointAzimuthMinField.setCursor(Cursor.HAND);
+        standingBPointAzimuthMinField.setPrefColumnCount(3);
+        standingBPointAzimuthSecField = new TextField();
+        standingBPointAzimuthSecField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointAzimuthSecField.setFont(normalFont);
+        standingBPointAzimuthSecField.setCursor(Cursor.HAND);
+        standingBPointAzimuthSecField.setPrefColumnCount(3);
+        HBox staningPointBAzimuthHbox = new HBox();
+        staningPointBAzimuthHbox.setAlignment(Pos.CENTER);
+        staningPointBAzimuthHbox.setSpacing(5);
+        staningPointBAzimuthHbox.setPadding(new Insets(10,10,10,10));
+        staningPointBAzimuthHbox.getChildren().addAll(horizontalText, standingBPointAzimuthAngleField,
+                angleHzText, standingBPointAzimuthMinField, minHzText, standingBPointAzimuthSecField, secHzText);
+        vBox.getChildren().addAll(staningPointBAzimuthHbox);
+
+        Text verticalText = new Text("\tVz:         ");
+        verticalText.setFont(boldFont);
+        Text angleVzText = new Text("fok");
+        angleVzText.setFont(boldFont);
+        Text minVzText = new Text("perc");
+        minVzText.setFont(boldFont);
+        Text secVzText = new Text("mperc");
+        secVzText.setFont(boldFont);
+        standingBPointElevationAngleField = new TextField();
+        standingBPointElevationAngleField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointElevationAngleField.setFont(normalFont);
+        standingBPointElevationAngleField.setCursor(Cursor.HAND);
+        standingBPointElevationAngleField.setPrefColumnCount(3);
+        standingBPointElevationMinField = new TextField();
+        standingBPointElevationMinField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointElevationMinField.setFont(normalFont);
+        standingBPointElevationMinField.setCursor(Cursor.HAND);
+        standingBPointElevationMinField.setPrefColumnCount(3);
+        standingBPointElevationSecField = new TextField();
+        standingBPointElevationSecField.setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointElevationSecField.setFont(normalFont);
+        standingBPointElevationSecField.setCursor(Cursor.HAND);
+        standingBPointElevationSecField.setPrefColumnCount(3);
+        HBox staningPointBElevationHbox = new HBox();
+        staningPointBElevationHbox.setAlignment(Pos.CENTER);
+        staningPointBElevationHbox.setSpacing(5);
+        staningPointBElevationHbox.setPadding(new Insets(10,10,10,10));
+        staningPointBElevationHbox.getChildren().addAll(verticalText, standingBPointElevationAngleField,
+                angleVzText, standingBPointElevationMinField, minVzText,
+                standingBPointElevationSecField, secVzText);
+        vBox.getChildren().addAll(staningPointBElevationHbox);
+
     }
     private void addCalcButton(){
         Button calcButton = new Button("Számol");
