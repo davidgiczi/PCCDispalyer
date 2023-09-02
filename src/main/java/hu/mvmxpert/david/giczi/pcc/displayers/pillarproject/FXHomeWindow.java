@@ -46,9 +46,7 @@ public class FXHomeWindow extends Application {
 	}
 	
 	public static void main(String[] args) {
-		new Intersection();
 		launch(args);
-
 	}
 	
 	private void addMenu() {

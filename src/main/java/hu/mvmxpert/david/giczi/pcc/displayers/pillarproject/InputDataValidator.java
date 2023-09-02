@@ -60,6 +60,18 @@ public class InputDataValidator {
 		}
 		return minSec;
 	}
+
+	public static int isValidElevationAngleValue(String angleValue) throws NumberFormatException {
+
+		int angle = Integer.parseInt(angleValue);
+
+		if( 0 > angle || 180 < angle ){
+			throw new NumberFormatException();
+		}
+
+		return angle;
+	}
+
 	
 	public static boolean isValidID(String id) {
 		return !id.isBlank() && !id.isEmpty();

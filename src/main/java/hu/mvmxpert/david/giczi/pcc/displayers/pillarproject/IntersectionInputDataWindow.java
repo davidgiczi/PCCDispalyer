@@ -25,7 +25,7 @@ public class IntersectionInputDataWindow {
     private final AnchorPane pane;
     private final VBox vBox;
     private final Color color = Color.rgb(112,128,144);
-    private final Font normalFont = Font.font("Arial", FontWeight.NORMAL, 14);
+    private final Font normalFont = Font.font("Arial", FontWeight.NORMAL, 13);
     private final Font boldFont = Font.font("Arial", FontWeight.BOLD, 13);
     public TextField startPointIdField;
     public TextField endPointIdField;
@@ -39,41 +39,40 @@ public class IntersectionInputDataWindow {
     public TextField standingAPointField_Y;
     public TextField standingAPointField_Z;
     public TextField standingAPointAzimuthAngleField;
-    public TextField standingAPointAzimuthMinField;;
+    public TextField standingAPointAzimuthMinField;
     public TextField standingAPointAzimuthSecField;
     public TextField standingAPointElevationAngleField;
-    public TextField standingAPointElevationMinField;;
+    public TextField standingAPointElevationMinField;
     public TextField standingAPointElevationSecField;
     public TextField standingBIdField;
     public TextField standingBPointField_X;
     public TextField standingBPointField_Y;
     public TextField standingBPointField_Z;
     public TextField standingBPointAzimuthAngleField;
-    public TextField standingBPointAzimuthMinField;;
+    public TextField standingBPointAzimuthMinField;
     public TextField standingBPointAzimuthSecField;
     public TextField standingBPointElevationAngleField;
-    public TextField standingBPointElevationMinField;;
+    public TextField standingBPointElevationMinField;
     public TextField standingBPointElevationSecField;
 
     public IntersectionInputDataWindow(MeasuredPillarDataController measuredPillarDataController){
         this.measuredPillarDataController = measuredPillarDataController;
         stage = new Stage();
         stage.setOnCloseRequest(windowEvent ->
-        {measuredPillarDataController.init();
-            measuredPillarDataController.fxHomeWindow.homeStage.show();
-            measuredPillarDataController.setCreatedInputPillarDataWindow(true);});
+                measuredPillarDataController.fxHomeWindow.homeStage.show());
         pane = new AnchorPane();
         vBox = new VBox();
         pane.setStyle("-fx-background-color: white");
         addWireDataFields();
         addNewPointDataFields();
         addStandingPointADataFields();
-        //addStandingPointBDataFields();
+        addStandingPointBDataFields();
         addCalcButton();
+        addTestData();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
-        stage.setHeight(800);
+        stage.setHeight(840);
         stage.setTitle("Előmetszés számítása");
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setResizable(false);
@@ -99,19 +98,19 @@ public class IntersectionInputDataWindow {
         leftLine.setStartX(5);
         leftLine.setStartY(10);
         leftLine.setEndX(5);
-        leftLine.setEndY(260);
+        leftLine.setEndY(220);
         Line rightLine = new Line();
         rightLine.setStroke(color);
         rightLine.setStartX(380);
         rightLine.setStartY(10);
         rightLine.setEndX(380);
-        rightLine.setEndY(260);
+        rightLine.setEndY(220);
         Line bottomLine = new Line();
         bottomLine.setStroke(color);
         bottomLine.setStartX(5);
-        bottomLine.setStartY(260);
+        bottomLine.setStartY(220);
         bottomLine.setEndX(380);
-        bottomLine.setEndY(260);
+        bottomLine.setEndY(220);
         pane.getChildren().addAll(leftTopLine, rightTopLine, leftLine, rightLine, bottomLine);
         Text wireDataText = new Text("Sodrony adatok megadása");
         wireDataText.setFont(normalFont);
@@ -130,12 +129,12 @@ public class IntersectionInputDataWindow {
         startPointIdText.setFont(boldFont);
         HBox startPointIdHbox = new HBox();
         startPointIdHbox.setAlignment(Pos.BASELINE_LEFT);
-        startPointIdHbox.setPadding(new Insets(10,10,10,10));
+        startPointIdHbox.setPadding(new Insets(5,5,5,20));
         startPointIdHbox.setSpacing(50);
         startPointIdHbox.getChildren().addAll(startPointIdText, startPointIdField);
 
         HBox startXHbox = new HBox();
-        startXHbox.setPadding(new Insets(5,5,5,5));
+        startXHbox.setPadding(new Insets(5,5,5,20));
         startXHbox.setSpacing(40);
         startXHbox.setAlignment(Pos.CENTER);
         Text startXText = new Text("Y koordináta [m]:");
@@ -148,10 +147,18 @@ public class IntersectionInputDataWindow {
                 "-fx-focus-color: #708090;");
         startField_X.setPrefColumnCount(15);
         startField_X.setFont(normalFont);
+        startField_X.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if( oldValue.length() < 3 ){
+                endField_X.setText(newValue);
+                standingAPointField_X.setText(newValue);
+                standingBPointField_X.setText(newValue);
+            }
+        });
         startXHbox.getChildren().addAll(startXText, startField_X);
 
         HBox startYHbox = new HBox();
-        startYHbox.setPadding(new Insets(5,5,5,5));
+        startYHbox.setPadding(new Insets(5,5,5,20));
         startYHbox.setSpacing(40);
         startYHbox.setAlignment(Pos.CENTER);
         Text startYText = new Text("X koordináta [m]:");
@@ -164,6 +171,14 @@ public class IntersectionInputDataWindow {
                 "-fx-focus-color: #708090;");
         startField_Y.setPrefColumnCount(15);
         startField_Y.setFont(normalFont);
+        startField_Y.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if( oldValue.length() < 3 ){
+                endField_Y.setText(newValue);
+                standingAPointField_Y.setText(newValue);
+                standingBPointField_Y.setText(newValue);
+            }
+        });
         startYHbox.getChildren().addAll(startYText, startField_Y);
 
         endPointIdField = new TextField();
@@ -176,12 +191,12 @@ public class IntersectionInputDataWindow {
         endPointIdText.setFont(boldFont);
         HBox endPointIdHbox = new HBox();
         endPointIdHbox.setAlignment(Pos.BASELINE_LEFT);
-        endPointIdHbox.setPadding(new Insets(10,10,10,10));
+        endPointIdHbox.setPadding(new Insets(5,5,5,20));
         endPointIdHbox.setSpacing(65);
         endPointIdHbox.getChildren().addAll(endPointIdText, endPointIdField);
 
         HBox endXHbox = new HBox();
-        endXHbox.setPadding(new Insets(5,5,5,5));
+        endXHbox.setPadding(new Insets(5,5,5,20));
         endXHbox.setSpacing(40);
         endXHbox.setAlignment(Pos.CENTER);
         Text endXText = new Text("Y koordináta [m]:");
@@ -197,7 +212,7 @@ public class IntersectionInputDataWindow {
         endXHbox.getChildren().addAll(endXText, endField_X);
 
         HBox endYHbox = new HBox();
-        endYHbox.setPadding(new Insets(5,5,5,5));
+        endYHbox.setPadding(new Insets(5,5,5,20));
         endYHbox.setSpacing(40);
         endYHbox.setAlignment(Pos.CENTER);
         Text endYText = new Text("X koordináta [m]:");
@@ -221,33 +236,33 @@ public class IntersectionInputDataWindow {
         Line leftTopLine = new Line();
         leftTopLine.setStroke(color);
         leftTopLine.setStartX(5);
-        leftTopLine.setStartY(270);
+        leftTopLine.setStartY(230);
         leftTopLine.setEndX(80);
-        leftTopLine.setEndY(270);
+        leftTopLine.setEndY(230);
         Line rightTopLine = new Line();
         rightTopLine.setStroke(color);
         rightTopLine.setStartX(290);
-        rightTopLine.setStartY(270);
+        rightTopLine.setStartY(230);
         rightTopLine.setEndX(380);
-        rightTopLine.setEndY(270);
+        rightTopLine.setEndY(230);
         Line leftLine = new Line();
         leftLine.setStroke(color);
         leftLine.setStartX(5);
-        leftLine.setStartY(270);
+        leftLine.setStartY(230);
         leftLine.setEndX(5);
-        leftLine.setEndY(335);
+        leftLine.setEndY(280);
         Line rightLine = new Line();
         rightLine.setStroke(color);
         rightLine.setStartX(380);
-        rightLine.setStartY(270);
+        rightLine.setStartY(230);
         rightLine.setEndX(380);
-        rightLine.setEndY(335);
+        rightLine.setEndY(280);
         Line bottomLine = new Line();
         bottomLine.setStroke(color);
         bottomLine.setStartX(5);
-        bottomLine.setStartY(335);
+        bottomLine.setStartY(280);
         bottomLine.setEndX(380);
-        bottomLine.setEndY(335);
+        bottomLine.setEndY(280);
         pane.getChildren().addAll(leftTopLine, rightTopLine, leftLine, rightLine, bottomLine);
 
         Text measuredDataText = new Text("Új pont megadása");
@@ -255,7 +270,7 @@ public class IntersectionInputDataWindow {
         measuredDataText.setFill(color);
         HBox measuredDataTextHbox = new HBox();
         measuredDataTextHbox.setAlignment(Pos.CENTER);
-        measuredDataTextHbox.setPadding(new Insets(15,15,15,15));
+        measuredDataTextHbox.setPadding(new Insets(7,5,5,5));
         measuredDataTextHbox.getChildren().add(measuredDataText);
        vBox.getChildren().add(measuredDataTextHbox);
 
@@ -271,7 +286,7 @@ public class IntersectionInputDataWindow {
         newPointIdField.setPrefColumnCount(12);
         newPointIdField.setFont(normalFont);
         newPointIdField.setCursor(Cursor.HAND);
-        newPointIdField.setText("METSZESPONT");
+        newPointIdField.setText("METSZÉSPONT");
         newPointIdTextHbox.getChildren().addAll(newPointIdText, newPointIdField );
         vBox.getChildren().add(newPointIdTextHbox);
     }
@@ -280,40 +295,40 @@ public class IntersectionInputDataWindow {
         Line leftTopLine = new Line();
         leftTopLine.setStroke(color);
         leftTopLine.setStartX(5);
-        leftTopLine.setStartY(355);
+        leftTopLine.setStartY(290);
         leftTopLine.setEndX(40);
-        leftTopLine.setEndY(355);
+        leftTopLine.setEndY(290);
         Line rightTopLine = new Line();
         rightTopLine.setStroke(color);
         rightTopLine.setStartX(340);
-        rightTopLine.setStartY(355);
+        rightTopLine.setStartY(290);
         rightTopLine.setEndX(380);
-        rightTopLine.setEndY(355);
+        rightTopLine.setEndY(290);
         Line leftLine = new Line();
         leftLine.setStroke(color);
         leftLine.setStartX(5);
-        leftLine.setStartY(355);
+        leftLine.setStartY(290);
         leftLine.setEndX(5);
-        leftLine.setEndY(560);
+        leftLine.setEndY(525);
         Line rightLine = new Line();
         rightLine.setStroke(color);
         rightLine.setStartX(380);
-        rightLine.setStartY(355);
+        rightLine.setStartY(290);
         rightLine.setEndX(380);
-        rightLine.setEndY(560);
+        rightLine.setEndY(525);
         Line bottomLine = new Line();
         bottomLine.setStroke(color);
         bottomLine.setStartX(5);
-        bottomLine.setStartY(560);
+        bottomLine.setStartY(525);
         bottomLine.setEndX(380);
-        bottomLine.setEndY(560);
+        bottomLine.setEndY(525);
         pane.getChildren().addAll(leftTopLine, rightTopLine,
                 leftLine, rightLine, bottomLine);
         Text standingAPointDataText = new Text("1. álláspontra vonatkozó adatok megadása");
         standingAPointDataText.setFont(normalFont);
         standingAPointDataText.setFill(color);
         HBox standingAPointTextHbox = new HBox();
-        standingAPointTextHbox.setPadding(new Insets(25,25,5,25));
+        standingAPointTextHbox.setPadding(new Insets(15,5,5,5));
         standingAPointTextHbox.setAlignment(Pos.CENTER);
         standingAPointTextHbox.getChildren().add(standingAPointDataText);
         vBox.getChildren().add(standingAPointTextHbox);
@@ -325,6 +340,7 @@ public class IntersectionInputDataWindow {
         Text standingAPointIdText = new Text("Az 1. pont azonosítója:");
         standingAPointIdText.setFont(boldFont);
         standingAIdField = new TextField();
+        standingAIdField.setText("1_PONT");
         standingAIdField.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
@@ -348,6 +364,12 @@ public class IntersectionInputDataWindow {
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
         standingPointAXHbox.getChildren().addAll(standingAPointXText, standingAPointField_X);
+        standingAPointField_X.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if( oldValue.length() < 3 ){
+                standingBPointField_X.setText(newValue);
+            }
+        });
         vBox.getChildren().add(standingPointAXHbox);
 
         HBox standingPointAYHbox = new HBox();
@@ -363,8 +385,30 @@ public class IntersectionInputDataWindow {
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
         standingAPointField_Y .setPrefColumnCount(15);
+        standingAPointField_Y.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if( oldValue.length() < 3 ){
+                standingBPointField_Y.setText(newValue);
+            }
+        });
         standingPointAYHbox.getChildren().addAll(standingPointAYText, standingAPointField_Y);
         vBox.getChildren().add(standingPointAYHbox);
+
+        HBox standingPointAZHbox = new HBox();
+        standingPointAZHbox.setPadding(new Insets(5,5,5,5));
+        standingPointAZHbox.setSpacing(40);
+        standingPointAZHbox.setAlignment(Pos.CENTER);
+        Text standingPointAZText = new Text("h magasság [m]:");
+        standingPointAZText.setFont(boldFont);
+        standingAPointField_Z = new TextField();
+        standingAPointField_Z .setCursor(Cursor.HAND);
+        standingAPointField_Z .setFont(normalFont);
+        standingAPointField_Z .setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingAPointField_Z .setPrefColumnCount(15);
+        standingPointAZHbox.getChildren().addAll(standingPointAZText, standingAPointField_Z);
+        vBox.getChildren().add(standingPointAZHbox);
 
         Text horizontalText = new Text("\tHz:         ");
         horizontalText.setFont(boldFont);
@@ -432,14 +476,14 @@ public class IntersectionInputDataWindow {
         standingAPointElevationSecField.setFont(normalFont);
         standingAPointElevationSecField.setCursor(Cursor.HAND);
         standingAPointElevationSecField.setPrefColumnCount(3);
-        HBox staningPointAElevationHbox = new HBox();
-        staningPointAElevationHbox.setAlignment(Pos.CENTER);
-        staningPointAElevationHbox.setSpacing(5);
-        staningPointAElevationHbox.setPadding(new Insets(10,10,10,10));
-        staningPointAElevationHbox.getChildren().addAll(verticalText, standingAPointElevationAngleField,
+        HBox standingPointAElevationHbox = new HBox();
+        standingPointAElevationHbox.setAlignment(Pos.CENTER);
+        standingPointAElevationHbox.setSpacing(5);
+        standingPointAElevationHbox.setPadding(new Insets(10,10,10,10));
+        standingPointAElevationHbox.getChildren().addAll(verticalText, standingAPointElevationAngleField,
                 angleVzText, standingAPointElevationMinField, minVzText,
                 standingAPointElevationSecField, secVzText);
-        vBox.getChildren().addAll(staningPointAElevationHbox);
+        vBox.getChildren().addAll(standingPointAElevationHbox);
 
     }
 
@@ -447,40 +491,39 @@ public class IntersectionInputDataWindow {
         Line leftTopLine = new Line();
         leftTopLine.setStroke(color);
         leftTopLine.setStartX(5);
-        leftTopLine.setStartY(570);
+        leftTopLine.setStartY(535);
         leftTopLine.setEndX(40);
-        leftTopLine.setEndY(570);
+        leftTopLine.setEndY(535);
         Line rightTopLine = new Line();
         rightTopLine.setStroke(color);
         rightTopLine.setStartX(340);
-        rightTopLine.setStartY(570);
+        rightTopLine.setStartY(535);
         rightTopLine.setEndX(380);
-        rightTopLine.setEndY(570);
+        rightTopLine.setEndY(535);
         Line leftLine = new Line();
         leftLine.setStroke(color);
         leftLine.setStartX(5);
-        leftLine.setStartY(570);
+        leftLine.setStartY(535);
         leftLine.setEndX(5);
-        leftLine.setEndY(665);
+        leftLine.setEndY(770);
         Line rightLine = new Line();
         rightLine.setStroke(color);
         rightLine.setStartX(380);
-        rightLine.setStartY(570);
+        rightLine.setStartY(535);
         rightLine.setEndX(380);
-        rightLine.setEndY(665);
+        rightLine.setEndY(770);
         Line bottomLine = new Line();
         bottomLine.setStroke(color);
         bottomLine.setStartX(5);
-        bottomLine.setStartY(665);
+        bottomLine.setStartY(770);
         bottomLine.setEndX(380);
-        bottomLine.setEndY(665);
+        bottomLine.setEndY(770);
         pane.getChildren().addAll(leftTopLine, rightTopLine,
                 leftLine, rightLine, bottomLine);
         Text standingBPointDataText = new Text("2. álláspontra vonatkozó adatok megadása");
         standingBPointDataText.setFont(normalFont);
         standingBPointDataText.setFill(color);
         HBox standingBPointTextHbox = new HBox();
-        standingBPointTextHbox.setPadding(new Insets(10,10,10,10));
         standingBPointTextHbox.setAlignment(Pos.CENTER);
         standingBPointTextHbox.getChildren().add(standingBPointDataText);
         vBox.getChildren().add(standingBPointTextHbox);
@@ -492,6 +535,7 @@ public class IntersectionInputDataWindow {
         Text standingBPointIdText = new Text("A 2. pont azonosítója:");
         standingBPointIdText.setFont(boldFont);
         standingBIdField = new TextField();
+        standingBIdField.setText("2_PONT");
         standingBIdField.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
@@ -501,39 +545,53 @@ public class IntersectionInputDataWindow {
         standingBPointIdTextHbox.getChildren().addAll(standingBPointIdText, standingBIdField);
         vBox.getChildren().add(standingBPointIdTextHbox);
 
-        HBox standingBPointXHbox = new HBox();
-        standingBPointXHbox.setPadding(new Insets(5,5,5,5));
-        standingBPointXHbox.setSpacing(40);
-        standingBPointXHbox.setAlignment(Pos.CENTER);
+        HBox standingPointBXHbox = new HBox();
+        standingPointBXHbox.setPadding(new Insets(5,5,5,5));
+        standingPointBXHbox.setSpacing(40);
+        standingPointBXHbox.setAlignment(Pos.CENTER);
         Text standingBPointXText = new Text("Y koordináta [m]:");
         standingBPointXText.setFont(boldFont);
         standingBPointField_X = new TextField();
         standingBPointField_X.setPrefColumnCount(15);
         standingBPointField_X.setFont(normalFont);
-        standingBPointField_X  = new TextField();
         standingBPointField_X.setCursor(Cursor.HAND);
-        standingBPointField_X.setFont(normalFont);
         standingBPointField_X.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
-        standingBPointXHbox.getChildren().addAll(standingBPointXText, standingBPointField_X);
+        standingPointBXHbox.getChildren().addAll(standingBPointXText, standingBPointField_X);
+        vBox.getChildren().add(standingPointBXHbox);
 
         HBox standingPointBYHbox = new HBox();
         standingPointBYHbox.setPadding(new Insets(5,5,5,5));
         standingPointBYHbox.setSpacing(40);
         standingPointBYHbox.setAlignment(Pos.CENTER);
-        Text standingPointAXText = new Text("X koordináta [m]:");
-        standingPointAXText.setFont(boldFont);
+        Text standingPointBYText = new Text("X koordináta [m]:");
+        standingPointBYText.setFont(boldFont);
         standingBPointField_Y = new TextField();
-        standingBPointField_Y.setCursor(Cursor.HAND);
-        standingBPointField_Y.setFont(normalFont);
-        standingBPointField_Y.setStyle("-fx-text-inner-color: #708090; " +
+        standingBPointField_Y .setCursor(Cursor.HAND);
+        standingBPointField_Y .setFont(normalFont);
+        standingBPointField_Y .setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
-        standingBPointField_Y.setPrefColumnCount(15);
-        standingBPointField_Y.setFont(normalFont);
-        standingPointBYHbox.getChildren().addAll(standingPointAXText, standingAPointField_X);
+        standingBPointField_Y .setPrefColumnCount(15);
+        standingPointBYHbox.getChildren().addAll(standingPointBYText, standingBPointField_Y);
         vBox.getChildren().add(standingPointBYHbox);
+
+        HBox standingPointBZHbox = new HBox();
+        standingPointBZHbox.setPadding(new Insets(5,5,5,5));
+        standingPointBZHbox.setSpacing(40);
+        standingPointBZHbox.setAlignment(Pos.CENTER);
+        Text standingPointBZYText = new Text("h magasság [m]:");
+        standingPointBZYText.setFont(boldFont);
+        standingBPointField_Z = new TextField();
+        standingBPointField_Z .setCursor(Cursor.HAND);
+        standingBPointField_Z .setFont(normalFont);
+        standingBPointField_Z .setStyle("-fx-text-inner-color: #708090; " +
+                "-fx-text-box-border: #708090;" +
+                "-fx-focus-color: #708090;");
+        standingBPointField_Z .setPrefColumnCount(15);
+        standingPointBZHbox.getChildren().addAll(standingPointBZYText, standingBPointField_Z);
+        vBox.getChildren().add(standingPointBZHbox);
 
         Text horizontalText = new Text("\tHz:         ");
         horizontalText.setFont(boldFont);
@@ -564,13 +622,13 @@ public class IntersectionInputDataWindow {
         standingBPointAzimuthSecField.setFont(normalFont);
         standingBPointAzimuthSecField.setCursor(Cursor.HAND);
         standingBPointAzimuthSecField.setPrefColumnCount(3);
-        HBox staningPointBAzimuthHbox = new HBox();
-        staningPointBAzimuthHbox.setAlignment(Pos.CENTER);
-        staningPointBAzimuthHbox.setSpacing(5);
-        staningPointBAzimuthHbox.setPadding(new Insets(10,10,10,10));
-        staningPointBAzimuthHbox.getChildren().addAll(horizontalText, standingBPointAzimuthAngleField,
+        HBox standingPointBAzimuthHbox = new HBox();
+        standingPointBAzimuthHbox.setAlignment(Pos.CENTER);
+        standingPointBAzimuthHbox.setSpacing(5);
+        standingPointBAzimuthHbox.setPadding(new Insets(10,10,10,10));
+        standingPointBAzimuthHbox.getChildren().addAll(horizontalText, standingBPointAzimuthAngleField,
                 angleHzText, standingBPointAzimuthMinField, minHzText, standingBPointAzimuthSecField, secHzText);
-        vBox.getChildren().addAll(staningPointBAzimuthHbox);
+        vBox.getChildren().addAll(standingPointBAzimuthHbox);
 
         Text verticalText = new Text("\tVz:         ");
         verticalText.setFont(boldFont);
@@ -601,14 +659,13 @@ public class IntersectionInputDataWindow {
         standingBPointElevationSecField.setFont(normalFont);
         standingBPointElevationSecField.setCursor(Cursor.HAND);
         standingBPointElevationSecField.setPrefColumnCount(3);
-        HBox staningPointBElevationHbox = new HBox();
-        staningPointBElevationHbox.setAlignment(Pos.CENTER);
-        staningPointBElevationHbox.setSpacing(5);
-        staningPointBElevationHbox.setPadding(new Insets(10,10,10,10));
-        staningPointBElevationHbox.getChildren().addAll(verticalText, standingBPointElevationAngleField,
-                angleVzText, standingBPointElevationMinField, minVzText,
-                standingBPointElevationSecField, secVzText);
-        vBox.getChildren().addAll(staningPointBElevationHbox);
+        HBox standingPointBElevationHbox = new HBox();
+        standingPointBElevationHbox.setAlignment(Pos.CENTER);
+        standingPointBElevationHbox.setSpacing(5);
+        standingPointBElevationHbox.setPadding(new Insets(10,10,10,10));
+        standingPointBElevationHbox.getChildren().addAll(verticalText, standingBPointElevationAngleField,
+                angleVzText, standingBPointElevationMinField, minVzText, standingBPointElevationSecField, secVzText);
+        vBox.getChildren().addAll(standingPointBElevationHbox);
 
     }
     private void addCalcButton(){
@@ -617,10 +674,55 @@ public class IntersectionInputDataWindow {
         calcButton.setCursor(Cursor.HAND);
         calcButton.setFont(boldFont);
         HBox calcButtonHbox = new HBox();
-        calcButtonHbox.setPadding(new Insets(20,20,20,20));
+        calcButtonHbox.setPadding(new Insets(7,5,5,5));
         calcButtonHbox.setAlignment(Pos.CENTER);
         calcButtonHbox.getChildren().add(calcButton);
         vBox.getChildren().add(calcButtonHbox);
     }
+
+    private void addTestData(){
+
+        startPointIdField.setText("113");
+        startField_X.setText("670865.848");
+        startField_Y.setText("243668.540");
+        endPointIdField.setText("114");
+        endField_X.setText("670622.992");
+        endField_Y.setText("244081.461");
+      double azimuthA =  8.25144120;
+      double elevationA = 88.29508200;
+      double azimuthB = 142.27146520;
+      double elevationB = 87.47520440;
+      int azimuthAMin = (int) ((azimuthA - (int) azimuthA) * 60);
+      int azimuthBMin = (int) ((azimuthB - (int) azimuthB) * 60);
+      int elevationAMin = (int) ((elevationA - (int) elevationA) * 60);
+      int elevationBMin = (int) ((elevationB - (int) elevationB) * 60);
+        standingAPointField_X.setText("670697.831");
+        standingAPointField_Y.setText("243560.267");
+        standingAPointField_Z.setText("264.758");
+        standingAPointAzimuthAngleField.setText(String.valueOf((int) (azimuthA)));
+        standingAPointAzimuthMinField.setText(String.valueOf((int) ((azimuthA - (int) azimuthA) * 60)));
+        standingAPointAzimuthSecField
+                .setText(String.valueOf((int) (azimuthA * 3600 - (int) azimuthA * 3600 - azimuthAMin * 60)));
+        standingAPointElevationAngleField.setText(String.valueOf((int) (elevationA)));
+        standingAPointElevationMinField
+                .setText(String.valueOf((int) ((elevationA - (int) elevationA) * 60)));
+        standingAPointElevationSecField
+                .setText(String.valueOf((int) (elevationA * 3600 -
+                        (int) elevationA * 3600 - elevationAMin * 60)));
+
+        standingBPointField_X.setText("670209.354");
+        standingBPointField_Y.setText("244571.161");
+        standingBPointField_Z.setText("238.545");
+        standingBPointAzimuthAngleField.setText(String.valueOf((int) (azimuthB)));
+        standingBPointAzimuthMinField.setText(String.valueOf((int) ((azimuthB - (int) azimuthB) * 60)));
+        standingBPointAzimuthSecField
+                .setText(String.valueOf((int) (azimuthB * 3600 - (int) azimuthB * 3600 - azimuthBMin * 60)));
+        standingBPointElevationAngleField.setText(String.valueOf((int) (elevationB)));
+        standingBPointElevationMinField
+                .setText(String.valueOf((int) ((elevationB - (int) elevationB) * 60)));
+        standingBPointElevationSecField.setText(String.valueOf((int) (elevationB * 3600 -
+                (int) elevationB * 3600 - elevationBMin * 60)));
+    }
+
 
 }

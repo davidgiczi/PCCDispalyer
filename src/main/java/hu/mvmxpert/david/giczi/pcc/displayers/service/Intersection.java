@@ -7,10 +7,17 @@ import hu.mvmxpert.david.giczi.pcc.displayers.pillarproject.PointType;
 
 public class Intersection {
 
-    public static MeasPoint INTERSECTION_POINT;
+    private MeasPoint intersectionPoint;
+
+    private MeasPoint intersectionPointFromA;
+    private MeasPoint intersectionPointFromB;
+
     private MeasPoint standingPointA;
     private MeasPoint standingPointB;
-
+    private Point lineStartPoint;
+    private Point lineEndPoint;
+    private double alfa;
+    private double beta;
     private int azimuthAngleA;
     private int azimuthMinuteA;
     private int azimuthSecA;
@@ -25,13 +32,6 @@ public class Intersection {
     private int elevationAngleB;
     private int elevationMinuteB;
     private int elevationSecB;
-
-
-
-   public Intersection(){
-        addTestData();
-        calcIntersectionPoint();
-    }
 
     public void calcIntersectionPoint(){
 
@@ -57,8 +57,8 @@ public class Intersection {
                         new Point("A",
                                 standingPointA.getX_coord(),
                                 standingPointA.getY_coord()));
-    double alfa = Math.abs(azimuthA - azimuthAB.calcAzimuth());
-    double beta = Math.abs(azimuthB - azimuthBA.calcAzimuth());
+    alfa = Math.abs(azimuthA - azimuthAB.calcAzimuth());
+    beta = Math.abs(azimuthB - azimuthBA.calcAzimuth());
 
     double distanceA = azimuthAB.calcDistance() * Math.sin( beta ) /  Math.sin( alfa + beta );
     double distanceB = azimuthAB.calcDistance() * Math.sin( alfa ) /  Math.sin( alfa + beta );
@@ -80,7 +80,19 @@ public class Intersection {
     double intersectionElevationB =
                 standingPointB.getZ_coord() + distanceB * Math.tan(elevationB);
 
-        INTERSECTION_POINT = new MeasPoint("Intersection",
+        intersectionPointFromA = new MeasPoint("IntersectionA",
+                polarPointA.calcPolarPoint().getX_coord(),
+                polarPointA.calcPolarPoint().getY_coord(),
+                intersectionElevationA,
+                PointType.INTERSECTION);
+
+        intersectionPointFromB = new MeasPoint("IntersectionB",
+                polarPointB.calcPolarPoint().getX_coord(),
+                polarPointB.calcPolarPoint().getY_coord(),
+                intersectionElevationB,
+                PointType.INTERSECTION);
+
+        intersectionPoint = new MeasPoint("Intersection",
                 ( polarPointA.calcPolarPoint().getX_coord() +
                         polarPointB.calcPolarPoint(). getX_coord() ) / 2.0,
                 ( polarPointA.calcPolarPoint().getY_coord() +
@@ -89,26 +101,64 @@ public class Intersection {
                 PointType.INTERSECTION);
     }
 
-    private void addTestData(){
-        standingPointA = new MeasPoint("A",
-                670303.497, 244438.553, 100.00, null);
-        standingPointB = new MeasPoint("B",
-                670429.011, 244510.593, 100.00, null);
-        azimuthAngleA = 128;
-        azimuthMinuteA = 17;
-        azimuthSecA = 4;
+    public String getIntersectionAngleValueAtNewPoint(){
 
-        azimuthAngleB = 176;
-        azimuthMinuteB = 11;
-        azimuthSecB = 51;
+      double gamma = 180 - Math.toDegrees(alfa) - Math.toDegrees(beta);
+      int gammaAngleValue = (int) gamma;
+      int gammaMinValue = (int) ((gamma - (int) gamma) * 60);
+      int gammaSecValue = (int) (gamma * 3600 - gammaAngleValue * 3600 - gammaMinValue * 60);
 
-       elevationAngleA = 0;
-       elevationMinuteA = 0;
-       elevationSecA = 0;
+      return gammaAngleValue  + "°" + gammaMinValue + "'" +
+             gammaSecValue + "\"";
+    }
 
-       elevationAngleB = 0;
-       elevationMinuteB = 0;
-       elevationSecB = 0;
+    public Point getHalfLinePointData(){
+        AzimuthAndDistance lineData =
+                new AzimuthAndDistance(lineStartPoint, lineEndPoint);
+        PolarPoint halfLinePoint = new PolarPoint(lineStartPoint,
+                lineData.calcDistance() / 2.0,
+                lineData.calcAzimuth(), "halfLinePoint");
+        return halfLinePoint.calcPolarPoint();
+    }
+
+    public MeasPoint getIntersectionPoint() {
+        return intersectionPoint;
+    }
+
+    public void setIntersectionPoint(MeasPoint intersectionPoint) {
+        this.intersectionPoint = intersectionPoint;
+    }
+
+    public MeasPoint getIntersectionPointFromA() {
+        return intersectionPointFromA;
+    }
+
+    public void setIntersectionPointFromA(MeasPoint intersectionPointFromA) {
+        this.intersectionPointFromA = intersectionPointFromA;
+    }
+
+    public MeasPoint getIntersectionPointFromB() {
+        return intersectionPointFromB;
+    }
+
+    public void setIntersectionPointFromB(MeasPoint intersectionPointFromB) {
+        this.intersectionPointFromB = intersectionPointFromB;
+    }
+
+    public Point getLineStartPoint() {
+        return lineStartPoint;
+    }
+
+    public void setLineStartPoint(Point lineStartPoint) {
+        this.lineStartPoint = lineStartPoint;
+    }
+
+    public Point getLineEndPoint() {
+        return lineEndPoint;
+    }
+
+    public void setLineEndPoint(Point lineEndPoint) {
+        this.lineEndPoint = lineEndPoint;
     }
 
     public MeasPoint getStandingPointA() {
