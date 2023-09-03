@@ -82,9 +82,9 @@ public class Intersection {
                         distanceB, azimuthB, "IntersectionB");
 
     double intersectionElevationA =
-            standingPointA.getZ_coord() + distanceA * Math.tan(elevationA);
+            standingPointA.getZ_coord() + distanceA * Math.pow(Math.tan(elevationA), -1);
     double intersectionElevationB =
-                standingPointB.getZ_coord() + distanceB * Math.tan(elevationB);
+            standingPointB.getZ_coord() + distanceB * Math.pow(Math.tan(elevationB), -1);
 
         intersectionPointFromA = new MeasPoint("IntersectionA",
                 polarPointA.calcPolarPoint().getX_coord(),
@@ -129,7 +129,7 @@ public class Intersection {
       int gammaMinValue = (int) ((gamma - (int) gamma) * 60);
       int gammaSecValue = (int) (gamma * 3600 - gammaAngleValue * 3600 - gammaMinValue * 60);
 
-      return gammaAngleValue  + "°" + gammaMinValue + "'" +
+      return gammaAngleValue  + "° " + gammaMinValue + "' " +
              gammaSecValue + "\"";
     }
 
