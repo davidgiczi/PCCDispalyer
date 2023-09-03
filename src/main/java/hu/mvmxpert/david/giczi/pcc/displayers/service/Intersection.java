@@ -57,8 +57,14 @@ public class Intersection {
                         new Point("A",
                                 standingPointA.getX_coord(),
                                 standingPointA.getY_coord()));
-    alfa = Math.abs(azimuthA - azimuthAB.calcAzimuth());
-    beta = Math.abs(azimuthB - azimuthBA.calcAzimuth());
+
+    alfa = Math.abs(azimuthA - azimuthAB.calcAzimuth()) > Math.PI ?
+            2 * Math.PI - Math.abs(azimuthA - azimuthAB.calcAzimuth()) :
+            Math.abs(azimuthA - azimuthAB.calcAzimuth());
+
+    beta = Math.abs(azimuthB - azimuthBA.calcAzimuth()) > Math.PI ?
+    2 * Math.PI -  Math.abs(azimuthB - azimuthBA.calcAzimuth()) :
+            Math.abs(azimuthB - azimuthBA.calcAzimuth());
 
     double distanceA = azimuthAB.calcDistance() * Math.sin( beta ) /  Math.sin( alfa + beta );
     double distanceB = azimuthAB.calcDistance() * Math.sin( alfa ) /  Math.sin( alfa + beta );
@@ -99,6 +105,21 @@ public class Intersection {
                         polarPointB.calcPolarPoint(). getY_coord() ) / 2.0,
                 (intersectionElevationA + intersectionElevationB) / 2.0,
                 PointType.INTERSECTION);
+    }
+
+    public int getAngleValue(double directionAzimuth){
+     return (int) directionAzimuth;
+    }
+
+    public int getMinValue(double directionAzimuth){
+        int angle = (int) directionAzimuth;
+        return (int) ((directionAzimuth - angle) * 60);
+    }
+
+    public int getSecValue(double directionAzimuth){
+        int angle = (int) directionAzimuth;
+        int min = (int) ((directionAzimuth - angle) * 60);
+        return (int) ((directionAzimuth - angle) * 3600 - min * 60);
     }
 
     public String getIntersectionAngleValueAtNewPoint(){

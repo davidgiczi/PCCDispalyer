@@ -632,7 +632,6 @@ public class MeasuredPillarDataController {
         intersection.calcIntersectionPoint();
         intersection.getIntersectionPoint().setPointID(newPointId);
         new IntersectionDisplayer(this);
-        System.out.println(intersection.getIntersectionAngleValueAtNewPoint());
     }
 
 }
