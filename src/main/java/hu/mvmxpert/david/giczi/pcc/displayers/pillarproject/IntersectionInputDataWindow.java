@@ -682,51 +682,40 @@ public class IntersectionInputDataWindow {
 
     private void addTestData(){
 
-      startPointIdField.setText("115");
-      startField_X.setText("670427.029");
-      startField_Y.setText("244360.139");
-      endPointIdField.setText("116");
-      endField_X.setText("670187.557");
-      endField_Y.setText("244766.672");
-      standingAPointField_X.setText("670309.114");
-      standingAPointField_Y.setText("244439.540");
-      standingAPointField_Z.setText("223.241");
+      startPointIdField.setText("12_bal");
+      startField_X.setText("640235.208");
+      startField_Y.setText("217212.937");
+      endPointIdField.setText("13_bal");
+      endField_X.setText("640976.757");
+      endField_Y.setText("216912.364");
+      standingAIdField.setText("ST_0022");
+      standingAPointField_X.setText("640240.212");
+      standingAPointField_Y.setText("216979.066");
+      standingAPointField_Z.setText("95.655");
       standingAPointAzimuthAngleField
-              .setText(String.valueOf(
-                      measuredPillarDataController.intersection.getAngleValue(359.09283320)));
+              .setText("77");
       standingAPointAzimuthMinField
-              .setText(String.valueOf(
-                      measuredPillarDataController.intersection.getMinValue(359.09283320)));
+              .setText("08");
       standingAPointAzimuthSecField
-                .setText(String.valueOf(
-                        measuredPillarDataController.intersection.getSecValue(359.09283320)));
+                .setText("18");
       standingAPointElevationAngleField
-              .setText(String.valueOf(
-                      measuredPillarDataController.intersection.getAngleValue(74.52305040)));
+              .setText("85");
       standingAPointElevationMinField
-                .setText(String.valueOf(
-                        measuredPillarDataController.intersection.getMinValue(74.52305040)));
+                .setText("30");
       standingAPointElevationSecField
-                .setText(String.valueOf(
-                        measuredPillarDataController.intersection.getSecValue(74.52305040)));
-
-      standingBPointField_X.setText("670209.354");
-      standingBPointField_Y.setText("244571.161");
-      standingBPointField_Z.setText("238.545");
-      standingBPointAzimuthAngleField.setText(String.valueOf(
-              measuredPillarDataController.intersection.getAngleValue(94.31342840)));
-      standingBPointAzimuthMinField.setText(String.valueOf(
-              measuredPillarDataController.intersection.getMinValue(94.31342840)));
+                .setText("53");
+      standingBIdField.setText("ST_0023");
+      standingBPointField_X.setText("640445.988");
+      standingBPointField_Y.setText("217483.864");
+      standingBPointField_Z.setText("96.118");
+      standingBPointAzimuthAngleField.setText("159");
+      standingBPointAzimuthMinField.setText("12");
       standingBPointAzimuthSecField
-                .setText(String.valueOf(
-                        measuredPillarDataController.intersection.getSecValue(94.31342840)));
-      standingBPointElevationAngleField.setText(String.valueOf(
-              measuredPillarDataController.intersection.getAngleValue(79.15516600)));
+                .setText("37");
+      standingBPointElevationAngleField.setText("86");
       standingBPointElevationMinField
-                .setText(String.valueOf(
-                        measuredPillarDataController.intersection.getMinValue(79.15516600)));
-      standingBPointElevationSecField.setText(String.valueOf(
-              measuredPillarDataController.intersection.getSecValue(79.15516600)));
+                .setText("19");
+      standingBPointElevationSecField.setText("23");
     }
 
 }

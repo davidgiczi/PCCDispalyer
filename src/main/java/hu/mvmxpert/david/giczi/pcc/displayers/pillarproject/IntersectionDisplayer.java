@@ -1,8 +1,6 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
-import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
-import hu.mvmxpert.david.giczi.pcc.displayers.service.AzimuthAndDistance;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -71,7 +69,7 @@ public class IntersectionDisplayer {
     private void addContent(){
         addNorthSign();
         addComboBoxForScaleValue();
-        addIntersectionPointData();
+        addIntersectionData();
     }
 
     private void addNorthSign(){
@@ -93,6 +91,9 @@ public class IntersectionDisplayer {
     private void addComboBoxForScaleValue(){
         ObservableList<String> options =
                 FXCollections.observableArrayList(
+                        "1",
+                        "2",
+                        "10",
                         "500",
                         "1000",
                         "2000",
@@ -122,14 +123,14 @@ public class IntersectionDisplayer {
         scaleComboBox.setValue(selectedScale);
     }
 
-    private void addIntersectionPointData(){
-        Text idText = new Text(measuredPillarDataController
+    private void addIntersectionData(){
+        Text newPointIdText = new Text(measuredPillarDataController
                 .intersection.getIntersectionPoint().getPointID());
-        idText.xProperty().bind(pane.widthProperty().divide(22).multiply(4));
-        idText.setY(10 * MILLIMETER);
-        idText.setFont(boldFont);
-        idText.setFill(Color.MAGENTA);
-        Text newPointXText = new Text("Y (mért)");
+        newPointIdText.xProperty().bind(pane.widthProperty().divide(22).multiply(4));
+        newPointIdText.setY(10 * MILLIMETER);
+        newPointIdText.setFont(boldFont);
+        newPointIdText.setFill(Color.MAGENTA);
+        Text newPointXText = new Text("Y (mért)[m]");
         newPointXText.setFont(boldFont);
         newPointXText.xProperty().bind(pane.widthProperty().divide(21).multiply(6));
         newPointXText.setY(5 * MILLIMETER);
@@ -138,7 +139,7 @@ public class IntersectionDisplayer {
         newPointX.xProperty().bind(pane.widthProperty().divide(22).multiply(6));
         newPointX.setY(10 * MILLIMETER);
         newPointX.setFont(normalFont);
-        Text newPointYText = new Text("X (mért)");
+        Text newPointYText = new Text("X (mért)[m]");
         newPointYText.setFont(boldFont);
         newPointYText.xProperty().bind(pane.widthProperty().divide(21).multiply(8));
         newPointYText.setY(5 * MILLIMETER);
@@ -147,7 +148,7 @@ public class IntersectionDisplayer {
         newPointY.setFont(normalFont);
         newPointY.xProperty().bind(pane.widthProperty().divide(22).multiply(8));
         newPointY.setY(10 * MILLIMETER);
-        Text newPointZText = new Text("h (mért)");
+        Text newPointZText = new Text("h (mért)[m]");
         newPointZText.setFont(boldFont);
         newPointZText.xProperty().bind(pane.widthProperty().divide(21).multiply(10));
         newPointZText.setY(5 * MILLIMETER);
@@ -160,11 +161,13 @@ public class IntersectionDisplayer {
         deltaXText.setFont(boldFont);
         deltaXText.xProperty().bind(pane.widthProperty().divide(21).multiply(14));
         deltaXText.setY(5 * MILLIMETER);
-        Text deltaX = new Text(String.format("%+20.1f", 100 * (measuredPillarDataController
-                .intersection.getHalfLinePointData().getX_coord() -
+        Text deltaX = new Text(String.format("%+20.1f",
                 measuredPillarDataController
-                .intersection.getIntersectionPoint().getX_coord()
-                )).replace(",", "."));
+                        .intersection.getHalfLinePointData() == null ?
+                        0.0 :
+             100 * (measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
+                     measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()))
+                .replace(",", "."));
         deltaX.xProperty().bind(pane.widthProperty().divide(22).multiply(14));
         deltaX.setY(10 * MILLIMETER);
         deltaX.setFont(normalFont);
@@ -172,11 +175,13 @@ public class IntersectionDisplayer {
         deltaYText.setFont(boldFont);
         deltaYText.xProperty().bind(pane.widthProperty().divide(21).multiply(16));
         deltaYText.setY(5 * MILLIMETER);
-        Text deltaY = new Text(String.format("%+20.1f", 100 * (measuredPillarDataController
-                .intersection.getHalfLinePointData().getY_coord() -
+        Text deltaY = new Text(String.format("%+20.1f",
                 measuredPillarDataController
-                        .intersection.getIntersectionPoint().getY_coord()
-        )).replace(",", "."));
+                        .intersection.getHalfLinePointData() == null ?
+                        0.0 :
+               100 * (measuredPillarDataController.intersection.getHalfLinePointData().getY_coord() -
+                      measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()))
+                .replace(",", "."));
         deltaY.xProperty().bind(pane.widthProperty().divide(22).multiply(16));
         deltaY.setY(10 * MILLIMETER);
         deltaY.setFont(normalFont);
@@ -184,12 +189,11 @@ public class IntersectionDisplayer {
         distanceText.setFont(boldFont);
         distanceText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
         distanceText.setY(5 * MILLIMETER);
-        AzimuthAndDistance distanceBetweenCalcAndMeasuredIntersectionPoint =
-                new AzimuthAndDistance(measuredPillarDataController.intersection.getHalfLinePointData(),
-                new Point("IntersectionPoint",
-                        measuredPillarDataController.intersection.getIntersectionPoint().getX_coord(),
-                        measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()));
-        Text distanceValue = new Text(String.format("%+20.1f", 100 * distanceBetweenCalcAndMeasuredIntersectionPoint.calcDistance())
+        Text distanceValue = new Text(String.format("%+20.1f",
+                        measuredPillarDataController
+                                .intersection.getHalfLinePointData() == null ?
+                          0.0 :
+                 100 *  measuredPillarDataController.intersection.distanceBetweenIntersectionPointAndHalfLinePoint)
                 .replace(",", "."));
         distanceValue.xProperty().bind(pane.widthProperty().divide(22).multiply(12));
         distanceValue.setY(10 * MILLIMETER);
@@ -224,38 +228,32 @@ public class IntersectionDisplayer {
         intersectionPointZFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(10));
         intersectionPointZFromStandingA.setY(20 * MILLIMETER);
         intersectionPointZFromStandingA.setFont(normalFont);
-        AzimuthAndDistance distanceBetweenPointAAndPoint1 =
-                new AzimuthAndDistance(new Point("PointA",
-                        measuredPillarDataController.intersection.getStandingPointA().getX_coord(),
-                        measuredPillarDataController.intersection.getStandingPointA().getY_coord()),
-                        new Point("intersectionPointFromA",
-                        measuredPillarDataController.intersection.getIntersectionPointFromA().getX_coord(),
-                        measuredPillarDataController.intersection.getIntersectionPointFromA().getY_coord()));
-        AzimuthAndDistance distanceBetweenPointAAndHalfPoint =
-                new AzimuthAndDistance(new Point("PointA",
-                        measuredPillarDataController.intersection.getStandingPointA().getX_coord(),
-                        measuredPillarDataController.intersection.getStandingPointA().getY_coord()),
-                        measuredPillarDataController.intersection.getHalfLinePointData());
+        Text deltaDistanceText = new Text("Δt [cm]");
+        deltaDistanceText.setFont(boldFont);
+        deltaDistanceText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
+        deltaDistanceText.setY(15 * MILLIMETER);
+        Text deltaAzimuthText = new Text("Δδ");
+        deltaAzimuthText.setFont(boldFont);
+        deltaAzimuthText.xProperty().bind(pane.widthProperty().divide(22).multiply(15));
+        deltaAzimuthText.setY(15 * MILLIMETER);
         Text deltaDistanceFromStandingA = new Text(String.format("%+20.1f",
-                100 * (distanceBetweenPointAAndHalfPoint.calcDistance() -
-                        distanceBetweenPointAAndPoint1.calcDistance())).replace(",", "."));
+                        measuredPillarDataController
+                                .intersection.getHalfLinePointData() == null ?
+                                0.0 :
+                100 * (measuredPillarDataController.intersection.distanceBetweenStandingPointAAndHalfLinePoint -
+                       measuredPillarDataController.intersection.distanceBetweenStandingPointAAndIntersectionPointFromA))
+                        .replace(",", "."));
         deltaDistanceFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(12));
         deltaDistanceFromStandingA.setY(20 * MILLIMETER);
         deltaDistanceFromStandingA.setFont(normalFont);
         Text deltaAzimuthFromStandingA =  new Text(String.format("%s",
-                measuredPillarDataController.intersection.getAngleValue(
-                        Math.toDegrees(distanceBetweenPointAAndHalfPoint.calcAzimuth()
-                                - distanceBetweenPointAAndPoint1.calcAzimuth())) + "° " +
-                        measuredPillarDataController.intersection.getMinValue(
-                                Math.toDegrees(distanceBetweenPointAAndHalfPoint.calcAzimuth()
-                                        - distanceBetweenPointAAndPoint1.calcAzimuth())) + "' " +
-                        measuredPillarDataController.intersection.getSecValue(
-                                Math.toDegrees(distanceBetweenPointAAndHalfPoint.calcAzimuth()
-                                        - distanceBetweenPointAAndPoint1.calcAzimuth())) + "\""));
+                measuredPillarDataController
+                        .intersection.getHalfLinePointData() == null ?
+                        "-" :
+                measuredPillarDataController.intersection.deltaAzimuthAtStandingPointA));
         deltaAzimuthFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(15));
         deltaAzimuthFromStandingA.setY(20 * MILLIMETER);
         deltaAzimuthFromStandingA.setFont(normalFont);
-
         Text fromStandingBText = new Text(measuredPillarDataController.intersection.getStandingPointB().getPointID() +"→");
         fromStandingBText.setFont(boldFont);
         fromStandingBText.xProperty().bind(pane.widthProperty().divide(21).multiply(4));
@@ -275,34 +273,21 @@ public class IntersectionDisplayer {
         intersectionPointZFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(10));
         intersectionPointZFromStandingB.setY(25 * MILLIMETER);
         intersectionPointZFromStandingB.setFont(normalFont);
-        AzimuthAndDistance distanceBetweenPointBAndPoint2 =
-                new AzimuthAndDistance(new Point("PointB",
-                        measuredPillarDataController.intersection.getStandingPointB().getX_coord(),
-                        measuredPillarDataController.intersection.getStandingPointB().getY_coord()),
-                        new Point("IntersectionPointFromB",
-                                measuredPillarDataController.intersection.getIntersectionPointFromB().getX_coord(),
-                                measuredPillarDataController.intersection.getIntersectionPointFromB().getY_coord()));
-        AzimuthAndDistance distanceBetweenPointBAndHalfPoint =
-                new AzimuthAndDistance(new Point("PointA",
-                        measuredPillarDataController.intersection.getStandingPointB().getX_coord(),
-                        measuredPillarDataController.intersection.getStandingPointB().getY_coord()),
-                        measuredPillarDataController.intersection.getHalfLinePointData());
         Text deltaDistanceFromStandingB = new Text(String.format("%+20.1f",
-                100 * (distanceBetweenPointBAndHalfPoint.calcDistance() -
-                        distanceBetweenPointBAndPoint2.calcDistance())).replace(",", "."));
+                        measuredPillarDataController
+                                .intersection.getHalfLinePointData() == null ?
+                                0.0 :
+                100 * (measuredPillarDataController.intersection.distanceBetweenStandingPointBAndHalfLinePoint -
+                       measuredPillarDataController.intersection.distanceBetweenStandingPointBAndIntersectionPointFromB))
+                        .replace(",", "."));
         deltaDistanceFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(12));
         deltaDistanceFromStandingB.setY(25 * MILLIMETER);
         deltaDistanceFromStandingB.setFont(normalFont);
         Text deltaAzimuthFromStandingB = new Text(String.format("%s",
-        measuredPillarDataController.intersection.getAngleValue(
-                Math.toDegrees(distanceBetweenPointBAndHalfPoint.calcAzimuth()
-                        - distanceBetweenPointBAndPoint2.calcAzimuth())) + "° " +
-        measuredPillarDataController.intersection.getMinValue(
-                Math.toDegrees(distanceBetweenPointBAndHalfPoint.calcAzimuth()
-                        - distanceBetweenPointBAndPoint2.calcAzimuth())) + "' " +
-         measuredPillarDataController.intersection.getSecValue(
-                                Math.toDegrees(distanceBetweenPointBAndHalfPoint.calcAzimuth()
-                                        - distanceBetweenPointBAndPoint2.calcAzimuth())) + "\""));
+                measuredPillarDataController
+                        .intersection.getHalfLinePointData() == null ?
+                        "-" :
+                measuredPillarDataController.intersection.deltaAzimuthAtStandingPointB));
         deltaAzimuthFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(15));
         deltaAzimuthFromStandingB.setY(25 * MILLIMETER);
         deltaAzimuthFromStandingB.setFont(normalFont);
@@ -315,19 +300,24 @@ public class IntersectionDisplayer {
         gamma.xProperty().bind(pane.widthProperty().divide(22).multiply(6.5));
         gamma.setY(30 * MILLIMETER);
 
-        pane.getChildren().addAll(idText, newPointXText, newPointX,
+        pane.getChildren().addAll(newPointIdText, newPointXText, newPointX,
                 newPointYText, newPointY, newPointZText, newPointZ,
-                deltaXText, deltaX, deltaYText, deltaY, distanceText, distanceValue,
-                fromStandingAText, intersectionPointXFromStandingA,
+                deltaXText, deltaX, deltaYText, deltaY, deltaZText, deltaZ,
+                distanceText, distanceValue, fromStandingAText, intersectionPointXFromStandingA,
                 intersectionPointYFromStandingA, intersectionPointZFromStandingA,
-                deltaDistanceFromStandingA, deltaAzimuthFromStandingA,
-                fromStandingBText, intersectionPointXFromStandingB,
+                deltaDistanceText, deltaDistanceFromStandingA, deltaAzimuthText,
+                deltaAzimuthFromStandingA, fromStandingBText, intersectionPointXFromStandingB,
                 intersectionPointYFromStandingB, intersectionPointZFromStandingB,
                 deltaDistanceFromStandingB, deltaAzimuthFromStandingB, gammaText, gamma);
-        setDataToClipboard();
+       copyText(measuredPillarDataController
+               .intersection.getIntersectionPoint().getPointID() + " " +
+       String.format("%9.3f",measuredPillarDataController.intersection.getIntersectionPoint().getX_coord())
+               .replace(",", ".") + " " +
+       String.format("%9.3f", measuredPillarDataController.intersection.getIntersectionPoint().getY_coord())
+               .replace(",", ".")+ " " +
+       String.format("%6.3f", measuredPillarDataController.intersection.getIntersectionPoint().getZ_coord())
+               .replace(",", "."));
     }
 
-    private void setDataToClipboard(){
 
-    }
 }
