@@ -68,7 +68,7 @@ public class IntersectionInputDataWindow {
         addStandingPointADataFields();
         addStandingPointBDataFields();
         addCalcButton();
-        addTestData();
+        //addTestData();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
@@ -149,7 +149,9 @@ public class IntersectionInputDataWindow {
         startField_X.setFont(normalFont);
         startField_X.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            if( oldValue.length() < 3 ){
+            if( oldValue.length() < 3 && endField_X.getText().length() < 3 &&
+                    standingAPointField_X.getText().length() < 3 &&
+                    standingBPointField_X.getText().length() < 3){
                 endField_X.setText(newValue);
                 standingAPointField_X.setText(newValue);
                 standingBPointField_X.setText(newValue);
@@ -173,7 +175,9 @@ public class IntersectionInputDataWindow {
         startField_Y.setFont(normalFont);
         startField_Y.textProperty().addListener((observable, oldValue, newValue) -> {
 
-            if( oldValue.length() < 3 ){
+            if( oldValue.length() < 3 && endField_Y.getText().length() < 3 &&
+                    standingAPointField_Y.getText().length() < 3 &&
+                    standingBPointField_Y.getText().length() < 3){
                 endField_Y.setText(newValue);
                 standingAPointField_Y.setText(newValue);
                 standingBPointField_Y.setText(newValue);
