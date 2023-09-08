@@ -2,9 +2,7 @@ package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
 import hu.mvmxpert.david.giczi.pcc.displayers.model.MeasPoint;
 import hu.mvmxpert.david.giczi.pcc.displayers.model.Point;
-import hu.mvmxpert.david.giczi.pcc.displayers.service.AzimuthAndDistance;
 import hu.mvmxpert.david.giczi.pcc.displayers.service.Intersection;
-import hu.mvmxpert.david.giczi.pcc.displayers.service.PolarPoint;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -36,7 +34,6 @@ public class MeasuredPillarDataController {
         this.fxHomeWindow = fxHomeWindow;
         this.fileProcess = new FileProcess(this);
         this.measuredPillarData = new MeasuredPillarData(this);
-        this.intersection = new Intersection();
         setCreatedInputPillarDataWindow(true);
     }
 
@@ -332,7 +329,7 @@ public class MeasuredPillarDataController {
             }
 
         }
-        endPointId = intersectionInputDataWindow.startPointIdField.getText();
+        endPointId = intersectionInputDataWindow.endPointIdField.getText();
         Double endPointX = null;
         try {
             endPointX =
@@ -611,6 +608,7 @@ public class MeasuredPillarDataController {
                 standingPointA_X, standingPointA_Y, standingPointA_Z, null);
         MeasPoint standingPointB = new MeasPoint(standingBPointId,
                 standingPointB_X, standingPointB_Y, standingPointB_Z, null);
+        intersection = new Intersection();
         intersection.setStandingPointA(standingPointA);
         intersection.setStandingPointB(standingPointB);
         if( startPoint != null ){

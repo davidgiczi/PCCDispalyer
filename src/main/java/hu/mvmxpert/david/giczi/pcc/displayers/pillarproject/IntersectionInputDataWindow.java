@@ -68,7 +68,7 @@ public class IntersectionInputDataWindow {
         addStandingPointADataFields();
         addStandingPointBDataFields();
         addCalcButton();
-        //addTestData();
+        addTestData();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
@@ -686,6 +686,7 @@ public class IntersectionInputDataWindow {
 
     private void addTestData(){
 
+      newPointIdField.setText("12_bal→13_bal felező");
       startPointIdField.setText("12_bal");
       startField_X.setText("640235.208");
       startField_Y.setText("217212.937");

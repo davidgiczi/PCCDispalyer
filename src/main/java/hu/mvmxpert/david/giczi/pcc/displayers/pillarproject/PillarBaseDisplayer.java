@@ -123,7 +123,7 @@ public class PillarBaseDisplayer {
         idText.setY(10 * MILLIMETER);
         idText.setFont(boldFont);
         idText.setFill(Color.MAGENTA);
-        Text designedXText = new Text("EOV Y (tervezett)");
+        Text designedXText = new Text("Y (tervezett)");
         designedXText.setFont(boldFont);
         designedXText.xProperty().bind(pane.widthProperty().divide(21).multiply(6));
         designedXText.setY(5 * MILLIMETER);
@@ -132,7 +132,7 @@ public class PillarBaseDisplayer {
         designedX.xProperty().bind(pane.widthProperty().divide(22).multiply(6));
         designedX.setY(10 * MILLIMETER);
         designedX.setFont(normalFont);
-        Text designedYText = new Text("EOV X (tervezett)");
+        Text designedYText = new Text("X (tervezett)");
         designedYText.setFont(boldFont);
         designedYText.xProperty().bind(pane.widthProperty().divide(21).multiply(8));
         designedYText.setY(5 * MILLIMETER);
@@ -141,7 +141,7 @@ public class PillarBaseDisplayer {
         designedY.setFont(normalFont);
         designedY.xProperty().bind(pane.widthProperty().divide(22).multiply(8));
         designedY.setY(10 * MILLIMETER);
-        Text measXText = new Text("EOV Y (mért)");
+        Text measXText = new Text("Y (mért)");
         measXText.setFont(boldFont);
         measXText.xProperty().bind(pane.widthProperty().divide(21).multiply(10));
         measXText.setY(5 * MILLIMETER);
@@ -150,7 +150,7 @@ public class PillarBaseDisplayer {
        measX.xProperty().bind(pane.widthProperty().divide(22).multiply(10));
        measX.setY(10 * MILLIMETER);
        measX.setFont(normalFont);
-        Text measYText = new Text("EOV X (mért)");
+        Text measYText = new Text("X (mért)");
         measYText.setFont(boldFont);
         measYText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
         measYText.setY(5 * MILLIMETER);

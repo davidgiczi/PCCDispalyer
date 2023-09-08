@@ -88,10 +88,12 @@ public class Intersection {
 
                         distanceB, azimuthB, "IntersectionB");
 
+    double correctionFromA = 0.87 * Math.pow(distanceA, 2) / (2 * 6378000);
     double intersectionElevationA =
-            standingPointA.getZ_coord() + distanceA * Math.pow(Math.tan(elevationA), -1);
+            standingPointA.getZ_coord() + distanceA * Math.pow(Math.tan(elevationA), -1) + correctionFromA;
+    double correctionFromB = 0.87 * Math.pow(distanceB, 2) / (2 * 6378000);
     double intersectionElevationB =
-            standingPointB.getZ_coord() + distanceB * Math.pow(Math.tan(elevationB), -1);
+            standingPointB.getZ_coord() + distanceB * Math.pow(Math.tan(elevationB), -1) + correctionFromB;
 
         intersectionPointFromA = new MeasPoint("IntersectionA",
                 polarPointA.calcPolarPoint().getX_coord(),
