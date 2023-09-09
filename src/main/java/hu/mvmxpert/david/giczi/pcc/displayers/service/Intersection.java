@@ -39,6 +39,8 @@ public class Intersection {
     public double distanceBetweenIntersectionPointAndHalfLinePoint;
     public double distanceBetweenStandingPointAAndHalfLinePoint;
     public double distanceBetweenStandingPointBAndHalfLinePoint;
+    public double distanceBetweenStartWireAndIntersectionPoint;
+    public double distanceBetweenEndWireAndIntersectionPoint;
 
     public void calcIntersectionPoint(){
 
@@ -224,7 +226,12 @@ public class Intersection {
                                    - pointBAndFromPointBData.calcAzimuth()))) + "' " +
                            Math.abs(getSecValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
                                    - pointBAndFromPointBData.calcAzimuth()))) + "\"";
-
+   distanceBetweenStartWireAndIntersectionPoint = new AzimuthAndDistance(lineStartPoint,
+           new Point("IntersectionPoint", intersectionPoint.getX_coord(),
+                   intersectionPoint.getY_coord())).calcDistance();
+   distanceBetweenEndWireAndIntersectionPoint = new AzimuthAndDistance(lineEndPoint,
+                new Point("IntersectionPoint", intersectionPoint.getX_coord(),
+                        intersectionPoint.getY_coord())).calcDistance();
     }
 
     public MeasPoint getIntersectionPoint() {

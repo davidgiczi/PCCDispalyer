@@ -673,7 +673,7 @@ public class IntersectionInputDataWindow {
 
     }
     private void addCalcButton(){
-        Button calcButton = new Button("Számol");
+        Button calcButton = new Button("Adatok beolvasása");
         calcButton.setOnMouseClicked(e -> measuredPillarDataController.onClickCountButtonForIntersectionProcess());
         calcButton.setCursor(Cursor.HAND);
         calcButton.setFont(boldFont);

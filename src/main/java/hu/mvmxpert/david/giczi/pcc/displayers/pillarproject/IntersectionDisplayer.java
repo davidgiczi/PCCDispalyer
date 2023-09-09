@@ -73,7 +73,8 @@ public class IntersectionDisplayer {
         addComboBoxForScaleValue();
         addIntersectionData();
         addCalculatedAndMeasuredIntersectionPoints();
-        addPointDistanceLines();
+        addPointsDistanceLine();
+        addCoordsDifferencesAndDistance();
         addStandingPoints();
     }
 
@@ -200,7 +201,7 @@ public class IntersectionDisplayer {
         }
         Circle standDingAPointCircle = new Circle();
         standDingAPointCircle.setRadius(5);
-        standDingAPointCircle.setStroke(Color.PURPLE);
+        standDingAPointCircle.setStroke(Color.LIMEGREEN);
         standDingAPointCircle.setStrokeWidth(2);
         standDingAPointCircle.setFill(Color.TRANSPARENT);
         standDingAPointCircle.setCursor(Cursor.HAND);
@@ -226,7 +227,7 @@ public class IntersectionDisplayer {
         Tooltip.install(standDingAPointCircle, standingAPointTooltip);
         Circle standDingBPointCircle = new Circle();
         standDingBPointCircle.setRadius(5);
-        standDingBPointCircle.setStroke(Color.PURPLE);
+        standDingBPointCircle.setStroke(Color.LIMEGREEN);
         standDingBPointCircle.setStrokeWidth(2);
         standDingBPointCircle.setFill(Color.TRANSPARENT);
         standDingBPointCircle.setCursor(Cursor.HAND);
@@ -253,13 +254,14 @@ public class IntersectionDisplayer {
         pane.getChildren().addAll(standDingAPointCircle, standDingBPointCircle);
     }
 
-    private void addPointDistanceLines(){
+    private void addPointsDistanceLine(){
         if( SCALE < 100){
             return;
         }
 
         Line distanceBetweenStandingAAndIntersectionPointLine = new Line();
-        distanceBetweenStandingAAndIntersectionPointLine.setStroke(Color.PURPLE);
+        distanceBetweenStandingAAndIntersectionPointLine.setStroke(Color.RED);
+        distanceBetweenStandingAAndIntersectionPointLine.getStrokeDashArray().addAll(10d);
         distanceBetweenStandingAAndIntersectionPointLine.setStrokeWidth(2);
         distanceBetweenStandingAAndIntersectionPointLine.setCursor(Cursor.CLOSED_HAND);
         distanceBetweenStandingAAndIntersectionPointLine.startXProperty()
@@ -282,7 +284,8 @@ public class IntersectionDisplayer {
         Tooltip.install(distanceBetweenStandingAAndIntersectionPointLine,
                 betweenStandingAAndIntersectionPointDistanceTooltip);
         Line distanceBetweenStandingBAndIntersectionPointLine = new Line();
-        distanceBetweenStandingBAndIntersectionPointLine.setStroke(Color.PURPLE);
+        distanceBetweenStandingBAndIntersectionPointLine.setStroke(Color.RED);
+        distanceBetweenStandingBAndIntersectionPointLine.getStrokeDashArray().addAll(10d);
         distanceBetweenStandingBAndIntersectionPointLine.setStrokeWidth(2);
         distanceBetweenStandingBAndIntersectionPointLine.setCursor(Cursor.CLOSED_HAND);
         distanceBetweenStandingBAndIntersectionPointLine.startXProperty()
@@ -370,55 +373,70 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                                 .replace(",",".") + "m");
         Tooltip.install(wireEndPoint, wireEndPointTooltip);
         pane.getChildren().addAll(wireLine, wireStartPoint, wireEndPoint);
-        Line distanceBetweenStandingAAndHalfPointLine = new Line();
-        distanceBetweenStandingAAndHalfPointLine.setStroke(Color.ORANGE);
-        distanceBetweenStandingAAndHalfPointLine.setStrokeWidth(2);
-        distanceBetweenStandingAAndHalfPointLine.setCursor(Cursor.CLOSED_HAND);
-        distanceBetweenStandingAAndHalfPointLine.startXProperty()
-                .bind(pane.widthProperty().divide(10).multiply(5)
-                        .add(Math.round((measuredPillarDataController.intersection.getStandingPointA().getX_coord() -
-                                measuredPillarDataController.intersection.getHalfLinePointData().getX_coord()) * 1000)
-                                * MILLIMETER / SCALE));
-        distanceBetweenStandingAAndHalfPointLine.startYProperty()
-                .bind(pane.heightProperty().divide(2)
-                        .subtract(Math.round((measuredPillarDataController.intersection.getStandingPointA().getY_coord() -
-                                measuredPillarDataController.intersection.getHalfLinePointData().getY_coord()) * 1000)
-                                * MILLIMETER / SCALE));
-        distanceBetweenStandingAAndHalfPointLine.endXProperty()
-                .bind(pane.widthProperty().divide(10).multiply(5));
-        distanceBetweenStandingAAndHalfPointLine.endYProperty()
-                .bind(pane.heightProperty().divide(2));
-        Tooltip betweenStandingAAndHalfPointDistanceTooltip = new Tooltip(String.format("%.2fm",
-                        measuredPillarDataController.intersection.distanceBetweenStandingPointAAndHalfLinePoint)
+ }
+
+
+ private void addCoordsDifferencesAndDistance(){
+        if( measuredPillarDataController.intersection.getHalfLinePointData() == null ){
+            return;
+        }
+      Line deltaXLine = new Line();
+      deltaXLine.setStroke(Color.LIMEGREEN);
+      deltaXLine.setStrokeWidth(2);
+      deltaXLine.setCursor(Cursor.CLOSED_HAND);
+      deltaXLine.startXProperty().bind(pane.widthProperty().divide(10).multiply(5));
+      deltaXLine.startYProperty().bind(pane.heightProperty().divide(2));
+      deltaXLine.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+      .add((Math.round((measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
+                measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()) * 1000))
+                * MILLIMETER /SCALE));
+      deltaXLine.endYProperty().bind(pane.heightProperty().divide(2));
+      Tooltip deltaXTooltip = new Tooltip("ΔY=" + String.format("%+.1fcm",
+                      100 * (measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
+                              measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()))
                 .replace(",", "."));
-        Tooltip.install(distanceBetweenStandingAAndHalfPointLine,
-                betweenStandingAAndHalfPointDistanceTooltip);
-        Line distanceBetweenStandingBAndHalfPointLine = new Line();
-        distanceBetweenStandingBAndHalfPointLine.setStroke(Color.ORANGE);
-        distanceBetweenStandingBAndHalfPointLine.setStrokeWidth(2);
-        distanceBetweenStandingBAndHalfPointLine.setCursor(Cursor.CLOSED_HAND);
-        distanceBetweenStandingBAndHalfPointLine.startXProperty()
-                .bind(pane.widthProperty().divide(10).multiply(5)
-                        .add(Math.round((measuredPillarDataController.intersection.getStandingPointB().getX_coord() -
-                                measuredPillarDataController.intersection.getHalfLinePointData().getX_coord()) * 1000)
-                                * MILLIMETER / SCALE));
-        distanceBetweenStandingBAndHalfPointLine.startYProperty()
-                .bind(pane.heightProperty().divide(2)
-                        .subtract(Math.round((measuredPillarDataController.intersection.getStandingPointB().getY_coord() -
-                                measuredPillarDataController.intersection.getHalfLinePointData().getY_coord()) * 1000)
-                                * MILLIMETER / SCALE));
-        distanceBetweenStandingBAndHalfPointLine.endXProperty()
-                .bind(pane.widthProperty().divide(10).multiply(5));
-        distanceBetweenStandingBAndHalfPointLine.endYProperty()
-                .bind(pane.heightProperty().divide(2));
-        Tooltip betweenStandingBAndHalfPointDistanceTooltip = new Tooltip(String.format("%.2fm",
-                        measuredPillarDataController.intersection.distanceBetweenStandingPointBAndHalfLinePoint)
-                .replace(",", "."));
-        Tooltip.install(distanceBetweenStandingBAndHalfPointLine,
-                betweenStandingBAndHalfPointDistanceTooltip);
-        pane.getChildren().addAll(distanceBetweenStandingAAndHalfPointLine,
-                distanceBetweenStandingBAndHalfPointLine);
-    }
+     Tooltip.install(deltaXLine, deltaXTooltip);
+     Line deltaYLine = new Line();
+     deltaYLine.setStroke(Color.BLUE);
+     deltaYLine.setStrokeWidth(2);
+     deltaYLine.setCursor(Cursor.CLOSED_HAND);
+     deltaYLine.startXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+             .add((Math.round((measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
+             measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()) * 1000))
+             * MILLIMETER /SCALE));
+     deltaYLine.startYProperty().bind(pane.heightProperty().divide(2));
+     deltaYLine.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+             .add((Math.round((measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
+             measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()) * 1000))
+             * MILLIMETER /SCALE));
+     deltaYLine.endYProperty().bind(pane.heightProperty().divide(2)
+     .subtract((Math.round((measuredPillarDataController.intersection.getHalfLinePointData().getY_coord() -
+      measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) * 1000)) * MILLIMETER /SCALE));
+     Tooltip deltaYTooltip = new Tooltip("ΔX=" + String.format("%+.1fcm",
+                     100 * (measuredPillarDataController.intersection.getHalfLinePointData().getY_coord() -
+                             measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()))
+             .replace(",", "."));
+     Tooltip.install(deltaYLine, deltaYTooltip);
+     Line distanceLine = new Line();
+     distanceLine.setStroke(Color.RED);
+     distanceLine.getStrokeDashArray().addAll(10d);
+     distanceLine.setStrokeWidth(2);
+     distanceLine.setCursor(Cursor.CLOSED_HAND);
+     distanceLine.startXProperty().bind(pane.widthProperty().divide(10).multiply(5));
+     distanceLine.startYProperty().bind(pane.heightProperty().divide(2));
+     distanceLine.endXProperty().bind(pane.widthProperty().divide(10).multiply(5)
+             .add((Math.round((measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
+                     measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()) * 1000))
+                     * MILLIMETER /SCALE));
+     distanceLine.endYProperty().bind(pane.heightProperty().divide(2)
+     .subtract((Math.round((measuredPillarDataController.intersection.getHalfLinePointData().getY_coord() -
+     measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) * 1000)) * MILLIMETER /SCALE));
+     Tooltip distanceTooltip = new Tooltip("t=" + String.format("%.1fcm",
+             100 *  measuredPillarDataController.intersection.distanceBetweenIntersectionPointAndHalfLinePoint)
+             .replace(",", "."));
+     Tooltip.install(distanceLine, distanceTooltip);
+    pane.getChildren().addAll(deltaXLine, deltaYLine, distanceLine);
+ }
 
     private void addIntersectionData(){
         Text newPointIdText = new Text(measuredPillarDataController
@@ -477,7 +495,7 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                         .intersection.getHalfLinePointData() == null ?
                         0.0 :
                100 * (measuredPillarDataController.intersection.getHalfLinePointData().getY_coord() -
-                      measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()))
+                       measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()))
                 .replace(",", "."));
         deltaY.xProperty().bind(pane.widthProperty().divide(22).multiply(16));
         deltaY.setY(10 * MILLIMETER);
@@ -486,7 +504,7 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
         distanceText.setFont(boldFont);
         distanceText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
         distanceText.setY(5 * MILLIMETER);
-        Text distanceValue = new Text(String.format("%+20.1f",
+        Text distanceValue = new Text(String.format("%20.1f",
                         measuredPillarDataController
                                 .intersection.getHalfLinePointData() == null ?
                           0.0 :
@@ -525,13 +543,17 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
         intersectionPointZFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(10));
         intersectionPointZFromStandingA.setY(20 * MILLIMETER);
         intersectionPointZFromStandingA.setFont(normalFont);
+        Text standingAndIntersectionDistanceText = new Text("t [m]");
+        standingAndIntersectionDistanceText.setFont(boldFont);
+        standingAndIntersectionDistanceText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
+        standingAndIntersectionDistanceText.setY(15 * MILLIMETER);
         Text deltaDistanceText = new Text("Δt [cm]");
         deltaDistanceText.setFont(boldFont);
-        deltaDistanceText.xProperty().bind(pane.widthProperty().divide(21).multiply(12));
+        deltaDistanceText.xProperty().bind(pane.widthProperty().divide(21).multiply(14));
         deltaDistanceText.setY(15 * MILLIMETER);
         Text deltaAzimuthText = new Text("Δδ");
         deltaAzimuthText.setFont(boldFont);
-        deltaAzimuthText.xProperty().bind(pane.widthProperty().divide(22).multiply(15));
+        deltaAzimuthText.xProperty().bind(pane.widthProperty().divide(22).multiply(17));
         deltaAzimuthText.setY(15 * MILLIMETER);
         Text deltaDistanceFromStandingA = new Text(String.format("%+20.1f",
                         measuredPillarDataController
@@ -540,7 +562,7 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                 100 * (measuredPillarDataController.intersection.distanceBetweenStandingPointAAndHalfLinePoint -
                        measuredPillarDataController.intersection.distanceBetweenStandingPointAAndIntersectionPointFromA))
                         .replace(",", "."));
-        deltaDistanceFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(12));
+        deltaDistanceFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(14));
         deltaDistanceFromStandingA.setY(20 * MILLIMETER);
         deltaDistanceFromStandingA.setFont(normalFont);
         Text deltaAzimuthFromStandingA =  new Text(String.format("%s",
@@ -548,7 +570,7 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                         .intersection.getHalfLinePointData() == null ?
                         "-" :
                 measuredPillarDataController.intersection.deltaAzimuthAtStandingPointA));
-        deltaAzimuthFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(15));
+        deltaAzimuthFromStandingA.xProperty().bind(pane.widthProperty().divide(22).multiply(17));
         deltaAzimuthFromStandingA.setY(20 * MILLIMETER);
         deltaAzimuthFromStandingA.setFont(normalFont);
         Text fromStandingBText = new Text(measuredPillarDataController.intersection.getStandingPointB().getPointID() +"→");
@@ -570,6 +592,26 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
         intersectionPointZFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(10));
         intersectionPointZFromStandingB.setY(25 * MILLIMETER);
         intersectionPointZFromStandingB.setFont(normalFont);
+        Text distanceBetweenStartWireAndIntersectionPoint = new Text(String.format("%20.2f",
+                        measuredPillarDataController
+                                .intersection.getHalfLinePointData() == null ?
+                                0.0 :
+        measuredPillarDataController.intersection.distanceBetweenStartWireAndIntersectionPoint)
+                .replace(",", "."));
+        distanceBetweenStartWireAndIntersectionPoint.xProperty()
+                .bind(pane.widthProperty().divide(22).multiply(12));
+        distanceBetweenStartWireAndIntersectionPoint.setY(20 * MILLIMETER);
+        distanceBetweenStartWireAndIntersectionPoint.setFont(normalFont);
+        Text distanceBetweenEndWireAndIntersectionPoint = new Text(String.format("%20.2f",
+                        measuredPillarDataController
+                                .intersection.getHalfLinePointData() == null ?
+                                0.0 :
+                                measuredPillarDataController.intersection.distanceBetweenEndWireAndIntersectionPoint)
+                .replace(",", "."));
+        distanceBetweenEndWireAndIntersectionPoint.xProperty()
+                .bind(pane.widthProperty().divide(22).multiply(12));
+        distanceBetweenEndWireAndIntersectionPoint.setY(25 * MILLIMETER);
+        distanceBetweenEndWireAndIntersectionPoint.setFont(normalFont);
         Text deltaDistanceFromStandingB = new Text(String.format("%+20.1f",
                         measuredPillarDataController
                                 .intersection.getHalfLinePointData() == null ?
@@ -577,7 +619,7 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                 100 * (measuredPillarDataController.intersection.distanceBetweenStandingPointBAndHalfLinePoint -
                        measuredPillarDataController.intersection.distanceBetweenStandingPointBAndIntersectionPointFromB))
                         .replace(",", "."));
-        deltaDistanceFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(12));
+        deltaDistanceFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(14));
         deltaDistanceFromStandingB.setY(25 * MILLIMETER);
         deltaDistanceFromStandingB.setFont(normalFont);
         Text deltaAzimuthFromStandingB = new Text(String.format("%s",
@@ -585,7 +627,7 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                         .intersection.getHalfLinePointData() == null ?
                         "-" :
                 measuredPillarDataController.intersection.deltaAzimuthAtStandingPointB));
-        deltaAzimuthFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(15));
+        deltaAzimuthFromStandingB.xProperty().bind(pane.widthProperty().divide(22).multiply(17));
         deltaAzimuthFromStandingB.setY(25 * MILLIMETER);
         deltaAzimuthFromStandingB.setFont(normalFont);
         Text gammaText = new Text("γ:");
@@ -605,7 +647,9 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                 deltaDistanceText, deltaDistanceFromStandingA, deltaAzimuthText,
                 deltaAzimuthFromStandingA, fromStandingBText, intersectionPointXFromStandingB,
                 intersectionPointYFromStandingB, intersectionPointZFromStandingB,
-                deltaDistanceFromStandingB, deltaAzimuthFromStandingB, gammaText, gamma);
+                standingAndIntersectionDistanceText, distanceBetweenStartWireAndIntersectionPoint,
+                distanceBetweenEndWireAndIntersectionPoint, deltaDistanceFromStandingB,
+                deltaAzimuthFromStandingB, gammaText, gamma);
        copyText(measuredPillarDataController
                .intersection.getIntersectionPoint().getPointID() + " " +
        String.format("%9.3f",measuredPillarDataController.intersection.getIntersectionPoint().getX_coord())
