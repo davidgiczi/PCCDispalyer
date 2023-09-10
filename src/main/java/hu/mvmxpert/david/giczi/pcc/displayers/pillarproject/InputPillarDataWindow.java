@@ -127,7 +127,7 @@ public class InputPillarDataWindow {
         projectDataTextHbox.setAlignment(Pos.CENTER);
         projectDataTextHbox.getChildren().add(projectDataText);
         projectNameField = new TextField();
-        if( FileProcess.isExistedProjectFile() ){
+        if( FileProcess.isExistedProjectFile("plr") ){
             projectNameField.setText(FileProcess.PROJECT_FILE_NAME);
         }
         projectNameField.setCursor(Cursor.HAND);
@@ -149,7 +149,7 @@ public class InputPillarDataWindow {
         filePathText.setFont(boldFont);
         filePathTextHbox.getChildren().add(filePathText);
         projectPathField = new TextField();
-        if( FileProcess.isExistedProjectFile() ){
+        if( FileProcess.isExistedProjectFile("plr") ){
             projectPathField.setText(FileProcess.FOLDER_PATH);
         }
         projectPathField.setCursor(Cursor.HAND);
@@ -307,16 +307,16 @@ public class InputPillarDataWindow {
     }
 
     private void initDataFieldsByProjectFile(){
-        if( FileProcess.isExistedProjectFile() ){
-            centerPillarIDField.setText(measuredPillarDataController.projectFileData.get(0));
-            centerPillarField_X.setText(measuredPillarDataController.projectFileData.get(1));
-            centerPillarField_Y.setText(measuredPillarDataController.projectFileData.get(2));
-            directionPillarIDField.setText(measuredPillarDataController.projectFileData.get(3));
-            directionPillarField_X.setText(measuredPillarDataController.projectFileData.get(4));
-            directionPillarField_Y.setText(measuredPillarDataController.projectFileData.get(5));
-            rotationAngleField.setText(measuredPillarDataController.projectFileData.get(6));
-            rotationMinField.setText(measuredPillarDataController.projectFileData.get(7));
-            rotationSecField.setText(measuredPillarDataController.projectFileData.get(8));
+        if( FileProcess.isExistedProjectFile("plr") ){
+            centerPillarIDField.setText(measuredPillarDataController.pillarBaseProjectFileData.get(0));
+            centerPillarField_X.setText(measuredPillarDataController.pillarBaseProjectFileData.get(1));
+            centerPillarField_Y.setText(measuredPillarDataController.pillarBaseProjectFileData.get(2));
+            directionPillarIDField.setText(measuredPillarDataController.pillarBaseProjectFileData.get(3));
+            directionPillarField_X.setText(measuredPillarDataController.pillarBaseProjectFileData.get(4));
+            directionPillarField_Y.setText(measuredPillarDataController.pillarBaseProjectFileData.get(5));
+            rotationAngleField.setText(measuredPillarDataController.pillarBaseProjectFileData.get(6));
+            rotationMinField.setText(measuredPillarDataController.pillarBaseProjectFileData.get(7));
+            rotationSecField.setText(measuredPillarDataController.pillarBaseProjectFileData.get(8));
         }
     }
 

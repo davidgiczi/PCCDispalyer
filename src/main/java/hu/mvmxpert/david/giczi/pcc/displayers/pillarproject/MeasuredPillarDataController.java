@@ -22,7 +22,8 @@ public class MeasuredPillarDataController {
     public InputPillarDataWindow inputPillarDataWindow;
     public IntersectionInputDataWindow intersectionInputDataWindow;
     public FXHomeWindow fxHomeWindow;
-    public List<String> projectFileData;
+    public List<String> pillarBaseProjectFileData;
+    public List<String> intersectionProjectFileData;
     public Intersection intersection;
     private boolean isCreatedInputPillarDataWindow;
 
@@ -42,11 +43,11 @@ public class MeasuredPillarDataController {
                 !measuredPillarData.getMeasPillarPoints().isEmpty() ){
             measuredPillarData.getMeasPillarPoints().clear();
         }
-        if( fileProcess.getMeasData() != null && !fileProcess.getMeasData().isEmpty()){
-            fileProcess.getMeasData().clear();
+        if( fileProcess.getPillarBaseMeasData() != null && !fileProcess.getPillarBaseMeasData().isEmpty()){
+            fileProcess.getPillarBaseMeasData().clear();
         }
-        if( projectFileData != null ){
-            projectFileData = null;
+        if( pillarBaseProjectFileData != null ){
+            pillarBaseProjectFileData = null;
         }
     }
     public void getInfoAlert(String title, String text) {
@@ -74,11 +75,11 @@ public class MeasuredPillarDataController {
 
     public void openMeasuredData(){
         init();
-        fileProcess.getMeasureFileData();
-        if( fileProcess.getMeasData() == null || fileProcess.getMeasData().isEmpty() ){
+        fileProcess.getPillarBaseMeasureFileData();
+        if( fileProcess.getPillarBaseMeasData() == null || fileProcess.getPillarBaseMeasData().isEmpty() ){
             return;
         }
-        measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
+        measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getPillarBaseMeasData());
         if( measuredPillarData.getMeasPillarPoints() == null || measuredPillarData.getMeasPillarPoints().isEmpty()) {
             getInfoAlert("Nem beolvasható adat",
                     "Nem található beolvasható mérési eredmény a fájlban.");
@@ -100,8 +101,8 @@ public class MeasuredPillarDataController {
     public void addMoreMeasuredPillarData(){
         measuredPointListDisplayer.stage.hide();
         measuredPointListDisplayer.parseDisplayerData();
-        fileProcess.getMeasureFileData();
-        measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getMeasData());
+        fileProcess.getPillarBaseMeasureFileData();
+        measuredPillarData.convertMeasuredDataToMeasPoints(fileProcess.getPillarBaseMeasData());
         if( measuredPillarData.getMeasPillarPoints() == null || measuredPillarData.getMeasPillarPoints().isEmpty() ){
             getInfoAlert("Nem beolvasható adat",
                     "Nem található beolvasható mérési eredmény a fájlban.");
@@ -242,9 +243,10 @@ public class MeasuredPillarDataController {
         measuredPillarData.setBaseLineDirectionPoint(new MeasPoint(inputPillarDataWindow.directionPillarIDField.getText(),
                 directionPillarX, directionPillarY, 0.0, PointType.DIRECTION));
         measuredPillarData.addIDsForPillarLegs();
-        if( FileProcess.isExistedProjectFile() ){
+        if( FileProcess.isExistedProjectFile("plr") ){
 
-            if( getConfirmationAlert("Projekt fájl mentése", "Létező projekt fájl, felülírod?") ){
+            if( getConfirmationAlert( "Létező projekt fájl, felülírod?",
+                    FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".plr") ){
                 fileProcess.savePillarProjectData();
             }
             else {
@@ -258,12 +260,12 @@ public class MeasuredPillarDataController {
         this.pillarBaseDisplayer = new PillarBaseDisplayer(this);
     }
 
-    public void openProject(){
-       projectFileData = fileProcess.openProject();
-       if( projectFileData.isEmpty() ){
+    public void openPillarBaseProject(){
+       pillarBaseProjectFileData = fileProcess.openPillarBaseProject();
+       if( pillarBaseProjectFileData.isEmpty() ){
            return;
        }
-       measuredPillarData.parseProjectFileData(projectFileData);
+       measuredPillarData.parseProjectFileData(pillarBaseProjectFileData);
         if( inputPillarDataWindow != null ){
             inputPillarDataWindow.stage.hide();
         }
@@ -279,9 +281,22 @@ public class MeasuredPillarDataController {
         }
     }
 
+    private void loadMeasureFileData(){
+        if( !intersectionInputDataWindow.standingAIdField.getText().isEmpty() &&
+            intersectionInputDataWindow.standingAPointField_X.getText().isEmpty() &&
+            intersectionInputDataWindow.standingAPointField_Y.getText().isEmpty() &&
+            intersectionInputDataWindow.standingAPointField_Z.getText().isEmpty() &&
+            !intersectionInputDataWindow.standingBIdField.getText().isEmpty() &&
+            intersectionInputDataWindow.standingBPointField_X.getText().isEmpty() &&
+            intersectionInputDataWindow.standingBPointField_Y.getText().isEmpty() &&
+            intersectionInputDataWindow.standingBPointField_Z.getText().isEmpty())  {
+            fileProcess.getIntersectionMeasureFileData();
+        }
+    }
+
     public void onClickCountButtonForIntersectionProcess(){
         fxHomeWindow.homeStage.hide();
-        intersectionInputDataWindow.stage.hide();
+        loadMeasureFileData();
         String startPointId;
         if( !InputDataValidator.isValidID(intersectionInputDataWindow.startPointIdField.getText()) ){
                 if( !intersectionInputDataWindow.startPointIdField.getText().isEmpty() ){
@@ -595,20 +610,24 @@ public class MeasuredPillarDataController {
             return;
         }
 
-        if( FileProcess.isExistedProjectFile() ){
-            if( getConfirmationAlert("Projekt fájl mentése",
-                    FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".inc\n" +
-                    "Létező projekt fájl, felülírod?") ){
+        fileProcess.setFolder();
+        FileProcess.PROJECT_FILE_NAME = intersectionInputDataWindow.standingAIdField.getText() +
+                "-" + intersectionInputDataWindow.standingBIdField.getText() + "_METSZES";
+
+        if( FileProcess.isExistedProjectFile("ins") ){
+            if( getConfirmationAlert( "Létező projekt fájl, felülírod?",
+                    FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".ins") ){
                 fileProcess.saveIntersectionData();
             }
             else {
+                intersectionInputDataWindow.stage.show();
                 return;
             }
         }
         else {
             fileProcess.saveIntersectionData();
         }
-
+        intersectionInputDataWindow.stage.hide();
         Point startPoint = null;
         Point endPoint = null;
 

@@ -50,7 +50,7 @@ public class IntersectionDisplayer {
         addContent();
         ScrollPane scrollPane = getScrollPane(pane);
         Scene scene = new Scene(scrollPane);
-        stage.setTitle("Előmetszés");
+        stage.setTitle(FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".ins");
         stage.getIcons().add(new Image("file:images/MVM.jpg"));
         stage.setMinWidth(1050);
         stage.setMinHeight(750);

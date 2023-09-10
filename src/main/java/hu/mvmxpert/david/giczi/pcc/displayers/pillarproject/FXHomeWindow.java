@@ -1,6 +1,5 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
-import hu.mvmxpert.david.giczi.pcc.displayers.service.Intersection;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -72,7 +71,7 @@ public class FXHomeWindow extends Application {
 		MenuItem openPillarProject = new MenuItem("Projekt megnyitása");
 
 		openPillarProject.setOnAction(e -> {
-		measuredPillarDataController.openProject();
+		measuredPillarDataController.openPillarBaseProject();
 		});
 
 		MenuItem createPillarProject = new MenuItem("Új projekt létrehozása");

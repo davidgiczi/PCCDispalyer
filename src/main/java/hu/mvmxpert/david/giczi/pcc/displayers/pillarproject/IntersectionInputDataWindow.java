@@ -1,5 +1,6 @@
 package hu.mvmxpert.david.giczi.pcc.displayers.pillarproject;
 
+import hu.mvmxpert.david.giczi.pcc.displayers.service.Intersection;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -147,17 +148,7 @@ public class IntersectionInputDataWindow {
                 "-fx-focus-color: #708090;");
         startField_X.setPrefColumnCount(15);
         startField_X.setFont(normalFont);
-        startField_X.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            if( oldValue.length() < 3 && endField_X.getText().length() < 3 &&
-                    standingAPointField_X.getText().length() < 3 &&
-                    standingBPointField_X.getText().length() < 3){
-                endField_X.setText(newValue);
-                standingAPointField_X.setText(newValue);
-                standingBPointField_X.setText(newValue);
-            }
-        });
-        startXHbox.getChildren().addAll(startXText, startField_X);
+               startXHbox.getChildren().addAll(startXText, startField_X);
 
         HBox startYHbox = new HBox();
         startYHbox.setPadding(new Insets(5,5,5,20));
@@ -173,16 +164,6 @@ public class IntersectionInputDataWindow {
                 "-fx-focus-color: #708090;");
         startField_Y.setPrefColumnCount(15);
         startField_Y.setFont(normalFont);
-        startField_Y.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            if( oldValue.length() < 3 && endField_Y.getText().length() < 3 &&
-                    standingAPointField_Y.getText().length() < 3 &&
-                    standingBPointField_Y.getText().length() < 3){
-                endField_Y.setText(newValue);
-                standingAPointField_Y.setText(newValue);
-                standingBPointField_Y.setText(newValue);
-            }
-        });
         startYHbox.getChildren().addAll(startYText, startField_Y);
 
         endPointIdField = new TextField();
@@ -290,7 +271,6 @@ public class IntersectionInputDataWindow {
         newPointIdField.setPrefColumnCount(12);
         newPointIdField.setFont(normalFont);
         newPointIdField.setCursor(Cursor.HAND);
-        newPointIdField.setText("METSZÉSPONT");
         newPointIdTextHbox.getChildren().addAll(newPointIdText, newPointIdField );
         vBox.getChildren().add(newPointIdTextHbox);
     }
@@ -344,7 +324,6 @@ public class IntersectionInputDataWindow {
         Text standingAPointIdText = new Text("Az 1. pont azonosítója:");
         standingAPointIdText.setFont(boldFont);
         standingAIdField = new TextField();
-        standingAIdField.setText("1_PONT");
         standingAIdField.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
@@ -539,7 +518,6 @@ public class IntersectionInputDataWindow {
         Text standingBPointIdText = new Text("A 2. pont azonosítója:");
         standingBPointIdText.setFont(boldFont);
         standingBIdField = new TextField();
-        standingBIdField.setText("2_PONT");
         standingBIdField.setStyle("-fx-text-inner-color: #708090; " +
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
@@ -683,44 +661,32 @@ public class IntersectionInputDataWindow {
         calcButtonHbox.getChildren().add(calcButton);
         vBox.getChildren().add(calcButtonHbox);
     }
-
     private void addTestData(){
+        Intersection intersection = new Intersection();
+        standingAPointAzimuthAngleField
+                .setText(String.valueOf(intersection.getAngleValue(8.25144120)));
+        standingAPointAzimuthMinField
+                .setText(String.valueOf(intersection.getMinValue(8.25144120)));
+        standingAPointAzimuthSecField
+                .setText(String.valueOf(intersection.getSecValue(8.25144120)));
+        standingAPointElevationAngleField
+                .setText(String.valueOf(intersection.getAngleValue(88.29508200)));
+        standingAPointElevationMinField
+                .setText(String.valueOf(intersection.getMinValue(88.29508200)));
+        standingAPointElevationSecField
+                .setText(String.valueOf(intersection.getSecValue(88.29508200)));
 
-      newPointIdField.setText("12_bal→13_bal felező");
-      startPointIdField.setText("12_bal");
-      startField_X.setText("640235.208");
-      startField_Y.setText("217212.937");
-      endPointIdField.setText("13_bal");
-      endField_X.setText("640976.757");
-      endField_Y.setText("216912.364");
-      standingAIdField.setText("ST_0022");
-      standingAPointField_X.setText("640240.212");
-      standingAPointField_Y.setText("216979.066");
-      standingAPointField_Z.setText("95.655");
-      standingAPointAzimuthAngleField
-              .setText("77");
-      standingAPointAzimuthMinField
-              .setText("08");
-      standingAPointAzimuthSecField
-                .setText("18");
-      standingAPointElevationAngleField
-              .setText("85");
-      standingAPointElevationMinField
-                .setText("30");
-      standingAPointElevationSecField
-                .setText("53");
-      standingBIdField.setText("ST_0023");
-      standingBPointField_X.setText("640445.988");
-      standingBPointField_Y.setText("217483.864");
-      standingBPointField_Z.setText("96.118");
-      standingBPointAzimuthAngleField.setText("159");
-      standingBPointAzimuthMinField.setText("12");
-      standingBPointAzimuthSecField
-                .setText("37");
-      standingBPointElevationAngleField.setText("86");
-      standingBPointElevationMinField
-                .setText("19");
-      standingBPointElevationSecField.setText("23");
-    }
-
+        standingBPointAzimuthAngleField
+                .setText(String.valueOf(intersection.getAngleValue(142.27146520)));
+        standingBPointAzimuthMinField
+                .setText(String.valueOf(intersection.getMinValue(142.27146520)));
+        standingBPointAzimuthSecField
+                .setText(String.valueOf(intersection.getSecValue(142.27146520)));
+        standingBPointElevationAngleField
+                .setText(String.valueOf(intersection.getAngleValue(87.47520440)));
+        standingBPointElevationMinField
+                .setText(String.valueOf(intersection.getMinValue(87.47520440)));
+        standingBPointElevationSecField
+                .setText(String.valueOf(intersection.getSecValue(87.47520440)));
+}
 }

@@ -16,16 +16,18 @@ public class FileProcess {
 	public MeasuredPillarDataController measuredPillarDataController;
 	public static String FOLDER_PATH;
 	public static String MEAS_FILE_NAME;
-	private List<String> measData;
+	private List<String> pillarBaseMeasData;
 	private String delimiter = ";";
 
 	public FileProcess(MeasuredPillarDataController measuredPillarDataController){
 		this.measuredPillarDataController = measuredPillarDataController;
 	}
 
-	public List<String> getMeasData() {
-		return measData;
+	public List<String> getPillarBaseMeasData() {
+		return pillarBaseMeasData;
 	}
+
+
 	public void setDelimiter(String delimiter) {
 		this.delimiter = delimiter;
 	}
@@ -40,7 +42,7 @@ public class FileProcess {
 			FOLDER_PATH = selectedFile.getAbsolutePath();
 		}
 	}
-	public List<String> openProject() {
+	public List<String> openPillarBaseProject() {
 		FileChooser projectFileChooser = new FileChooser();
 		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ?
 				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
@@ -52,10 +54,10 @@ public class FileProcess {
 			FOLDER_PATH = selectedFile.getParent();
 			PROJECT_FILE_NAME = selectedFile.getName().substring(0, selectedFile.getName().indexOf('.'));
 		}
-		return getProjectFileData();
+		return getPillarBaseProjectFileData();
 	}
 
-	private List<String> getProjectFileData(){
+	private List<String> getPillarBaseProjectFileData(){
 
 		List<String> projectData = new ArrayList<>();
 
@@ -80,7 +82,47 @@ public class FileProcess {
 		return projectData;
 	}
 
-	public void getMeasureFileData() {
+	public List<String> openIntersectionProject() {
+		FileChooser projectFileChooser = new FileChooser();
+		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ?
+				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
+		projectFileChooser.setTitle("Válassz projekt fájlt");
+		FileChooser.ExtensionFilter projectFileFilter = new FileChooser.ExtensionFilter("Projekt fájlok (*.ins)", "*.plr");
+		projectFileChooser.getExtensionFilters().add(projectFileFilter);
+		File selectedFile = projectFileChooser.showOpenDialog(measuredPillarDataController.fxHomeWindow.homeStage);
+		if ( selectedFile != null ) {
+			FOLDER_PATH = selectedFile.getParent();
+			PROJECT_FILE_NAME = selectedFile.getName().substring(0, selectedFile.getName().indexOf('.'));
+		}
+		return getIntersectionFileData();
+	}
+
+	private List<String> getIntersectionFileData(){
+
+		List<String> projectData = new ArrayList<>();
+
+		if(PROJECT_FILE_NAME == null || FOLDER_PATH == null)
+			return projectData;
+
+		File file = new File(FOLDER_PATH + "/" + PROJECT_FILE_NAME+ ".ins");
+
+		try(BufferedReader reader = new BufferedReader(
+				new FileReader(file, StandardCharsets.UTF_8))) {
+
+			String row = reader.readLine();
+			while( row != null ) {
+				projectData.add(row);
+				row = reader.readLine();
+			}
+		}
+		catch (IOException e) {
+
+		}
+
+		return projectData;
+	}
+
+	public void getIntersectionMeasureFileData() {
 		FileChooser projectFileChooser = new FileChooser();
 		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ?
 				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
@@ -89,14 +131,90 @@ public class FileProcess {
 		projectFileChooser.getExtensionFilters().add(projectFileFilter);
 		File selectedFile = projectFileChooser.showOpenDialog(measuredPillarDataController.fxHomeWindow.homeStage);
 		if ( selectedFile != null ) {
-			setData(selectedFile);
+			setIntersectionData(selectedFile);
+			FOLDER_PATH = selectedFile.getParent();
+		}
+	}
+
+	private void setIntersectionData(File selectedFile){
+
+		try(BufferedReader reader = new BufferedReader(
+				new FileReader(selectedFile, StandardCharsets.UTF_8))) {
+
+			String row = reader.readLine();
+			while (row != null) {
+				String[] rowData = row.split(";");
+				if(!measuredPillarDataController
+						.intersectionInputDataWindow.startPointIdField.getText().isEmpty() &&
+						rowData[0].equals(measuredPillarDataController
+						.intersectionInputDataWindow.startPointIdField.getText().trim())) {
+
+				measuredPillarDataController.intersectionInputDataWindow.startField_X.setText(rowData[1]);
+				measuredPillarDataController.intersectionInputDataWindow.startField_Y.setText(rowData[2]);
+				}
+				if(!measuredPillarDataController
+						.intersectionInputDataWindow.endPointIdField.getText().isEmpty() &&
+						rowData[0].equals(measuredPillarDataController
+						.intersectionInputDataWindow.endPointIdField.getText().trim())) {
+					measuredPillarDataController.intersectionInputDataWindow.endField_X.setText(rowData[1]);
+					measuredPillarDataController.intersectionInputDataWindow.endField_Y.setText(rowData[2]);
+				}
+				if(!measuredPillarDataController
+						.intersectionInputDataWindow.startPointIdField.getText().isEmpty() &&
+					!measuredPillarDataController
+						.intersectionInputDataWindow.endPointIdField.getText().isEmpty()) {
+					measuredPillarDataController.intersectionInputDataWindow
+							.newPointIdField.setText(measuredPillarDataController
+									.intersectionInputDataWindow.startPointIdField.getText() + "→" +
+									measuredPillarDataController
+											.intersectionInputDataWindow.endPointIdField.getText() + "_felező");
+				}
+					if(!measuredPillarDataController
+							.intersectionInputDataWindow.standingAIdField.getText().isEmpty() &&
+							rowData[0].equals(measuredPillarDataController
+									.intersectionInputDataWindow.standingAIdField.getText().trim())) {
+						measuredPillarDataController.intersectionInputDataWindow
+								.standingAPointField_X.setText(rowData[1]);
+						measuredPillarDataController.intersectionInputDataWindow
+								.standingAPointField_Y.setText(rowData[2]);
+						measuredPillarDataController.intersectionInputDataWindow
+								.standingAPointField_Z.setText(rowData[3]);
+					}
+						if(!measuredPillarDataController
+								.intersectionInputDataWindow.standingBIdField.getText().isEmpty() &&
+								rowData[0].equals(measuredPillarDataController
+										.intersectionInputDataWindow.standingBIdField.getText().trim())) {
+							measuredPillarDataController.intersectionInputDataWindow
+									.standingBPointField_X.setText(rowData[1]);
+							measuredPillarDataController.intersectionInputDataWindow
+									.standingBPointField_Y.setText(rowData[2]);
+							measuredPillarDataController.intersectionInputDataWindow
+									.standingBPointField_Z.setText(rowData[3]);
+					}
+				row = reader.readLine();
+			}
+		}
+		catch (IOException e) {
+		}
+	}
+
+	public void getPillarBaseMeasureFileData() {
+		FileChooser projectFileChooser = new FileChooser();
+		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ?
+				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
+		projectFileChooser.setTitle("Válassz mérési fájlt");
+		FileChooser.ExtensionFilter projectFileFilter = new FileChooser.ExtensionFilter("Mérési fájlok (*.txt)", "*.txt");
+		projectFileChooser.getExtensionFilters().add(projectFileFilter);
+		File selectedFile = projectFileChooser.showOpenDialog(measuredPillarDataController.fxHomeWindow.homeStage);
+		if ( selectedFile != null ) {
+			setPillarBaseData(selectedFile);
 			MEAS_FILE_NAME = selectedFile.getName();
 			FOLDER_PATH = selectedFile.getParent();
 		}
 	}
 
-	private void setData(File selectedFile){
-		measData = new ArrayList<>();
+	private void setPillarBaseData(File selectedFile){
+		pillarBaseMeasData = new ArrayList<>();
 		try(BufferedReader reader = new BufferedReader(
 				new FileReader(selectedFile, StandardCharsets.UTF_8))) {
 
@@ -106,7 +224,7 @@ public class FileProcess {
 						row.endsWith(PointType.ALAP.name()) ||
 						row.endsWith(PointType.CSUCS.name() + delimiter) ||
 						row.endsWith(PointType.csucs.name() + delimiter)) {
-					measData.add(row);
+					pillarBaseMeasData.add(row);
 				}
 				row = reader.readLine();
 			}
@@ -159,12 +277,7 @@ public class FileProcess {
 	}
 
 	public void saveIntersectionData(){
-		if( FileProcess.FOLDER_PATH == null ){
-			FileProcess.FOLDER_PATH = System.getProperty("user.home");
-		}
-		FileProcess.PROJECT_FILE_NAME = measuredPillarDataController.intersectionInputDataWindow.standingAIdField.getText() +
-				"-" + measuredPillarDataController.intersectionInputDataWindow.standingBIdField.getText() + "_METSZES";
-		File file = new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + ".inc");
+		File file = new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + ".ins");
 		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
 			if( !measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText().isEmpty() ){
 				writer.write(measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText());
@@ -179,15 +292,15 @@ public class FileProcess {
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.endPointIdField.getText().isEmpty() ){
-				writer.write(measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText());
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.endPointIdField.getText());
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.endField_X.getText().isEmpty() ){
-				writer.write(measuredPillarDataController.intersectionInputDataWindow.startField_X.getText());
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.endField_X.getText());
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.endField_Y.getText().isEmpty() ){
-				writer.write(measuredPillarDataController.intersectionInputDataWindow.startField_Y.getText());
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.endField_Y.getText());
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.newPointIdField.getText().isEmpty() ){
@@ -196,9 +309,9 @@ public class FileProcess {
 			}
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAIdField.getText());
 			writer.newLine();
-			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_Y.getText());
-			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_X.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_Y.getText());
 			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_Z.getText());
 			writer.newLine();
@@ -216,9 +329,9 @@ public class FileProcess {
 			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBIdField.getText());
 			writer.newLine();
-			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_Y.getText());
-			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_X.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_Y.getText());
 			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_Z.getText());
 			writer.newLine();
@@ -239,8 +352,8 @@ public class FileProcess {
 		}
 	}
 
-	public static boolean isExistedProjectFile(){
-		return  new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + ".plr").exists();
+	public static boolean isExistedProjectFile(String extension){
+		return  new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + "." + extension).exists();
 	}
 
 }

@@ -199,35 +199,35 @@ public class Intersection {
                         getHalfLinePointData());
         distanceBetweenStandingPointBAndHalfLinePoint = standingPointBAndHalfPointData.calcDistance();
    deltaAzimuthAtStandingPointA =
-           getSecValue(Math.toDegrees(standingPointAAndHalfPointData.calcAzimuth()
-                   - pointAAndFromPointAData.calcAzimuth())) < 0 ?
-       "-"  +   Math.abs(getAngleValue(Math.toDegrees(standingPointAAndHalfPointData.calcAzimuth()
-               - pointAAndFromPointAData.calcAzimuth()))) + "° " +
-               Math.abs(getMinValue(Math.toDegrees(standingPointAAndHalfPointData.calcAzimuth()
-                       - pointAAndFromPointAData.calcAzimuth()))) + "' " +
-               Math.abs(getSecValue(Math.toDegrees(standingPointAAndHalfPointData.calcAzimuth()
-                       - pointAAndFromPointAData.calcAzimuth()))) + "\"" :
-              Math.abs(getAngleValue(Math.toDegrees(standingPointAAndHalfPointData.calcAzimuth()
-                           - pointAAndFromPointAData.calcAzimuth()))) + "° " +
-               Math.abs(getMinValue(Math.toDegrees(standingPointAAndHalfPointData.calcAzimuth()
-                                   - pointAAndFromPointAData.calcAzimuth()))) + "' " +
-                     Math.abs(getSecValue(Math.toDegrees(standingPointAAndHalfPointData.calcAzimuth()
-                                   - pointAAndFromPointAData.calcAzimuth()))) + "\"";
+           getSecValue(Math.toDegrees(pointAAndFromPointAData.calcAzimuth() -
+                   standingPointAAndHalfPointData.calcAzimuth())) < 0 ?
+       "-"  +   Math.abs(getAngleValue(Math.toDegrees(pointAAndFromPointAData.calcAzimuth() -
+               standingPointAAndHalfPointData.calcAzimuth()))) + "° " +
+               Math.abs(getMinValue(Math.toDegrees( pointAAndFromPointAData.calcAzimuth() -
+                       standingPointAAndHalfPointData.calcAzimuth()))) + "' " +
+               Math.abs(getSecValue(Math.toDegrees(pointAAndFromPointAData.calcAzimuth() -
+                       standingPointAAndHalfPointData.calcAzimuth()))) + "\"" :
+               Math.abs(getAngleValue(Math.toDegrees(pointAAndFromPointAData.calcAzimuth() -
+                       standingPointAAndHalfPointData.calcAzimuth()))) + "° " +
+               Math.abs(getMinValue(Math.toDegrees(pointAAndFromPointAData.calcAzimuth() -
+                       standingPointAAndHalfPointData.calcAzimuth()))) + "' " +
+               Math.abs(getSecValue(Math.toDegrees(pointAAndFromPointAData.calcAzimuth() -
+                             standingPointAAndHalfPointData.calcAzimuth()))) + "\"";
    deltaAzimuthAtStandingPointB =
-           getSecValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
-                   - pointBAndFromPointBData.calcAzimuth())) < 0 ?
-     "-"  +  Math.abs(getAngleValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
-             - pointBAndFromPointBData.calcAzimuth()))) + "° " +
-             Math.abs(getMinValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
-                     - pointBAndFromPointBData.calcAzimuth()))) + "' " +
-             Math.abs(getSecValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
-                     - pointBAndFromPointBData.calcAzimuth()))) + "\"" :
-                   Math.abs(getAngleValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
-                           - pointBAndFromPointBData.calcAzimuth()))) + "° " +
-                           Math.abs(getMinValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
-                                   - pointBAndFromPointBData.calcAzimuth()))) + "' " +
-                           Math.abs(getSecValue(Math.toDegrees(standingPointBAndHalfPointData.calcAzimuth()
-                                   - pointBAndFromPointBData.calcAzimuth()))) + "\"";
+           getSecValue(Math.toDegrees(pointBAndFromPointBData.calcAzimuth() -
+                   standingPointBAndHalfPointData.calcAzimuth())) < 0 ?
+     "-"  +  Math.abs(getAngleValue(Math.toDegrees(pointBAndFromPointBData.calcAzimuth() -
+             standingPointBAndHalfPointData.calcAzimuth()))) + "° " +
+             Math.abs(getMinValue(Math.toDegrees(pointBAndFromPointBData.calcAzimuth() -
+                     standingPointBAndHalfPointData.calcAzimuth()))) + "' " +
+             Math.abs(getSecValue(Math.toDegrees(pointBAndFromPointBData.calcAzimuth() -
+                     standingPointBAndHalfPointData.calcAzimuth()))) + "\"" :
+             Math.abs(getAngleValue(Math.toDegrees(pointBAndFromPointBData.calcAzimuth() -
+                           standingPointBAndHalfPointData.calcAzimuth()))) + "° " +
+             Math.abs(getMinValue(Math.toDegrees(pointBAndFromPointBData.calcAzimuth() -
+                                   standingPointBAndHalfPointData.calcAzimuth()))) + "' " +
+             Math.abs(getSecValue(Math.toDegrees(pointBAndFromPointBData.calcAzimuth() -
+                                   standingPointBAndHalfPointData.calcAzimuth()))) + "\"";
    distanceBetweenStartWireAndIntersectionPoint = new AzimuthAndDistance(lineStartPoint,
            new Point("IntersectionPoint", intersectionPoint.getX_coord(),
                    intersectionPoint.getY_coord())).calcDistance();
