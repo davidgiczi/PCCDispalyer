@@ -158,6 +158,87 @@ public class FileProcess {
 		}
 	}
 
+	public void saveIntersectionData(){
+		if( FileProcess.FOLDER_PATH == null ){
+			FileProcess.FOLDER_PATH = System.getProperty("user.home");
+		}
+		FileProcess.PROJECT_FILE_NAME = measuredPillarDataController.intersectionInputDataWindow.standingAIdField.getText() +
+				"-" + measuredPillarDataController.intersectionInputDataWindow.standingBIdField.getText() + "_METSZES";
+		File file = new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + ".inc");
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
+			if( !measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText().isEmpty() ){
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText());
+				writer.newLine();
+			}
+			if( !measuredPillarDataController.intersectionInputDataWindow.startField_X.getText().isEmpty() ){
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.startField_X.getText());
+				writer.newLine();
+			}
+			if( !measuredPillarDataController.intersectionInputDataWindow.startField_Y.getText().isEmpty() ){
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.startField_Y.getText());
+				writer.newLine();
+			}
+			if( !measuredPillarDataController.intersectionInputDataWindow.endPointIdField.getText().isEmpty() ){
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText());
+				writer.newLine();
+			}
+			if( !measuredPillarDataController.intersectionInputDataWindow.endField_X.getText().isEmpty() ){
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.startField_X.getText());
+				writer.newLine();
+			}
+			if( !measuredPillarDataController.intersectionInputDataWindow.endField_Y.getText().isEmpty() ){
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.startField_Y.getText());
+				writer.newLine();
+			}
+			if( !measuredPillarDataController.intersectionInputDataWindow.newPointIdField.getText().isEmpty() ){
+				writer.write(measuredPillarDataController.intersectionInputDataWindow.newPointIdField.getText());
+				writer.newLine();
+			}
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAIdField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_Y.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_X.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_Z.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointAzimuthAngleField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointAzimuthMinField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointAzimuthSecField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointElevationAngleField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointElevationMinField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointElevationSecField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBIdField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_Y.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_X.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_Z.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointAzimuthAngleField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointAzimuthMinField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointAzimuthSecField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointElevationAngleField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointElevationMinField.getText());
+			writer.newLine();
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointElevationSecField.getText());
+			writer.newLine();
+		}
+		catch (IOException e){
+		}
+	}
+
 	public static boolean isExistedProjectFile(){
 		return  new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + ".plr").exists();
 	}

@@ -595,6 +595,20 @@ public class MeasuredPillarDataController {
             return;
         }
 
+        if( FileProcess.isExistedProjectFile() ){
+            if( getConfirmationAlert("Projekt fájl mentése",
+                    FileProcess.FOLDER_PATH + "\\" + FileProcess.PROJECT_FILE_NAME + ".inc\n" +
+                    "Létező projekt fájl, felülírod?") ){
+                fileProcess.saveIntersectionData();
+            }
+            else {
+                return;
+            }
+        }
+        else {
+            fileProcess.saveIntersectionData();
+        }
+
         Point startPoint = null;
         Point endPoint = null;
 

@@ -114,7 +114,9 @@ public class Intersection {
                         polarPointB.calcPolarPoint(). getX_coord() ) / 2.0,
                 ( polarPointA.calcPolarPoint().getY_coord() +
                         polarPointB.calcPolarPoint(). getY_coord() ) / 2.0,
-                (intersectionElevationA + intersectionElevationB) / 2.0,
+                (intersectionElevationA * Math.pow(Math.pow(distanceA, 2), -1) +
+                        intersectionElevationB *  Math.pow(Math.pow(distanceB, 2), -1)) /
+                        (Math.pow(Math.pow(distanceA, 2), -1) + Math.pow(Math.pow(distanceB, 2), -1)),
                 PointType.INTERSECTION);
         calcData();
     }

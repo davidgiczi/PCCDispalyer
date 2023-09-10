@@ -480,8 +480,8 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                 measuredPillarDataController
                         .intersection.getHalfLinePointData() == null ?
                         0.0 :
-             100 * (measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
-                     measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()))
+             100 * (measuredPillarDataController.intersection.getIntersectionPoint().getX_coord() -
+                     measuredPillarDataController.intersection.getHalfLinePointData().getX_coord()))
                 .replace(",", "."));
         deltaX.xProperty().bind(pane.widthProperty().divide(22).multiply(14));
         deltaX.setY(10 * MILLIMETER);
@@ -494,8 +494,8 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                 measuredPillarDataController
                         .intersection.getHalfLinePointData() == null ?
                         0.0 :
-               100 * (measuredPillarDataController.intersection.getHalfLinePointData().getY_coord() -
-                       measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()))
+               100 * (measuredPillarDataController.intersection.getIntersectionPoint().getY_coord() -
+                       measuredPillarDataController.intersection.getHalfLinePointData().getY_coord()))
                 .replace(",", "."));
         deltaY.xProperty().bind(pane.widthProperty().divide(22).multiply(16));
         deltaY.setY(10 * MILLIMETER);
