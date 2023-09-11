@@ -289,7 +289,8 @@ public class MeasuredPillarDataController {
             !intersectionInputDataWindow.standingBIdField.getText().isEmpty() &&
             intersectionInputDataWindow.standingBPointField_X.getText().isEmpty() &&
             intersectionInputDataWindow.standingBPointField_Y.getText().isEmpty() &&
-            intersectionInputDataWindow.standingBPointField_Z.getText().isEmpty())  {
+            intersectionInputDataWindow.standingBPointField_Z.getText().isEmpty() &&
+            !intersectionInputDataWindow.newPointIdField.getText().isEmpty())  {
             fileProcess.getIntersectionMeasureFileData();
         }
     }
@@ -611,8 +612,9 @@ public class MeasuredPillarDataController {
         }
 
         fileProcess.setFolder();
-        FileProcess.PROJECT_FILE_NAME = intersectionInputDataWindow.standingAIdField.getText() +
-                "-" + intersectionInputDataWindow.standingBIdField.getText() + "_METSZES";
+        FileProcess.PROJECT_FILE_NAME = intersectionInputDataWindow.standingAIdField.getText().toUpperCase() +
+                "-" + intersectionInputDataWindow.standingBIdField.getText().toUpperCase() + "_" +
+                intersectionInputDataWindow.newPointIdField.getText().toUpperCase() + "_METSZES";
 
         if( FileProcess.isExistedProjectFile("ins") ){
             if( getConfirmationAlert( "Létező projekt fájl, felülírod?",

@@ -69,7 +69,6 @@ public class IntersectionInputDataWindow {
         addStandingPointADataFields();
         addStandingPointBDataFields();
         addCalcButton();
-        addTestData();
         pane.getChildren().add(vBox);
         Scene scene = new Scene(pane);
         stage.setWidth(400);
