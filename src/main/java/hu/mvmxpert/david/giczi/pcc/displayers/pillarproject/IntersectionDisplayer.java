@@ -440,7 +440,7 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
 
     private void addIntersectionData(){
         Text newPointIdText = new Text(measuredPillarDataController
-                .intersection.getIntersectionPoint().getPointID());
+                .intersection.getIntersectionPoint().getPointID().toUpperCase());
         newPointIdText.xProperty().bind(pane.widthProperty().divide(22).multiply(4));
         newPointIdText.setY(10 * MILLIMETER);
         newPointIdText.setFont(boldFont);
@@ -480,8 +480,8 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                 measuredPillarDataController
                         .intersection.getHalfLinePointData() == null ?
                         0.0 :
-             100 * (measuredPillarDataController.intersection.getIntersectionPoint().getX_coord() -
-                     measuredPillarDataController.intersection.getHalfLinePointData().getX_coord()))
+             100 * ( measuredPillarDataController.intersection.getHalfLinePointData().getX_coord() -
+                     measuredPillarDataController.intersection.getIntersectionPoint().getX_coord()))
                 .replace(",", "."));
         deltaX.xProperty().bind(pane.widthProperty().divide(22).multiply(14));
         deltaX.setY(10 * MILLIMETER);
@@ -494,8 +494,8 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
                 measuredPillarDataController
                         .intersection.getHalfLinePointData() == null ?
                         0.0 :
-               100 * (measuredPillarDataController.intersection.getIntersectionPoint().getY_coord() -
-                       measuredPillarDataController.intersection.getHalfLinePointData().getY_coord()))
+               100 * (measuredPillarDataController.intersection.getHalfLinePointData().getY_coord() -
+                       measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()))
                 .replace(",", "."));
         deltaY.xProperty().bind(pane.widthProperty().divide(22).multiply(16));
         deltaY.setY(10 * MILLIMETER);
@@ -517,10 +517,10 @@ measuredPillarDataController.intersection.getIntersectionPoint().getY_coord()) *
         deltaZText.setFont(boldFont);
         deltaZText.xProperty().bind(pane.widthProperty().divide(21).multiply(18));
         deltaZText.setY(5 * MILLIMETER);
-        Text deltaZ = new Text(String.format("%+20.1f", 100 * (measuredPillarDataController
-                .intersection.getIntersectionPointFromA().getZ_coord()
-                - measuredPillarDataController.intersection.getIntersectionPointFromB().getZ_coord())
-        ).replace(",", "."));
+        Text deltaZ = new Text(String.format("%+20.1f",
+                 100 * (measuredPillarDataController.intersection.getIntersectionPointFromA().getZ_coord()
+                - measuredPillarDataController.intersection.getIntersectionPointFromB().getZ_coord()))
+                .replace(",", "."));
         deltaZ.xProperty().bind(pane.widthProperty().divide(22).multiply(18));
         deltaZ.setY(10 * MILLIMETER);
         deltaZ.setFont(normalFont);

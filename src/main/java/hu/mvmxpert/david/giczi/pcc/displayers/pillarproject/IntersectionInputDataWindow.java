@@ -660,32 +660,5 @@ public class IntersectionInputDataWindow {
         calcButtonHbox.getChildren().add(calcButton);
         vBox.getChildren().add(calcButtonHbox);
     }
-    private void addTestData(){
-        Intersection intersection = new Intersection();
-        standingAPointAzimuthAngleField
-                .setText(String.valueOf(intersection.getAngleValue(8.25144120)));
-        standingAPointAzimuthMinField
-                .setText(String.valueOf(intersection.getMinValue(8.25144120)));
-        standingAPointAzimuthSecField
-                .setText(String.valueOf(intersection.getSecValue(8.25144120)));
-        standingAPointElevationAngleField
-                .setText(String.valueOf(intersection.getAngleValue(88.29508200)));
-        standingAPointElevationMinField
-                .setText(String.valueOf(intersection.getMinValue(88.29508200)));
-        standingAPointElevationSecField
-                .setText(String.valueOf(intersection.getSecValue(88.29508200)));
 
-        standingBPointAzimuthAngleField
-                .setText(String.valueOf(intersection.getAngleValue(142.27146520)));
-        standingBPointAzimuthMinField
-                .setText(String.valueOf(intersection.getMinValue(142.27146520)));
-        standingBPointAzimuthSecField
-                .setText(String.valueOf(intersection.getSecValue(142.27146520)));
-        standingBPointElevationAngleField
-                .setText(String.valueOf(intersection.getAngleValue(87.47520440)));
-        standingBPointElevationMinField
-                .setText(String.valueOf(intersection.getMinValue(87.47520440)));
-        standingBPointElevationSecField
-                .setText(String.valueOf(intersection.getSecValue(87.47520440)));
-}
 }

@@ -186,7 +186,7 @@ public class FileProcess {
 								.intersectionInputDataWindow.newPointIdField.getText().isEmpty() &&
 						rowData[0].equalsIgnoreCase(measuredPillarDataController.
 								intersectionInputDataWindow.standingAIdField.getText()) &&
-						rowData[5].equalsIgnoreCase(measuredPillarDataController
+						rowData[6].equalsIgnoreCase(measuredPillarDataController
 								.intersectionInputDataWindow.newPointIdField.getText())){
 							String[] azimuthData = rowData[10].split("\\.");
 							measuredPillarDataController
@@ -213,7 +213,7 @@ public class FileProcess {
 						.intersectionInputDataWindow.newPointIdField.getText().isEmpty() &&
 						rowData[0].equalsIgnoreCase(measuredPillarDataController.
 								intersectionInputDataWindow.standingBIdField.getText()) &&
-						rowData[5].equalsIgnoreCase(measuredPillarDataController
+						rowData[6].equalsIgnoreCase(measuredPillarDataController
 								.intersectionInputDataWindow.newPointIdField.getText())){
 					String[] azimuthData = rowData[10].split("\\.");
 					measuredPillarDataController
@@ -325,7 +325,8 @@ public class FileProcess {
 		File file = new File(FOLDER_PATH + "\\" + PROJECT_FILE_NAME + ".ins");
 		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
 			if( !measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText().isEmpty() ){
-				writer.write(measuredPillarDataController.intersectionInputDataWindow.startPointIdField.getText());
+				writer.write(measuredPillarDataController.intersectionInputDataWindow
+						.startPointIdField.getText().toUpperCase());
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.startField_X.getText().isEmpty() ){
@@ -337,7 +338,8 @@ public class FileProcess {
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.endPointIdField.getText().isEmpty() ){
-				writer.write(measuredPillarDataController.intersectionInputDataWindow.endPointIdField.getText());
+				writer.write(measuredPillarDataController.intersectionInputDataWindow
+						.endPointIdField.getText().toUpperCase());
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.endField_X.getText().isEmpty() ){
@@ -349,10 +351,11 @@ public class FileProcess {
 				writer.newLine();
 			}
 			if( !measuredPillarDataController.intersectionInputDataWindow.newPointIdField.getText().isEmpty() ){
-				writer.write(measuredPillarDataController.intersectionInputDataWindow.newPointIdField.getText());
+				writer.write(measuredPillarDataController.intersectionInputDataWindow
+						.newPointIdField.getText().toUpperCase());
 				writer.newLine();
 			}
-			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAIdField.getText());
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAIdField.getText().toUpperCase());
 			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointField_X.getText());
 			writer.newLine();
@@ -372,7 +375,7 @@ public class FileProcess {
 			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingAPointElevationSecField.getText());
 			writer.newLine();
-			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBIdField.getText());
+			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBIdField.getText().toUpperCase());
 			writer.newLine();
 			writer.write(measuredPillarDataController.intersectionInputDataWindow.standingBPointField_X.getText());
 			writer.newLine();
