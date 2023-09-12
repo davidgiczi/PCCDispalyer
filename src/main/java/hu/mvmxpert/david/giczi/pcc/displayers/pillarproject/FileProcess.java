@@ -87,7 +87,8 @@ public class FileProcess {
 		projectFileChooser.setInitialDirectory(FOLDER_PATH == null ?
 				new File(System.getProperty("user.home")) : new File(FOLDER_PATH));
 		projectFileChooser.setTitle("Válassz projekt fájlt");
-		FileChooser.ExtensionFilter projectFileFilter = new FileChooser.ExtensionFilter("Projekt fájlok (*.ins)", "*.plr");
+		FileChooser.ExtensionFilter projectFileFilter =
+				new FileChooser.ExtensionFilter("Projekt fájlok (*.ins)", "*.ins");
 		projectFileChooser.getExtensionFilters().add(projectFileFilter);
 		File selectedFile = projectFileChooser.showOpenDialog(measuredPillarDataController.fxHomeWindow.homeStage);
 		if ( selectedFile != null ) {

@@ -410,7 +410,7 @@ public class InputPillarDataWindow {
 
     private void addCalcButton(){
     Button calcButton = new Button("Számol");
-    calcButton.setOnMouseClicked(e -> measuredPillarDataController.onlClickCountButtonProcess());
+    calcButton.setOnMouseClicked(e -> measuredPillarDataController.onlClickCountButtonProcessForPillarBaseProject());
     calcButton.setCursor(Cursor.HAND);
     calcButton.setFont(boldFont);
     HBox calcButtonHbox = new HBox();

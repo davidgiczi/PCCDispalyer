@@ -83,6 +83,9 @@ public class FXHomeWindow extends Application {
 			measuredPillarDataController.openIntersectionInputDataWindow();
 		});
 		MenuItem openIntersection = new MenuItem("Előmetszés megnyitása");
+		openIntersection.setOnAction(e -> {
+			measuredPillarDataController.openIntersectionProject();
+		});
 		pillarProject.getItems().addAll(openPillarProject,createPillarProject,
 				new SeparatorMenuItem(), createIntersection, openIntersection);
 		menuBar.getMenus().addAll(projectProcess, setBaseData,

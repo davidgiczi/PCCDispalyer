@@ -346,13 +346,7 @@ public class IntersectionInputDataWindow {
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
         standingPointAXHbox.getChildren().addAll(standingAPointXText, standingAPointField_X);
-        standingAPointField_X.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            if( oldValue.length() < 3 ){
-                standingBPointField_X.setText(newValue);
-            }
-        });
-        vBox.getChildren().add(standingPointAXHbox);
+               vBox.getChildren().add(standingPointAXHbox);
 
         HBox standingPointAYHbox = new HBox();
         standingPointAYHbox.setPadding(new Insets(5,5,5,5));
@@ -367,13 +361,7 @@ public class IntersectionInputDataWindow {
                 "-fx-text-box-border: #708090;" +
                 "-fx-focus-color: #708090;");
         standingAPointField_Y .setPrefColumnCount(15);
-        standingAPointField_Y.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            if( oldValue.length() < 3 ){
-                standingBPointField_Y.setText(newValue);
-            }
-        });
-        standingPointAYHbox.getChildren().addAll(standingPointAYText, standingAPointField_Y);
+                standingPointAYHbox.getChildren().addAll(standingPointAYText, standingAPointField_Y);
         vBox.getChildren().add(standingPointAYHbox);
 
         HBox standingPointAZHbox = new HBox();
